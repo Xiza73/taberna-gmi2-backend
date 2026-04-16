@@ -13,6 +13,8 @@ import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { BannersModule } from './modules/banners/banners.module.js';
 import { UploadsModule } from './modules/uploads/uploads.module.js';
+import { CartModule } from './modules/cart/cart.module.js';
+import { AddressesModule } from './modules/addresses/addresses.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -53,6 +55,8 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     ProductsModule,
     BannersModule,
     UploadsModule,
+    CartModule,
+    AddressesModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
