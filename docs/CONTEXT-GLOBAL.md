@@ -271,6 +271,9 @@ MERCADOPAGO_SUCCESS_URL=http://localhost:3000/payment/success
 MERCADOPAGO_FAILURE_URL=http://localhost:3000/payment/failure
 MERCADOPAGO_PENDING_URL=http://localhost:3000/payment/pending
 
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+
 # Cloudinary (image uploads)
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key

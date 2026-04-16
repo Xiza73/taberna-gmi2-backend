@@ -39,6 +39,8 @@ Phase 15: Admin Dashboard ─────────────────┘
 Phase 16: Search (Elasticsearch)
     │
 Phase 17: Final (seed, health check, e2e tests)
+    │
+Phase 18: Google OAuth (depends on: auth, users)
 ```
 
 ---

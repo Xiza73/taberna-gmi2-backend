@@ -29,5 +29,6 @@ Este archivo es un indice. El contenido completo esta dividido en archivos mas p
 | 19 | Search | [modules/search.md](modules/search.md) |
 
 ## Other Docs
-- [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) — Plan de implementacion por fases (18 phases)
+- [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) — Plan de implementacion por fases (Phases 0-18)
 - [CHANGELOG-DESIGN.md](CHANGELOG-DESIGN.md) — Historial de decisiones de diseno y reglas validadas (R1-R14)
+- [changelogs/](changelogs/) — Changelogs por fase (PHASE-0 a PHASE-18)

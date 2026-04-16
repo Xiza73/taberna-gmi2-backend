@@ -14,6 +14,7 @@ Gestion de usuarios. Customer gestiona su perfil. Admin gestiona todos los usuar
 | isActive | boolean | default true (admin puede suspender) |
 | resetPasswordToken | string? | bcrypt hash del token de reset |
 | resetPasswordExpires | timestamptz? | expiracion del token de reset |
+| googleId | string? | Google OAuth sub ID (unique) |
 
 **Endpoints — Customer:**
 | Method | Route | Auth | Description |
