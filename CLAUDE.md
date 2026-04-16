@@ -157,3 +157,14 @@ DomainException → 400
 ## Skills
 
 Use `/ecommerce-api-generator [module-name]` to generate new modules following these patterns.
+
+## Implementation Workflow
+
+Before implementing any phase or module, ALWAYS read these files first:
+
+1. **`docs/CHANGELOG-DESIGN.md`** — 14 validated rules (R1-R14). NEVER revert these decisions.
+2. **`docs/IMPLEMENTATION-PLAN.md`** — Read ONLY the section for the current phase.
+3. **`docs/modules/{module}.md`** — Read ONLY the module(s) being implemented in that phase.
+4. **`docs/CONTEXT-GLOBAL.md`** — Read ONLY when working on DB constraints, env vars, or cross-module flows.
+
+DO NOT read all docs at once. Read only what the current phase requires.

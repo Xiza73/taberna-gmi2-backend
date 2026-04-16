@@ -1,8 +1,38 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
+import { json } from 'express';
+
+import { AppModule } from './app.module.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const configService = app.get(ConfigService);
+
+  // Security
+  app.use(helmet());
+  app.enableCors({
+    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
+    credentials: true,
+  });
+
+  // Body size limit
+  app.use(json({ limit: '1mb' }));
+
+  // API prefix
+  app.setGlobalPrefix('api/v1');
+
+  // Validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+
+  const port = configService.get<number>('PORT', 3000);
+  await app.listen(port);
 }
 bootstrap();
