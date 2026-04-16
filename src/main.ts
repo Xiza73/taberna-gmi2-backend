@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { json } from 'express';
@@ -9,6 +9,13 @@ import { AppModule } from './app.module.js';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
   const configService = app.get(ConfigService);
+
+  // Validate critical secrets at startup
+  const jwtSecret = configService.getOrThrow('JWT_SECRET');
+  if (jwtSecret.length < 32 || jwtSecret.includes('CHANGE-ME')) {
+    throw new Error('JWT_SECRET must be at least 32 characters and not a placeholder');
+  }
+  configService.getOrThrow('DB_PASSWORD');
 
   // Security
   app.use(helmet());
@@ -29,6 +36,10 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        const messages = errors.flatMap((e) => Object.values(e.constraints || {}));
+        throw new BadRequestException(messages);
+      },
     }),
   );
 

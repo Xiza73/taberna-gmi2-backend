@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 import { SharedModule } from './shared/shared.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
@@ -22,6 +23,9 @@ import { OrdersModule } from './modules/orders/orders.module.js';
 import { ShippingModule } from './modules/shipping/shipping.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { ReviewsModule } from './modules/reviews/reviews.module.js';
+import { AdminModule } from './modules/admin/admin.module.js';
+import { SearchModule } from './modules/search/search.module.js';
+import { HealthModule } from './health/health.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -31,6 +35,12 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 1500 }]),
     ScheduleModule.forRoot(),
+    ElasticsearchModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        node: config.get<string>('ELASTICSEARCH_URL', 'http://localhost:9200'),
+      }),
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -71,6 +81,9 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     ShippingModule,
     NotificationsModule,
     ReviewsModule,
+    AdminModule,
+    SearchModule,
+    HealthModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
