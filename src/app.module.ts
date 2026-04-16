@@ -17,6 +17,7 @@ import { CartModule } from './modules/cart/cart.module.js';
 import { AddressesModule } from './modules/addresses/addresses.module.js';
 import { WishlistModule } from './modules/wishlist/wishlist.module.js';
 import { CouponsModule } from './modules/coupons/coupons.module.js';
+import { PaymentsModule } from './modules/payments/payments.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -61,6 +62,7 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     AddressesModule,
     WishlistModule,
     CouponsModule,
+    PaymentsModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
