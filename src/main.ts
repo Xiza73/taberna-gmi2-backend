@@ -16,6 +16,11 @@ async function bootstrap() {
     throw new Error('JWT_SECRET must be at least 32 characters and not a placeholder');
   }
   configService.getOrThrow('DB_PASSWORD');
+  configService.getOrThrow('MERCADOPAGO_ACCESS_TOKEN');
+  configService.getOrThrow('MERCADOPAGO_WEBHOOK_SECRET');
+
+  // Graceful shutdown
+  app.enableShutdownHooks();
 
   // Security
   app.use(helmet());

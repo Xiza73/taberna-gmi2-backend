@@ -32,7 +32,7 @@ export class ForgotPasswordUseCase {
     await this.userRepository.save(user);
 
     const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}&userId=${user.id}`;
+    const resetUrl = `${frontendUrl}/reset-password?token=${user.id}.${rawToken}`;
     this.emailSender.sendPasswordReset({ name: user.name, email: user.email, resetUrl }).catch(() => {});
   }
 }

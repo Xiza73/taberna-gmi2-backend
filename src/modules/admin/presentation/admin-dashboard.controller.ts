@@ -33,7 +33,8 @@ export class AdminDashboardController {
   async getTopProducts(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    const result = await this.getTopProductsUseCase.execute(limit);
+    const safeLimit = Math.min(Math.max(limit, 1), 50);
+    const result = await this.getTopProductsUseCase.execute(safeLimit);
     return BaseResponse.ok(result);
   }
 }

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { UNIT_OF_WORK, type IUnitOfWork, type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
 
 import { PRODUCT_REPOSITORY, type IProductRepository } from '@modules/products/domain/interfaces/product-repository.interface.js';
 
@@ -13,6 +14,7 @@ export class ApproveReviewUseCase {
   constructor(
     @Inject(REVIEW_REPOSITORY) private readonly reviewRepository: IReviewRepository,
     @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
+    @Inject(UNIT_OF_WORK) private readonly unitOfWork: IUnitOfWork,
   ) {}
 
   async execute(reviewId: string): Promise<ReviewResponseDto> {
@@ -22,21 +24,25 @@ export class ApproveReviewUseCase {
     }
 
     review.approve();
-    const saved = await this.reviewRepository.save(review);
 
-    await this.recalculateProductRating(review.productId);
+    const saved = await this.unitOfWork.execute(async (ctx: TransactionContext) => {
+      const reviewRepo = this.reviewRepository.withTransaction(ctx);
+      const productRepo = this.productRepository.withTransaction(ctx);
+
+      const savedReview = await reviewRepo.save(review);
+
+      const averageRating = await reviewRepo.averageRatingByProductId(review.productId);
+      const totalReviews = await reviewRepo.countApprovedByProductId(review.productId);
+
+      const product = await productRepo.findById(review.productId);
+      if (product) {
+        product.updateRating(averageRating, totalReviews);
+        await productRepo.save(product);
+      }
+
+      return savedReview;
+    });
 
     return new ReviewResponseDto(saved);
-  }
-
-  private async recalculateProductRating(productId: string): Promise<void> {
-    const averageRating = await this.reviewRepository.averageRatingByProductId(productId);
-    const totalReviews = await this.reviewRepository.countApprovedByProductId(productId);
-
-    const product = await this.productRepository.findById(productId);
-    if (product) {
-      product.updateRating(averageRating, totalReviews);
-      await this.productRepository.save(product);
-    }
   }
 }

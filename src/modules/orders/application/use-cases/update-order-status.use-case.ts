@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
 import { OrderEvent } from '../../domain/entities/order-event.entity.js';
@@ -20,8 +20,13 @@ export class UpdateOrderStatusUseCase {
       throw new DomainNotFoundException(ErrorMessages.ORDER_NOT_FOUND);
     }
 
+    const previousStatus = order.status;
     order.transitionTo(dto.status);
-    await this.orderRepository.save(order);
+
+    const transitioned = await this.orderRepository.atomicStatusTransition(orderId, previousStatus, dto.status);
+    if (!transitioned) {
+      throw new DomainConflictException(ErrorMessages.ORDER_STATUS_CONFLICT);
+    }
 
     const event = OrderEvent.create({
       orderId,

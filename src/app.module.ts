@@ -5,8 +5,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
-
 import { SharedModule } from './shared/shared.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
@@ -35,12 +33,6 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 1500 }]),
     ScheduleModule.forRoot(),
-    ElasticsearchModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        node: config.get<string>('ELASTICSEARCH_URL', 'http://localhost:9200'),
-      }),
-    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

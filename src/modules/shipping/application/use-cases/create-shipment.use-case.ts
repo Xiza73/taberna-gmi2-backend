@@ -52,17 +52,17 @@ export class CreateShipmentUseCase {
 
     const saved = await this.shipmentRepository.save(shipment);
 
-    // Transition order to shipped
-    order.transitionTo(OrderStatus.SHIPPED);
-    await this.orderRepository.save(order);
-
-    const event = OrderEvent.create({
-      orderId,
-      status: OrderStatus.SHIPPED,
-      description: 'Envio registrado',
-      metadata: { carrier: dto.carrier, trackingNumber: dto.trackingNumber },
-    });
-    await this.orderRepository.saveEvent(event);
+    // Atomic order status transition
+    const transitioned = await this.orderRepository.atomicStatusTransition(orderId, order.status, OrderStatus.SHIPPED);
+    if (transitioned) {
+      const event = OrderEvent.create({
+        orderId,
+        status: OrderStatus.SHIPPED,
+        description: 'Envio registrado',
+        metadata: { carrier: dto.carrier, trackingNumber: dto.trackingNumber },
+      });
+      await this.orderRepository.saveEvent(event);
+    }
 
     this.emailSender.sendOrderShipped({
       orderNumber: order.orderNumber,

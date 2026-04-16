@@ -80,7 +80,7 @@ export class VerifyPaymentUseCase {
         paidAt: approvedPayment.paidAt ?? new Date(),
         rawResponse: approvedPayment.rawResponse,
       });
-      await paymentRepo.save(payment);
+      await paymentRepo.upsertByExternalId(payment);
 
       const transitioned = await orderRepo.atomicStatusTransition(result.order.id, OrderStatus.PENDING, OrderStatus.PAID);
       if (transitioned) {

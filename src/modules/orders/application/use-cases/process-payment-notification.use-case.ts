@@ -27,9 +27,14 @@ export class ProcessPaymentNotificationUseCase {
     private readonly configService: ConfigService,
   ) {}
 
+  hasWebhookSecret(): boolean {
+    const secret = this.configService.get<string>('MERCADOPAGO_WEBHOOK_SECRET', '');
+    return !!secret;
+  }
+
   verifySignature(rawBody: Buffer, signature: string): boolean {
     const secret = this.configService.get<string>('MERCADOPAGO_WEBHOOK_SECRET', '');
-    if (!secret) return true;
+    if (!secret) return false;
 
     try {
       const expected = createHmac('sha256', secret).update(rawBody).digest('hex');
@@ -79,8 +84,8 @@ export class ProcessPaymentNotificationUseCase {
       const orderRepo = this.orderRepository.withTransaction(ctx);
       const paymentRepo = this.paymentRepository.withTransaction(ctx);
 
-      // Create/update payment record
-      const payment = Payment.create({
+      // Upsert payment record (handles duplicate webhooks)
+      const payment = existingPayment ?? Payment.create({
         orderId: order.id,
         preferenceId: paymentInfo.rawResponse['preference_id'] as string ?? null,
         status: PaymentStatus.APPROVED,
@@ -93,7 +98,7 @@ export class ProcessPaymentNotificationUseCase {
         paidAt: paymentInfo.paidAt ?? new Date(),
         rawResponse: paymentInfo.rawResponse,
       });
-      await paymentRepo.save(payment);
+      await paymentRepo.upsertByExternalId(payment);
 
       // Atomic status transition
       const transitioned = await orderRepo.atomicStatusTransition(order.id, OrderStatus.PENDING, OrderStatus.PAID);

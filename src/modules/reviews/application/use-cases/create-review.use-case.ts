@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import sanitizeHtml from 'sanitize-html';
 
 import { DomainConflictException, DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
@@ -49,8 +50,8 @@ export class CreateReviewUseCase {
       throw new DomainException(ErrorMessages.REVIEW_NOT_PURCHASED);
     }
 
-    // Sanitize comment (strip HTML tags)
-    const sanitizedComment = dto.comment ? dto.comment.replace(/<[^>]*>/g, '') : null;
+    // Sanitize comment (strip all HTML)
+    const sanitizedComment = dto.comment ? sanitizeHtml(dto.comment, { allowedTags: [], allowedAttributes: {} }) : null;
 
     const review = Review.create({
       userId,

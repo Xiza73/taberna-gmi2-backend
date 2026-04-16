@@ -1,8 +1,9 @@
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class SearchSuggestQueryDto {
   @IsString()
+  @IsNotEmpty()
   q: string;
 
   @IsOptional()

@@ -36,6 +36,7 @@ export const ErrorMessages = {
   ORDER_CANNOT_CANCEL: 'Order can only be cancelled while pending',
   ORDER_EXPIRED: 'Order expired due to unpaid status',
   ORDER_INVALID_TRANSITION: 'Invalid order status transition',
+  ORDER_STATUS_CONFLICT: 'Order status was modified concurrently, please retry',
   // Payments
   PAYMENT_ALREADY_PROCESSED: 'Payment has already been processed',
   PAYMENT_VERIFICATION_FAILED: 'Could not verify payment status',

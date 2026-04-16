@@ -24,9 +24,15 @@ export class CartRepository implements ICartRepository {
   async findOrCreateByUserId(userId: string): Promise<Cart> {
     let orm = await this.cartRepo.findOne({ where: { userId } });
     if (!orm) {
-      const cart = Cart.create({ userId });
-      const cartOrm = CartMapper.toOrm(cart);
-      orm = await this.cartRepo.save(cartOrm);
+      try {
+        const cart = Cart.create({ userId });
+        const cartOrm = CartMapper.toOrm(cart);
+        orm = await this.cartRepo.save(cartOrm);
+      } catch {
+        // Race condition: another request created the cart — fetch it
+        orm = await this.cartRepo.findOne({ where: { userId } });
+        if (!orm) throw new Error('Failed to find or create cart');
+      }
     }
     return CartMapper.toDomain(orm);
   }

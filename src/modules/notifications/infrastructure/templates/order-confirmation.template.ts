@@ -1,14 +1,17 @@
+import { escapeHtml } from './escape-html.js';
+
 export function orderConfirmationTemplate(props: {
   orderNumber: string;
   customerName: string;
   items: Array<{ name: string; quantity: number; unitPrice: number }>;
   total: number;
 }): { subject: string; html: string } {
+  const safeName = escapeHtml(props.customerName);
   const itemsHtml = props.items
     .map(
       (item) =>
         `<tr>
-          <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
+          <td style="padding: 8px; border-bottom: 1px solid #eee;">${escapeHtml(item.name)}</td>
           <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
           <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">S/ ${(item.unitPrice / 100).toFixed(2)}</td>
         </tr>`,
@@ -19,7 +22,7 @@ export function orderConfirmationTemplate(props: {
     subject: `Pedido ${props.orderNumber} confirmado`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">¡Gracias por tu pedido, ${props.customerName}!</h1>
+        <h1 style="color: #333;">¡Gracias por tu pedido, ${safeName}!</h1>
         <p>Tu pedido <strong>${props.orderNumber}</strong> ha sido registrado exitosamente.</p>
         <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
           <thead>

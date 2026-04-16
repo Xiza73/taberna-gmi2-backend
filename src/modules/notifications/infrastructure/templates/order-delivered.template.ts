@@ -1,15 +1,17 @@
+import { escapeHtml } from './escape-html.js';
+
 export function orderDeliveredTemplate(props: {
   orderNumber: string;
   customerName: string;
   productNames: string[];
 }): { subject: string; html: string } {
-  const productsList = props.productNames.map((name) => `<li>${name}</li>`).join('');
+  const productsList = props.productNames.map((name) => `<li>${escapeHtml(name)}</li>`).join('');
 
   return {
     subject: `Tu pedido ${props.orderNumber} ha sido entregado`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">¡Pedido entregado, ${props.customerName}!</h1>
+        <h1 style="color: #333;">¡Pedido entregado, ${escapeHtml(props.customerName)}!</h1>
         <p>Tu pedido <strong>${props.orderNumber}</strong> ha sido entregado exitosamente.</p>
         <p>Productos recibidos:</p>
         <ul>${productsList}</ul>

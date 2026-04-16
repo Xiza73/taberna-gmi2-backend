@@ -106,7 +106,7 @@ export class ElasticsearchProductSearch implements IProductSearchService {
       return { items, total };
     } catch (error) {
       this.logger.error(`Elasticsearch search failed: ${(error as Error).message}`);
-      return { items: [], total: 0 };
+      throw error;
     }
   }
 

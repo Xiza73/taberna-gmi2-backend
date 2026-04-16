@@ -48,27 +48,27 @@ export class UpdateShipmentUseCase {
 
     const saved = await this.shipmentRepository.save(shipment);
 
-    // If marked as delivered, transition order
+    // If marked as delivered, atomic order transition
     if (dto.status === ShipmentStatus.DELIVERED) {
       const order = await this.orderRepository.findById(orderId);
       if (order) {
-        order.transitionTo(OrderStatus.DELIVERED);
-        await this.orderRepository.save(order);
+        const transitioned = await this.orderRepository.atomicStatusTransition(orderId, order.status, OrderStatus.DELIVERED);
+        if (transitioned) {
+          const event = OrderEvent.create({
+            orderId,
+            status: OrderStatus.DELIVERED,
+            description: 'Pedido entregado',
+          });
+          await this.orderRepository.saveEvent(event);
 
-        const event = OrderEvent.create({
-          orderId,
-          status: OrderStatus.DELIVERED,
-          description: 'Pedido entregado',
-        });
-        await this.orderRepository.saveEvent(event);
-
-        const items = await this.orderRepository.findItemsByOrderId(orderId);
-        this.emailSender.sendOrderDelivered({
-          orderNumber: order.orderNumber,
-          customerName: order.customerName,
-          email: order.customerEmail,
-          productNames: items.map((i) => i.productName),
-        }).catch(() => {});
+          const items = await this.orderRepository.findItemsByOrderId(orderId);
+          this.emailSender.sendOrderDelivered({
+            orderNumber: order.orderNumber,
+            customerName: order.customerName,
+            email: order.customerEmail,
+            productNames: items.map((i) => i.productName),
+          }).catch(() => {});
+        }
       }
     }
 

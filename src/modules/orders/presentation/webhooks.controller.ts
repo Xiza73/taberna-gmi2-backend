@@ -26,9 +26,15 @@ export class WebhooksController {
     @Body() dto: MercadoPagoNotificationDto,
   ) {
     try {
-      // Verify HMAC signature
+      // Verify HMAC signature — mandatory when secret is configured
       const rawBody = (req as Request & { rawBody?: Buffer }).rawBody;
-      if (rawBody && signature) {
+      const hasSecret = this.processPaymentNotificationUseCase.hasWebhookSecret();
+
+      if (hasSecret) {
+        if (!rawBody || !signature) {
+          this.logger.warn('Missing rawBody or signature on webhook with configured secret');
+          return BaseResponse.ok(null);
+        }
         const valid = this.processPaymentNotificationUseCase.verifySignature(rawBody, signature);
         if (!valid) {
           this.logger.warn('Invalid webhook signature');

@@ -1,3 +1,5 @@
+import { escapeHtml } from './escape-html.js';
+
 export function passwordResetTemplate(props: {
   name: string;
   resetUrl: string;
@@ -6,10 +8,10 @@ export function passwordResetTemplate(props: {
     subject: 'Restablecer contraseña',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #333;">Hola ${props.name},</h1>
+        <h1 style="color: #333;">Hola ${escapeHtml(props.name)},</h1>
         <p>Recibimos una solicitud para restablecer tu contraseña.</p>
         <p>
-          <a href="${props.resetUrl}" style="display: inline-block; padding: 10px 20px; background: #007bff; color: #fff; text-decoration: none; border-radius: 4px;">
+          <a href="${escapeHtml(props.resetUrl)}" style="display: inline-block; padding: 10px 20px; background: #007bff; color: #fff; text-decoration: none; border-radius: 4px;">
             Restablecer contraseña
           </a>
         </p>
