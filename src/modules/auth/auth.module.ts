@@ -12,6 +12,7 @@ import { LogoutUseCase } from './application/use-cases/logout.use-case.js';
 import { GetMeUseCase } from './application/use-cases/get-me.use-case.js';
 import { ForgotPasswordUseCase } from './application/use-cases/forgot-password.use-case.js';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case.js';
+import { GoogleAuthUseCase } from './application/use-cases/google-auth.use-case.js';
 import { AuthController } from './presentation/auth.controller.js';
 import { UsersModule } from '../users/users.module.js';
 
@@ -34,6 +35,7 @@ import { UsersModule } from '../users/users.module.js';
     GetMeUseCase,
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
+    GoogleAuthUseCase,
   ],
   exports: [REFRESH_TOKEN_REPOSITORY],
 })

@@ -67,6 +67,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         is_active BOOLEAN NOT NULL DEFAULT true,
         reset_password_token VARCHAR(255),
         reset_password_expires TIMESTAMPTZ,
+        google_id VARCHAR(255) UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )

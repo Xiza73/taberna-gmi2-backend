@@ -29,6 +29,9 @@ export class UserOrmEntity {
   @Column({ type: 'timestamptz', name: 'reset_password_expires', nullable: true })
   resetPasswordExpires: Date | null;
 
+  @Column({ type: 'varchar', length: 255, name: 'google_id', nullable: true, unique: true })
+  googleId: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

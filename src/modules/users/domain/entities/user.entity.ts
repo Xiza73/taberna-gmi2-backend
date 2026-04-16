@@ -11,6 +11,7 @@ export class User extends BaseEntity {
   private _isActive: boolean;
   private _resetPasswordToken: string | null;
   private _resetPasswordExpires: Date | null;
+  private _googleId: string | null;
 
   private constructor(
     id: string,
@@ -22,6 +23,7 @@ export class User extends BaseEntity {
     isActive: boolean,
     resetPasswordToken: string | null,
     resetPasswordExpires: Date | null,
+    googleId: string | null,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -34,6 +36,7 @@ export class User extends BaseEntity {
     this._isActive = isActive;
     this._resetPasswordToken = resetPasswordToken;
     this._resetPasswordExpires = resetPasswordExpires;
+    this._googleId = googleId;
   }
 
   static create(props: {
@@ -42,6 +45,7 @@ export class User extends BaseEntity {
     password: string;
     role: UserRole;
     phone?: string | null;
+    googleId?: string | null;
   }): User {
     if (!props.name || !props.email || !props.password) {
       throw new DomainException('User requires name, email, and password');
@@ -56,6 +60,7 @@ export class User extends BaseEntity {
       true,
       null,
       null,
+      props.googleId ?? null,
       new Date(),
       new Date(),
     );
@@ -71,6 +76,7 @@ export class User extends BaseEntity {
     isActive: boolean;
     resetPasswordToken: string | null;
     resetPasswordExpires: Date | null;
+    googleId: string | null;
     createdAt: Date;
     updatedAt: Date;
   }): User {
@@ -84,6 +90,7 @@ export class User extends BaseEntity {
       props.isActive,
       props.resetPasswordToken,
       props.resetPasswordExpires,
+      props.googleId,
       props.createdAt,
       props.updatedAt,
     );
@@ -97,6 +104,7 @@ export class User extends BaseEntity {
   get isActive(): boolean { return this._isActive; }
   get resetPasswordToken(): string | null { return this._resetPasswordToken; }
   get resetPasswordExpires(): Date | null { return this._resetPasswordExpires; }
+  get googleId(): string | null { return this._googleId; }
 
   updateProfile(props: { name?: string; phone?: string | null }): void {
     if (props.name !== undefined) this._name = props.name;
@@ -133,6 +141,11 @@ export class User extends BaseEntity {
 
   updateRole(role: UserRole): void {
     this._role = role;
+    this.markUpdated();
+  }
+
+  linkGoogle(googleId: string): void {
+    this._googleId = googleId;
     this.markUpdated();
   }
 }

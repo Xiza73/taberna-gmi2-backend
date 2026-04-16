@@ -32,6 +32,11 @@ export class UserRepository implements IUserRepository {
     return orm ? UserMapper.toDomain(orm) : null;
   }
 
+  async findByGoogleId(googleId: string): Promise<User | null> {
+    const orm = await this.repo.findOne({ where: { googleId } });
+    return orm ? UserMapper.toDomain(orm) : null;
+  }
+
   async delete(id: string): Promise<void> {
     await this.repo.delete(id);
   }

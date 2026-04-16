@@ -12,11 +12,13 @@ import { LogoutUseCase } from '../application/use-cases/logout.use-case.js';
 import { GetMeUseCase } from '../application/use-cases/get-me.use-case.js';
 import { ForgotPasswordUseCase } from '../application/use-cases/forgot-password.use-case.js';
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password.use-case.js';
+import { GoogleAuthUseCase } from '../application/use-cases/google-auth.use-case.js';
 import { RegisterDto } from '../application/dtos/register.dto.js';
 import { LoginDto } from '../application/dtos/login.dto.js';
 import { RefreshTokenDto } from '../application/dtos/refresh-token.dto.js';
 import { ForgotPasswordDto } from '../application/dtos/forgot-password.dto.js';
 import { ResetPasswordDto } from '../application/dtos/reset-password.dto.js';
+import { GoogleAuthDto } from '../application/dtos/google-auth.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +30,7 @@ export class AuthController {
     private readonly getMeUseCase: GetMeUseCase,
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly googleAuthUseCase: GoogleAuthUseCase,
   ) {}
 
   @Public()
@@ -63,6 +66,14 @@ export class AuthController {
   @Get('me')
   async me(@CurrentUser('id') userId: string) {
     const result = await this.getMeUseCase.execute(userId);
+    return BaseResponse.ok(result);
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('google')
+  async google(@Body() dto: GoogleAuthDto) {
+    const result = await this.googleAuthUseCase.execute(dto);
     return BaseResponse.ok(result);
   }
 
