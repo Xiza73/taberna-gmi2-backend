@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { SharedModule } from './shared/shared.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { CategoriesModule } from './modules/categories/categories.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -45,6 +46,7 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     SharedModule,
     AuthModule,
     UsersModule,
+    CategoriesModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
