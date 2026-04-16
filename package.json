@@ -22,7 +22,9 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/typeorm.config.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
-    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/config/typeorm.config.ts"
+    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/config/typeorm.config.ts",
+    "db:seed": "ts-node -r tsconfig-paths/register src/scripts/seed.ts",
+    "db:reset": "ts-node -r tsconfig-paths/register src/scripts/db-reset.ts"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.3.4",
