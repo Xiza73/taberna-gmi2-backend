@@ -8,7 +8,9 @@ import { type OrderStatus } from '../enums/order-status.enum.js';
 export const ORDER_REPOSITORY = Symbol('ORDER_REPOSITORY');
 
 export interface IOrderRepository extends IBaseRepository<Order> {
-  findByIdWithDetails(id: string): Promise<{ order: Order; items: OrderItem[]; events: OrderEvent[] } | null>;
+  findByIdWithDetails(
+    id: string,
+  ): Promise<{ order: Order; items: OrderItem[]; events: OrderEvent[] } | null>;
   findAllByUserId(params: {
     userId: string;
     page: number;
@@ -29,7 +31,11 @@ export interface IOrderRepository extends IBaseRepository<Order> {
   saveEvent(event: OrderEvent): Promise<OrderEvent>;
   findItemsByOrderId(orderId: string): Promise<OrderItem[]>;
   findEventsByOrderId(orderId: string): Promise<OrderEvent[]>;
-  atomicStatusTransition(orderId: string, fromStatus: OrderStatus, toStatus: OrderStatus): Promise<boolean>;
+  atomicStatusTransition(
+    orderId: string,
+    fromStatus: OrderStatus,
+    toStatus: OrderStatus,
+  ): Promise<boolean>;
   atomicStockDecrement(productId: string, quantity: number): Promise<boolean>;
   atomicStockRestore(productId: string, quantity: number): Promise<void>;
   findPendingExpired(thresholdDate: Date, limit: number): Promise<Order[]>;

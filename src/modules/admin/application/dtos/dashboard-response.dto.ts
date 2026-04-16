@@ -26,7 +26,14 @@ export class RecentOrderDto {
   status: string;
   createdAt: string;
 
-  constructor(data: { id: string; orderNumber: string; customerName: string; total: number; status: string; createdAt: Date }) {
+  constructor(data: {
+    id: string;
+    orderNumber: string;
+    customerName: string;
+    total: number;
+    status: string;
+    createdAt: Date;
+  }) {
     this.id = data.id;
     this.orderNumber = data.orderNumber;
     this.customerName = data.customerName;
@@ -54,7 +61,14 @@ export class DashboardResponseDto {
     ordersToday: number;
     revenueToday: number;
     ordersByStatus: Record<string, number>;
-    recentOrders: Array<{ id: string; orderNumber: string; customerName: string; total: number; status: string; createdAt: Date }>;
+    recentOrders: Array<{
+      id: string;
+      orderNumber: string;
+      customerName: string;
+      total: number;
+      status: string;
+      createdAt: Date;
+    }>;
   }) {
     this.totalOrders = data.totalOrders;
     this.totalRevenue = data.totalRevenue;

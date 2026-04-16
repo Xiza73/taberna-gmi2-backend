@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
@@ -45,7 +55,10 @@ export class AdminProductsController {
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateProductDto) {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateProductDto,
+  ) {
     const result = await this.updateProductUseCase.execute(id, dto);
     return BaseResponse.ok(result);
   }
@@ -57,7 +70,10 @@ export class AdminProductsController {
   }
 
   @Patch(':id/stock')
-  async adjustStock(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AdjustStockDto) {
+  async adjustStock(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: AdjustStockDto,
+  ) {
     const result = await this.adjustStockUseCase.execute(id, dto);
     return BaseResponse.ok(result);
   }

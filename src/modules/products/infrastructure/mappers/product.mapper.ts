@@ -15,7 +15,8 @@ export class ProductMapper {
       images: orm.images,
       categoryId: orm.categoryId,
       isActive: orm.isActive,
-      averageRating: orm.averageRating !== null ? Number(orm.averageRating) : null,
+      averageRating:
+        orm.averageRating !== null ? Number(orm.averageRating) : null,
       totalReviews: orm.totalReviews,
       createdAt: orm.createdAt,
       updatedAt: orm.updatedAt,

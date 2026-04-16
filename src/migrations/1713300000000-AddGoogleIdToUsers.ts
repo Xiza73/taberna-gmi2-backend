@@ -12,6 +12,8 @@ export class AddGoogleIdToUsers1713300000000 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP INDEX IF EXISTS idx_users_google_id`);
-    await queryRunner.query(`ALTER TABLE users DROP COLUMN IF EXISTS google_id`);
+    await queryRunner.query(
+      `ALTER TABLE users DROP COLUMN IF EXISTS google_id`,
+    );
   }
 }

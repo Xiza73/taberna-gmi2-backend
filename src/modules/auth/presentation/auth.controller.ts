@@ -82,7 +82,10 @@ export class AuthController {
   @Post('forgot-password')
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
     await this.forgotPasswordUseCase.execute(dto);
-    return BaseResponse.ok(null, 'If the email exists, a reset link has been sent');
+    return BaseResponse.ok(
+      null,
+      'If the email exists, a reset link has been sent',
+    );
   }
 
   @Public()

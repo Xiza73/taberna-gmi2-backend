@@ -21,10 +21,13 @@ export class WishlistRepository implements IWishlistRepository {
       where: { userId },
       order: { createdAt: 'DESC' },
     });
-    return orms.map(WishlistItemMapper.toDomain);
+    return orms.map((orm) => WishlistItemMapper.toDomain(orm));
   }
 
-  async findByUserAndProduct(userId: string, productId: string): Promise<WishlistItem | null> {
+  async findByUserAndProduct(
+    userId: string,
+    productId: string,
+  ): Promise<WishlistItem | null> {
     const orm = await this.repo.findOne({ where: { userId, productId } });
     return orm ? WishlistItemMapper.toDomain(orm) : null;
   }
@@ -35,7 +38,10 @@ export class WishlistRepository implements IWishlistRepository {
     return WishlistItemMapper.toDomain(saved);
   }
 
-  async deleteByUserAndProduct(userId: string, productId: string): Promise<void> {
+  async deleteByUserAndProduct(
+    userId: string,
+    productId: string,
+  ): Promise<void> {
     await this.repo.delete({ userId, productId });
   }
 

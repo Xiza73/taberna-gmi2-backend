@@ -6,7 +6,10 @@ export const WISHLIST_REPOSITORY = Symbol('WISHLIST_REPOSITORY');
 
 export interface IWishlistRepository {
   findAllByUserId(userId: string): Promise<WishlistItem[]>;
-  findByUserAndProduct(userId: string, productId: string): Promise<WishlistItem | null>;
+  findByUserAndProduct(
+    userId: string,
+    productId: string,
+  ): Promise<WishlistItem | null>;
   save(entity: WishlistItem): Promise<WishlistItem>;
   deleteByUserAndProduct(userId: string, productId: string): Promise<void>;
   withTransaction(ctx: TransactionContext): this;

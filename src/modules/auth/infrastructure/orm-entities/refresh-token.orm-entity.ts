@@ -1,8 +1,17 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('refresh_tokens')
 @Index('idx_refresh_tokens_user_id', ['userId'])
-@Index('idx_refresh_tokens_active', ['userId'], { where: '"is_revoked" = false' })
+@Index('idx_refresh_tokens_active', ['userId'], {
+  where: '"is_revoked" = false',
+})
 export class RefreshTokenOrmEntity {
   @PrimaryColumn('uuid')
   id: string;

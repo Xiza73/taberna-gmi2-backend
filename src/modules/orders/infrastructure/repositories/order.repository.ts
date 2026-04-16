@@ -38,19 +38,29 @@ export class OrderRepository implements IOrderRepository {
     return orm ? OrderMapper.toDomain(orm) : null;
   }
 
-  async findByIdWithDetails(id: string): Promise<{ order: Order; items: OrderItem[]; events: OrderEvent[] } | null> {
+  async findByIdWithDetails(id: string): Promise<{
+    order: Order;
+    items: OrderItem[];
+    events: OrderEvent[];
+  } | null> {
     const orm = await this.orderRepo.findOne({ where: { id } });
     if (!orm) return null;
 
     const [itemOrms, eventOrms] = await Promise.all([
-      this.itemRepo.find({ where: { orderId: id }, order: { createdAt: 'ASC' } }),
-      this.eventRepo.find({ where: { orderId: id }, order: { createdAt: 'ASC' } }),
+      this.itemRepo.find({
+        where: { orderId: id },
+        order: { createdAt: 'ASC' },
+      }),
+      this.eventRepo.find({
+        where: { orderId: id },
+        order: { createdAt: 'ASC' },
+      }),
     ]);
 
     return {
       order: OrderMapper.toDomain(orm),
-      items: itemOrms.map(OrderItemMapper.toDomain),
-      events: eventOrms.map(OrderEventMapper.toDomain),
+      items: itemOrms.map((orm) => OrderItemMapper.toDomain(orm)),
+      events: eventOrms.map((orm) => OrderEventMapper.toDomain(orm)),
     };
   }
 
@@ -60,7 +70,8 @@ export class OrderRepository implements IOrderRepository {
     limit: number;
     status?: OrderStatus;
   }): Promise<{ items: Order[]; total: number }> {
-    const qb = this.orderRepo.createQueryBuilder('o')
+    const qb = this.orderRepo
+      .createQueryBuilder('o')
       .where('o.user_id = :userId', { userId: params.userId });
 
     if (params.status) {
@@ -72,7 +83,7 @@ export class OrderRepository implements IOrderRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(OrderMapper.toDomain), total };
+    return { items: orms.map((orm) => OrderMapper.toDomain(orm)), total };
   }
 
   async findAll(params: {
@@ -100,7 +111,9 @@ export class OrderRepository implements IOrderRepository {
       qb.andWhere('o.created_at <= :dateTo', { dateTo: params.dateTo });
     }
     if (params.search) {
-      qb.andWhere('o.order_number ILIKE :search', { search: `%${params.search}%` });
+      qb.andWhere('o.order_number ILIKE :search', {
+        search: `%${params.search}%`,
+      });
     }
 
     switch (params.sortBy) {
@@ -119,7 +132,7 @@ export class OrderRepository implements IOrderRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(OrderMapper.toDomain), total };
+    return { items: orms.map((orm) => OrderMapper.toDomain(orm)), total };
   }
 
   async saveItem(item: OrderItem): Promise<OrderItem> {
@@ -135,16 +148,26 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async findItemsByOrderId(orderId: string): Promise<OrderItem[]> {
-    const orms = await this.itemRepo.find({ where: { orderId }, order: { createdAt: 'ASC' } });
-    return orms.map(OrderItemMapper.toDomain);
+    const orms = await this.itemRepo.find({
+      where: { orderId },
+      order: { createdAt: 'ASC' },
+    });
+    return orms.map((orm) => OrderItemMapper.toDomain(orm));
   }
 
   async findEventsByOrderId(orderId: string): Promise<OrderEvent[]> {
-    const orms = await this.eventRepo.find({ where: { orderId }, order: { createdAt: 'ASC' } });
-    return orms.map(OrderEventMapper.toDomain);
+    const orms = await this.eventRepo.find({
+      where: { orderId },
+      order: { createdAt: 'ASC' },
+    });
+    return orms.map((orm) => OrderEventMapper.toDomain(orm));
   }
 
-  async atomicStatusTransition(orderId: string, fromStatus: OrderStatus, toStatus: OrderStatus): Promise<boolean> {
+  async atomicStatusTransition(
+    orderId: string,
+    fromStatus: OrderStatus,
+    toStatus: OrderStatus,
+  ): Promise<boolean> {
     const result = await this.orderRepo
       .createQueryBuilder()
       .update(OrderOrmEntity)
@@ -155,8 +178,11 @@ export class OrderRepository implements IOrderRepository {
     return (result.affected ?? 0) > 0;
   }
 
-  async atomicStockDecrement(productId: string, quantity: number): Promise<boolean> {
-    const result = await this.orderRepo.manager.query(
+  async atomicStockDecrement(
+    productId: string,
+    quantity: number,
+  ): Promise<boolean> {
+    const result: [unknown[], number] = await this.orderRepo.manager.query(
       `UPDATE products SET stock = stock - $1 WHERE id = $2 AND stock >= $1`,
       [quantity, productId],
     );
@@ -170,7 +196,10 @@ export class OrderRepository implements IOrderRepository {
     );
   }
 
-  async findPendingExpired(thresholdDate: Date, limit: number): Promise<Order[]> {
+  async findPendingExpired(
+    thresholdDate: Date,
+    limit: number,
+  ): Promise<Order[]> {
     const orms = await this.orderRepo
       .createQueryBuilder('o')
       .where('o.status = :status', { status: 'pending' })
@@ -178,10 +207,13 @@ export class OrderRepository implements IOrderRepository {
       .orderBy('o.created_at', 'ASC')
       .take(limit)
       .getMany();
-    return orms.map(OrderMapper.toDomain);
+    return orms.map((orm) => OrderMapper.toDomain(orm));
   }
 
-  async countUserOrdersWithCoupon(userId: string, couponId: string): Promise<number> {
+  async countUserOrdersWithCoupon(
+    userId: string,
+    couponId: string,
+  ): Promise<number> {
     return this.orderRepo
       .createQueryBuilder('o')
       .where('o.user_id = :userId', { userId })

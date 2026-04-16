@@ -43,7 +43,7 @@ export class RefreshTokenRepository implements IRefreshTokenRepository {
     const result = await this.repo
       .createQueryBuilder()
       .delete()
-      .where('is_revoked = true OR expires_at < NOW() - INTERVAL \'7 days\'')
+      .where("is_revoked = true OR expires_at < NOW() - INTERVAL '7 days'")
       .execute();
     return result.affected ?? 0;
   }

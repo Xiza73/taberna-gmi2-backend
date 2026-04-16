@@ -3,9 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+import {
+  EMAIL_SENDER,
+  type IEmailSender,
+} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
-import { USER_REPOSITORY, type IUserRepository } from '../../../users/domain/interfaces/user-repository.interface.js';
+import {
+  USER_REPOSITORY,
+  type IUserRepository,
+} from '../../../users/domain/interfaces/user-repository.interface.js';
 import { type ForgotPasswordDto } from '../dtos/forgot-password.dto.js';
 
 @Injectable()
@@ -31,8 +37,13 @@ export class ForgotPasswordUseCase {
     user.setResetPasswordToken(tokenHash, expires);
     await this.userRepository.save(user);
 
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const frontendUrl = this.configService.get<string>(
+      'FRONTEND_URL',
+      'http://localhost:3000',
+    );
     const resetUrl = `${frontendUrl}/reset-password?token=${user.id}.${rawToken}`;
-    this.emailSender.sendPasswordReset({ name: user.name, email: user.email, resetUrl }).catch(() => {});
+    this.emailSender
+      .sendPasswordReset({ name: user.name, email: user.email, resetUrl })
+      .catch(() => {});
   }
 }

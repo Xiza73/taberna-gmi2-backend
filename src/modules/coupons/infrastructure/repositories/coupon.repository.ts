@@ -28,12 +28,15 @@ export class CouponRepository implements ICouponRepository {
   }
 
   async findByCode(code: string): Promise<Coupon | null> {
-    const orm = await this.repo.findOne({ where: { code: code.toUpperCase() } });
+    const orm = await this.repo.findOne({
+      where: { code: code.toUpperCase() },
+    });
     return orm ? CouponMapper.toDomain(orm) : null;
   }
 
   async codeExists(code: string, excludeId?: string): Promise<boolean> {
-    const qb = this.repo.createQueryBuilder('c')
+    const qb = this.repo
+      .createQueryBuilder('c')
       .where('c.code = :code', { code: code.toUpperCase() });
 
     if (excludeId) {
@@ -43,7 +46,10 @@ export class CouponRepository implements ICouponRepository {
     return (await qb.getCount()) > 0;
   }
 
-  async findAll(params: { page: number; limit: number }): Promise<{ items: Coupon[]; total: number }> {
+  async findAll(params: {
+    page: number;
+    limit: number;
+  }): Promise<{ items: Coupon[]; total: number }> {
     const qb = this.repo.createQueryBuilder('c');
 
     qb.orderBy('c.created_at', 'DESC');
@@ -51,7 +57,7 @@ export class CouponRepository implements ICouponRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(CouponMapper.toDomain), total };
+    return { items: orms.map((orm) => CouponMapper.toDomain(orm)), total };
   }
 
   async findByIdForUpdate(id: string): Promise<Coupon | null> {

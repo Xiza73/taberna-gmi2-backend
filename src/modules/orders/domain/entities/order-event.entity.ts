@@ -68,9 +68,19 @@ export class OrderEvent extends BaseEntity {
     );
   }
 
-  get orderId(): string { return this._orderId; }
-  get status(): OrderStatus { return this._status; }
-  get description(): string { return this._description; }
-  get performedBy(): string | null { return this._performedBy; }
-  get metadata(): Record<string, unknown> | null { return this._metadata; }
+  get orderId(): string {
+    return this._orderId;
+  }
+  get status(): OrderStatus {
+    return this._status;
+  }
+  get description(): string {
+    return this._description;
+  }
+  get performedBy(): string | null {
+    return this._performedBy;
+  }
+  get metadata(): Record<string, unknown> | null {
+    return this._metadata;
+  }
 }

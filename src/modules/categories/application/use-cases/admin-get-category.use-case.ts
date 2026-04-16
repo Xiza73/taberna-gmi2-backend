@@ -3,13 +3,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '../../domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '../../domain/interfaces/category-repository.interface.js';
 import { CategoryResponseDto } from '../dtos/category-response.dto.js';
 
 @Injectable()
 export class AdminGetCategoryUseCase {
   constructor(
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
   ) {}
 
   async execute(id: string): Promise<CategoryResponseDto> {

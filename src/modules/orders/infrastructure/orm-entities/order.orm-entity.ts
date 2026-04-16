@@ -1,11 +1,22 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { OrderStatus } from '../../domain/enums/order-status.enum.js';
 
 @Entity('orders')
 @Index('idx_orders_user_id', ['userId'])
-@Index('idx_orders_user_coupon', ['userId', 'couponId'], { where: 'coupon_id IS NOT NULL' })
-@Index('idx_orders_pending_created', ['createdAt'], { where: "status = 'pending'" })
+@Index('idx_orders_user_coupon', ['userId', 'couponId'], {
+  where: 'coupon_id IS NOT NULL',
+})
+@Index('idx_orders_pending_created', ['createdAt'], {
+  where: "status = 'pending'",
+})
 export class OrderOrmEntity {
   @PrimaryColumn('uuid')
   id: string;

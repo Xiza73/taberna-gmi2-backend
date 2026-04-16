@@ -19,10 +19,6 @@ function uuid(): string {
   return randomUUID();
 }
 
-function now(): string {
-  return new Date().toISOString();
-}
-
 function daysAgo(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() - days);
@@ -55,10 +51,38 @@ async function seed() {
     const userLucia = uuid();
 
     const users = [
-      [userJuan, 'Juan Pérez', 'juan@example.com', passwordHash, 'customer', true],
-      [userMaria, 'María García', 'maria@example.com', passwordHash, 'customer', true],
-      [userCarlos, 'Carlos López', 'carlos@example.com', passwordHash, 'customer', true],
-      [userLucia, 'Lucía Torres', 'lucia@example.com', passwordHash, 'customer', false],
+      [
+        userJuan,
+        'Juan Pérez',
+        'juan@example.com',
+        passwordHash,
+        'customer',
+        true,
+      ],
+      [
+        userMaria,
+        'María García',
+        'maria@example.com',
+        passwordHash,
+        'customer',
+        true,
+      ],
+      [
+        userCarlos,
+        'Carlos López',
+        'carlos@example.com',
+        passwordHash,
+        'customer',
+        true,
+      ],
+      [
+        userLucia,
+        'Lucía Torres',
+        'lucia@example.com',
+        passwordHash,
+        'customer',
+        false,
+      ],
     ];
 
     for (const u of users) {
@@ -83,14 +107,70 @@ async function seed() {
     const catWomen = uuid();
 
     const categories = [
-      [catElectronics, 'Electrónica', 'electronica', 'Dispositivos y gadgets electrónicos', null, true, 0],
+      [
+        catElectronics,
+        'Electrónica',
+        'electronica',
+        'Dispositivos y gadgets electrónicos',
+        null,
+        true,
+        0,
+      ],
       [catClothing, 'Ropa', 'ropa', 'Moda y vestimenta', null, true, 1],
-      [catHome, 'Hogar', 'hogar', 'Artículos para el hogar y decoración', null, true, 2],
-      [catSports, 'Deportes', 'deportes', 'Artículos deportivos y fitness', null, true, 3],
-      [catPhones, 'Celulares', 'celulares', 'Smartphones y accesorios', catElectronics, true, 0],
-      [catLaptops, 'Laptops', 'laptops', 'Computadoras portátiles', catElectronics, true, 1],
-      [catMen, 'Hombre', 'ropa-hombre', 'Ropa para hombre', catClothing, true, 0],
-      [catWomen, 'Mujer', 'ropa-mujer', 'Ropa para mujer', catClothing, true, 1],
+      [
+        catHome,
+        'Hogar',
+        'hogar',
+        'Artículos para el hogar y decoración',
+        null,
+        true,
+        2,
+      ],
+      [
+        catSports,
+        'Deportes',
+        'deportes',
+        'Artículos deportivos y fitness',
+        null,
+        true,
+        3,
+      ],
+      [
+        catPhones,
+        'Celulares',
+        'celulares',
+        'Smartphones y accesorios',
+        catElectronics,
+        true,
+        0,
+      ],
+      [
+        catLaptops,
+        'Laptops',
+        'laptops',
+        'Computadoras portátiles',
+        catElectronics,
+        true,
+        1,
+      ],
+      [
+        catMen,
+        'Hombre',
+        'ropa-hombre',
+        'Ropa para hombre',
+        catClothing,
+        true,
+        0,
+      ],
+      [
+        catWomen,
+        'Mujer',
+        'ropa-mujer',
+        'Ropa para mujer',
+        catClothing,
+        true,
+        1,
+      ],
     ];
 
     for (const c of categories) {
@@ -117,16 +197,136 @@ async function seed() {
     const prod10 = uuid();
 
     const products = [
-      [prod1, 'iPhone 15 Pro', 'iphone-15-pro', 'Apple iPhone 15 Pro 256GB', 459900, 499900, 'IPH-15PRO', 25, '["https://placehold.co/600x600?text=iPhone+15+Pro"]', catPhones, true],
-      [prod2, 'Samsung Galaxy S24', 'samsung-galaxy-s24', 'Samsung Galaxy S24 128GB', 349900, 389900, 'SAM-S24', 40, '["https://placehold.co/600x600?text=Galaxy+S24"]', catPhones, true],
-      [prod3, 'MacBook Air M3', 'macbook-air-m3', 'Apple MacBook Air M3 15" 16GB RAM', 629900, null, 'MBA-M3-15', 15, '["https://placehold.co/600x600?text=MacBook+Air"]', catLaptops, true],
-      [prod4, 'Lenovo ThinkPad X1', 'lenovo-thinkpad-x1', 'Lenovo ThinkPad X1 Carbon Gen 11', 539900, 579900, 'LEN-X1C11', 10, '["https://placehold.co/600x600?text=ThinkPad+X1"]', catLaptops, true],
-      [prod5, 'Polo Ralph Lauren', 'polo-ralph-lauren', 'Polo clásico slim fit algodón piqué', 34900, 44900, 'PRL-POLO-M', 60, '["https://placehold.co/600x600?text=Polo+RL"]', catMen, true],
-      [prod6, 'Vestido Floral Zara', 'vestido-floral-zara', 'Vestido midi estampado floral', 24900, null, 'ZAR-VF-001', 35, '["https://placehold.co/600x600?text=Vestido+Floral"]', catWomen, true],
-      [prod7, 'Set Sábanas 600 Hilos', 'set-sabanas-600-hilos', 'Juego de sábanas 100% algodón egipcio', 18900, 24900, 'SAB-600-Q', 50, '["https://placehold.co/600x600?text=Sábanas+600"]', catHome, true],
-      [prod8, 'Lámpara LED Moderna', 'lampara-led-moderna', 'Lámpara de pie LED regulable 3 temperaturas', 12900, null, 'LAMP-LED-01', 80, '["https://placehold.co/600x600?text=Lámpara+LED"]', catHome, true],
-      [prod9, 'Zapatillas Nike Air Max', 'zapatillas-nike-air-max', 'Nike Air Max 90 Essential', 54900, 64900, 'NIK-AM90', 30, '["https://placehold.co/600x600?text=Nike+Air+Max"]', catSports, true],
-      [prod10, 'Mancuernas Ajustables', 'mancuernas-ajustables', 'Set mancuernas ajustables 5-25kg', 29900, null, 'MAN-ADJ-25', 20, '["https://placehold.co/600x600?text=Mancuernas"]', catSports, true],
+      [
+        prod1,
+        'iPhone 15 Pro',
+        'iphone-15-pro',
+        'Apple iPhone 15 Pro 256GB',
+        459900,
+        499900,
+        'IPH-15PRO',
+        25,
+        '["https://placehold.co/600x600?text=iPhone+15+Pro"]',
+        catPhones,
+        true,
+      ],
+      [
+        prod2,
+        'Samsung Galaxy S24',
+        'samsung-galaxy-s24',
+        'Samsung Galaxy S24 128GB',
+        349900,
+        389900,
+        'SAM-S24',
+        40,
+        '["https://placehold.co/600x600?text=Galaxy+S24"]',
+        catPhones,
+        true,
+      ],
+      [
+        prod3,
+        'MacBook Air M3',
+        'macbook-air-m3',
+        'Apple MacBook Air M3 15" 16GB RAM',
+        629900,
+        null,
+        'MBA-M3-15',
+        15,
+        '["https://placehold.co/600x600?text=MacBook+Air"]',
+        catLaptops,
+        true,
+      ],
+      [
+        prod4,
+        'Lenovo ThinkPad X1',
+        'lenovo-thinkpad-x1',
+        'Lenovo ThinkPad X1 Carbon Gen 11',
+        539900,
+        579900,
+        'LEN-X1C11',
+        10,
+        '["https://placehold.co/600x600?text=ThinkPad+X1"]',
+        catLaptops,
+        true,
+      ],
+      [
+        prod5,
+        'Polo Ralph Lauren',
+        'polo-ralph-lauren',
+        'Polo clásico slim fit algodón piqué',
+        34900,
+        44900,
+        'PRL-POLO-M',
+        60,
+        '["https://placehold.co/600x600?text=Polo+RL"]',
+        catMen,
+        true,
+      ],
+      [
+        prod6,
+        'Vestido Floral Zara',
+        'vestido-floral-zara',
+        'Vestido midi estampado floral',
+        24900,
+        null,
+        'ZAR-VF-001',
+        35,
+        '["https://placehold.co/600x600?text=Vestido+Floral"]',
+        catWomen,
+        true,
+      ],
+      [
+        prod7,
+        'Set Sábanas 600 Hilos',
+        'set-sabanas-600-hilos',
+        'Juego de sábanas 100% algodón egipcio',
+        18900,
+        24900,
+        'SAB-600-Q',
+        50,
+        '["https://placehold.co/600x600?text=Sábanas+600"]',
+        catHome,
+        true,
+      ],
+      [
+        prod8,
+        'Lámpara LED Moderna',
+        'lampara-led-moderna',
+        'Lámpara de pie LED regulable 3 temperaturas',
+        12900,
+        null,
+        'LAMP-LED-01',
+        80,
+        '["https://placehold.co/600x600?text=Lámpara+LED"]',
+        catHome,
+        true,
+      ],
+      [
+        prod9,
+        'Zapatillas Nike Air Max',
+        'zapatillas-nike-air-max',
+        'Nike Air Max 90 Essential',
+        54900,
+        64900,
+        'NIK-AM90',
+        30,
+        '["https://placehold.co/600x600?text=Nike+Air+Max"]',
+        catSports,
+        true,
+      ],
+      [
+        prod10,
+        'Mancuernas Ajustables',
+        'mancuernas-ajustables',
+        'Set mancuernas ajustables 5-25kg',
+        29900,
+        null,
+        'MAN-ADJ-25',
+        20,
+        '["https://placehold.co/600x600?text=Mancuernas"]',
+        catSports,
+        true,
+      ],
     ];
 
     for (const p of products) {
@@ -142,10 +342,50 @@ async function seed() {
     // Banners
     // ──────────────────────────────────────
     const banners = [
-      [uuid(), 'Ofertas de Temporada', 'https://placehold.co/1200x400?text=Ofertas+Temporada', '/productos?sort=price', 'hero', true, 0, daysAgo(5), daysFromNow(30)],
-      [uuid(), 'Nuevos Celulares', 'https://placehold.co/1200x400?text=Nuevos+Celulares', '/categorias/celulares', 'hero', true, 1, daysAgo(2), daysFromNow(60)],
-      [uuid(), 'Envío Gratis +S/199', 'https://placehold.co/600x200?text=Envío+Gratis', null, 'secondary', true, 0, null, null],
-      [uuid(), 'Métodos de Pago', 'https://placehold.co/600x100?text=Métodos+de+Pago', null, 'footer', true, 0, null, null],
+      [
+        uuid(),
+        'Ofertas de Temporada',
+        'https://placehold.co/1200x400?text=Ofertas+Temporada',
+        '/productos?sort=price',
+        'hero',
+        true,
+        0,
+        daysAgo(5),
+        daysFromNow(30),
+      ],
+      [
+        uuid(),
+        'Nuevos Celulares',
+        'https://placehold.co/1200x400?text=Nuevos+Celulares',
+        '/categorias/celulares',
+        'hero',
+        true,
+        1,
+        daysAgo(2),
+        daysFromNow(60),
+      ],
+      [
+        uuid(),
+        'Envío Gratis +S/199',
+        'https://placehold.co/600x200?text=Envío+Gratis',
+        null,
+        'secondary',
+        true,
+        0,
+        null,
+        null,
+      ],
+      [
+        uuid(),
+        'Métodos de Pago',
+        'https://placehold.co/600x100?text=Métodos+de+Pago',
+        null,
+        'footer',
+        true,
+        0,
+        null,
+        null,
+      ],
     ];
 
     for (const b of banners) {
@@ -165,9 +405,48 @@ async function seed() {
     const coupon3 = uuid();
 
     const coupons = [
-      [coupon1, 'BIENVENIDO10', 'percentage', 10, null, 5000, 100, 1, 0, true, daysAgo(10), daysFromNow(90)],
-      [coupon2, 'DESCUENTO50', 'fixed_amount', 5000, 15000, null, 50, 2, 0, true, daysAgo(5), daysFromNow(60)],
-      [coupon3, 'VERANO2026', 'percentage', 15, 20000, 10000, 200, 1, 0, true, daysAgo(1), daysFromNow(45)],
+      [
+        coupon1,
+        'BIENVENIDO10',
+        'percentage',
+        10,
+        null,
+        5000,
+        100,
+        1,
+        0,
+        true,
+        daysAgo(10),
+        daysFromNow(90),
+      ],
+      [
+        coupon2,
+        'DESCUENTO50',
+        'fixed_amount',
+        5000,
+        15000,
+        null,
+        50,
+        2,
+        0,
+        true,
+        daysAgo(5),
+        daysFromNow(60),
+      ],
+      [
+        coupon3,
+        'VERANO2026',
+        'percentage',
+        15,
+        20000,
+        10000,
+        200,
+        1,
+        0,
+        true,
+        daysAgo(1),
+        daysFromNow(45),
+      ],
     ];
 
     for (const c of coupons) {
@@ -186,10 +465,62 @@ async function seed() {
     const addr2 = uuid();
 
     const addresses = [
-      [addr1, userJuan, 'Casa', 'Juan Pérez', '987654321', 'Av. Javier Prado 1234', 'San Isidro', 'Lima', 'Lima', '15036', 'Frente al parque', true],
-      [uuid(), userJuan, 'Oficina', 'Juan Pérez', '987654321', 'Calle Las Begonias 456', 'San Isidro', 'Lima', 'Lima', '15036', 'Piso 12', false],
-      [addr2, userMaria, 'Mi casa', 'María García', '912345678', 'Jr. de la Unión 789', 'Cercado de Lima', 'Lima', 'Lima', '15001', null, true],
-      [uuid(), userCarlos, 'Departamento', 'Carlos López', '956781234', 'Av. Larco 321', 'Miraflores', 'Lima', 'Lima', '15074', 'Dpto 502', true],
+      [
+        addr1,
+        userJuan,
+        'Casa',
+        'Juan Pérez',
+        '987654321',
+        'Av. Javier Prado 1234',
+        'San Isidro',
+        'Lima',
+        'Lima',
+        '15036',
+        'Frente al parque',
+        true,
+      ],
+      [
+        uuid(),
+        userJuan,
+        'Oficina',
+        'Juan Pérez',
+        '987654321',
+        'Calle Las Begonias 456',
+        'San Isidro',
+        'Lima',
+        'Lima',
+        '15036',
+        'Piso 12',
+        false,
+      ],
+      [
+        addr2,
+        userMaria,
+        'Mi casa',
+        'María García',
+        '912345678',
+        'Jr. de la Unión 789',
+        'Cercado de Lima',
+        'Lima',
+        'Lima',
+        '15001',
+        null,
+        true,
+      ],
+      [
+        uuid(),
+        userCarlos,
+        'Departamento',
+        'Carlos López',
+        '956781234',
+        'Av. Larco 321',
+        'Miraflores',
+        'Lima',
+        'Lima',
+        '15074',
+        'Dpto 502',
+        true,
+      ],
     ];
 
     for (const a of addresses) {
@@ -211,7 +542,22 @@ async function seed() {
     await qr.query(
       `INSERT INTO orders (id, order_number, user_id, status, subtotal, discount, shipping_cost, total, coupon_id, coupon_code, coupon_discount, shipping_address_snapshot, customer_name, customer_email, customer_phone, created_at, updated_at)
        VALUES ($1,$2,$3,'delivered', 494800, 0, 1500, 496300, NULL, NULL, NULL, $4, $5, $6, $7, $8, $9)`,
-      [order1, orderNum1, userJuan, JSON.stringify({ street: 'Av. Javier Prado 1234', city: 'Lima', department: 'Lima', recipientName: 'Juan Pérez' }), 'Juan Pérez', 'juan@example.com', '987654321', daysAgo(15), daysAgo(10)],
+      [
+        order1,
+        orderNum1,
+        userJuan,
+        JSON.stringify({
+          street: 'Av. Javier Prado 1234',
+          city: 'Lima',
+          department: 'Lima',
+          recipientName: 'Juan Pérez',
+        }),
+        'Juan Pérez',
+        'juan@example.com',
+        '987654321',
+        daysAgo(15),
+        daysAgo(10),
+      ],
     );
 
     const oi1a = uuid();
@@ -219,12 +565,34 @@ async function seed() {
     await qr.query(
       `INSERT INTO order_items (id, order_id, product_id, product_name, product_slug, product_image, unit_price, quantity, subtotal, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9, $10, $10)`,
-      [oi1a, order1, prod1, 'iPhone 15 Pro', 'iphone-15-pro', 'https://placehold.co/600x600?text=iPhone+15+Pro', 459900, 1, 459900, daysAgo(15)],
+      [
+        oi1a,
+        order1,
+        prod1,
+        'iPhone 15 Pro',
+        'iphone-15-pro',
+        'https://placehold.co/600x600?text=iPhone+15+Pro',
+        459900,
+        1,
+        459900,
+        daysAgo(15),
+      ],
     );
     await qr.query(
       `INSERT INTO order_items (id, order_id, product_id, product_name, product_slug, product_image, unit_price, quantity, subtotal, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9, $10, $10)`,
-      [oi1b, order1, prod5, 'Polo Ralph Lauren', 'polo-ralph-lauren', 'https://placehold.co/600x600?text=Polo+RL', 34900, 1, 34900, daysAgo(15)],
+      [
+        oi1b,
+        order1,
+        prod5,
+        'Polo Ralph Lauren',
+        'polo-ralph-lauren',
+        'https://placehold.co/600x600?text=Polo+RL',
+        34900,
+        1,
+        34900,
+        daysAgo(15),
+      ],
     );
 
     // Order 1 events
@@ -246,14 +614,31 @@ async function seed() {
     await qr.query(
       `INSERT INTO payments (id, order_id, external_id, preference_id, method, status, amount, paid_at, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,'approved',$6,$7,$8,$8)`,
-      [uuid(), order1, 'MP-PAY-100001', 'MP-PREF-100001', 'credit_card', 496300, daysAgo(15), daysAgo(15)],
+      [
+        uuid(),
+        order1,
+        'MP-PAY-100001',
+        'MP-PREF-100001',
+        'credit_card',
+        496300,
+        daysAgo(15),
+        daysAgo(15),
+      ],
     );
 
     // Order 1 shipment
     await qr.query(
       `INSERT INTO shipments (id, order_id, carrier, tracking_number, tracking_url, status, shipped_at, delivered_at, created_at, updated_at)
        VALUES ($1,$2,'olva',$3,$4,'delivered',$5,$6,$7,$7)`,
-      [uuid(), order1, 'OLV-2026-98765', 'https://tracking.olva.com.pe/OLV-2026-98765', daysAgo(12), daysAgo(10), daysAgo(12)],
+      [
+        uuid(),
+        order1,
+        'OLV-2026-98765',
+        'https://tracking.olva.com.pe/OLV-2026-98765',
+        daysAgo(12),
+        daysAgo(10),
+        daysAgo(12),
+      ],
     );
 
     // Order 2: María — paid (MacBook)
@@ -262,13 +647,38 @@ async function seed() {
     await qr.query(
       `INSERT INTO orders (id, order_number, user_id, status, subtotal, discount, shipping_cost, total, coupon_id, coupon_code, coupon_discount, shipping_address_snapshot, customer_name, customer_email, created_at, updated_at)
        VALUES ($1,$2,$3,'paid', 629900, 5000, 0, 624900, $4, 'DESCUENTO50', 5000, $5, $6, $7, $8, $8)`,
-      [order2, orderNum2, userMaria, coupon2, JSON.stringify({ street: 'Jr. de la Unión 789', city: 'Lima', department: 'Lima', recipientName: 'María García' }), 'María García', 'maria@example.com', daysAgo(4)],
+      [
+        order2,
+        orderNum2,
+        userMaria,
+        coupon2,
+        JSON.stringify({
+          street: 'Jr. de la Unión 789',
+          city: 'Lima',
+          department: 'Lima',
+          recipientName: 'María García',
+        }),
+        'María García',
+        'maria@example.com',
+        daysAgo(4),
+      ],
     );
 
     await qr.query(
       `INSERT INTO order_items (id, order_id, product_id, product_name, product_slug, product_image, unit_price, quantity, subtotal, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$10)`,
-      [uuid(), order2, prod3, 'MacBook Air M3', 'macbook-air-m3', 'https://placehold.co/600x600?text=MacBook+Air', 629900, 1, 629900, daysAgo(4)],
+      [
+        uuid(),
+        order2,
+        prod3,
+        'MacBook Air M3',
+        'macbook-air-m3',
+        'https://placehold.co/600x600?text=MacBook+Air',
+        629900,
+        1,
+        629900,
+        daysAgo(4),
+      ],
     );
 
     for (const [status, desc, ago] of [
@@ -285,11 +695,23 @@ async function seed() {
     await qr.query(
       `INSERT INTO payments (id, order_id, external_id, preference_id, method, status, amount, paid_at, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,'approved',$6,$7,$8,$8)`,
-      [uuid(), order2, 'MP-PAY-100002', 'MP-PREF-100002', 'debit_card', 624900, daysAgo(4), daysAgo(4)],
+      [
+        uuid(),
+        order2,
+        'MP-PAY-100002',
+        'MP-PREF-100002',
+        'debit_card',
+        624900,
+        daysAgo(4),
+        daysAgo(4),
+      ],
     );
 
     // Increment coupon usage
-    await qr.query(`UPDATE coupons SET current_uses = current_uses + 1 WHERE id = $1`, [coupon2]);
+    await qr.query(
+      `UPDATE coupons SET current_uses = current_uses + 1 WHERE id = $1`,
+      [coupon2],
+    );
 
     // Order 3: Carlos — pending (Nike + Mancuernas)
     const order3 = uuid();
@@ -297,18 +719,54 @@ async function seed() {
     await qr.query(
       `INSERT INTO orders (id, order_number, user_id, status, subtotal, discount, shipping_cost, total, shipping_address_snapshot, customer_name, customer_email, customer_phone, created_at, updated_at)
        VALUES ($1,$2,$3,'pending', 84800, 0, 1500, 86300, $4, $5, $6, $7, $8, $8)`,
-      [order3, orderNum3, userCarlos, JSON.stringify({ street: 'Av. Larco 321', city: 'Lima', department: 'Lima', recipientName: 'Carlos López' }), 'Carlos López', 'carlos@example.com', '956781234', daysAgo(0)],
+      [
+        order3,
+        orderNum3,
+        userCarlos,
+        JSON.stringify({
+          street: 'Av. Larco 321',
+          city: 'Lima',
+          department: 'Lima',
+          recipientName: 'Carlos López',
+        }),
+        'Carlos López',
+        'carlos@example.com',
+        '956781234',
+        daysAgo(0),
+      ],
     );
 
     await qr.query(
       `INSERT INTO order_items (id, order_id, product_id, product_name, product_slug, product_image, unit_price, quantity, subtotal, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$10)`,
-      [uuid(), order3, prod9, 'Zapatillas Nike Air Max', 'zapatillas-nike-air-max', 'https://placehold.co/600x600?text=Nike+Air+Max', 54900, 1, 54900, daysAgo(0)],
+      [
+        uuid(),
+        order3,
+        prod9,
+        'Zapatillas Nike Air Max',
+        'zapatillas-nike-air-max',
+        'https://placehold.co/600x600?text=Nike+Air+Max',
+        54900,
+        1,
+        54900,
+        daysAgo(0),
+      ],
     );
     await qr.query(
       `INSERT INTO order_items (id, order_id, product_id, product_name, product_slug, product_image, unit_price, quantity, subtotal, created_at, updated_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$10)`,
-      [uuid(), order3, prod10, 'Mancuernas Ajustables', 'mancuernas-ajustables', 'https://placehold.co/600x600?text=Mancuernas', 29900, 1, 29900, daysAgo(0)],
+      [
+        uuid(),
+        order3,
+        prod10,
+        'Mancuernas Ajustables',
+        'mancuernas-ajustables',
+        'https://placehold.co/600x600?text=Mancuernas',
+        29900,
+        1,
+        29900,
+        daysAgo(0),
+      ],
     );
 
     await qr.query(
@@ -418,4 +876,4 @@ async function seed() {
   }
 }
 
-seed();
+void seed();

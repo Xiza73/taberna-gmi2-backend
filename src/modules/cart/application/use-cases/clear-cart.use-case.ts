@@ -3,7 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DomainException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { CART_REPOSITORY, type ICartRepository } from '../../domain/interfaces/cart-repository.interface.js';
+import {
+  CART_REPOSITORY,
+  type ICartRepository,
+} from '../../domain/interfaces/cart-repository.interface.js';
 
 @Injectable()
 export class ClearCartUseCase {

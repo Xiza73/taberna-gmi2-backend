@@ -43,7 +43,7 @@ export class CartRepository implements ICartRepository {
       relations: ['product'],
       order: { createdAt: 'ASC' },
     });
-    return orms.map(CartItemMapper.toDomain);
+    return orms.map((orm) => CartItemMapper.toDomain(orm));
   }
 
   async findItemById(itemId: string): Promise<CartItem | null> {
@@ -51,7 +51,10 @@ export class CartRepository implements ICartRepository {
     return orm ? CartItemMapper.toDomain(orm) : null;
   }
 
-  async findItemByCartAndProduct(cartId: string, productId: string): Promise<CartItem | null> {
+  async findItemByCartAndProduct(
+    cartId: string,
+    productId: string,
+  ): Promise<CartItem | null> {
     const orm = await this.itemRepo.findOne({ where: { cartId, productId } });
     return orm ? CartItemMapper.toDomain(orm) : null;
   }

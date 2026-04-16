@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, JoinColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  JoinColumn,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { OrderStatus } from '../../domain/enums/order-status.enum.js';
 import { OrderOrmEntity } from './order.orm-entity.js';

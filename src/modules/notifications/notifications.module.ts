@@ -5,9 +5,7 @@ import { NodemailerEmailSender } from './infrastructure/services/nodemailer-emai
 
 @Global()
 @Module({
-  providers: [
-    { provide: EMAIL_SENDER, useClass: NodemailerEmailSender },
-  ],
+  providers: [{ provide: EMAIL_SENDER, useClass: NodemailerEmailSender }],
   exports: [EMAIL_SENDER],
 })
 export class NotificationsModule {}

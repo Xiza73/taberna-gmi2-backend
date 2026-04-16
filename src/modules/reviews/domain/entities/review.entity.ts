@@ -36,7 +36,11 @@ export class Review extends BaseEntity {
     rating: number;
     comment?: string | null;
   }): Review {
-    if (props.rating < 1 || props.rating > 5 || !Number.isInteger(props.rating)) {
+    if (
+      props.rating < 1 ||
+      props.rating > 5 ||
+      !Number.isInteger(props.rating)
+    ) {
       throw new DomainException('Rating must be an integer between 1 and 5');
     }
     return new Review(
@@ -76,12 +80,24 @@ export class Review extends BaseEntity {
     );
   }
 
-  get userId(): string { return this._userId; }
-  get productId(): string { return this._productId; }
-  get orderId(): string { return this._orderId; }
-  get rating(): number { return this._rating; }
-  get comment(): string | null { return this._comment; }
-  get isApproved(): boolean { return this._isApproved; }
+  get userId(): string {
+    return this._userId;
+  }
+  get productId(): string {
+    return this._productId;
+  }
+  get orderId(): string {
+    return this._orderId;
+  }
+  get rating(): number {
+    return this._rating;
+  }
+  get comment(): string | null {
+    return this._comment;
+  }
+  get isApproved(): boolean {
+    return this._isApproved;
+  }
 
   approve(): void {
     this._isApproved = true;

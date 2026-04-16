@@ -1,19 +1,30 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainConflictException, DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '../../domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '../../domain/interfaces/category-repository.interface.js';
 import { type UpdateCategoryDto } from '../dtos/update-category.dto.js';
 import { CategoryResponseDto } from '../dtos/category-response.dto.js';
 
 @Injectable()
 export class UpdateCategoryUseCase {
   constructor(
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
   ) {}
 
-  async execute(id: string, dto: UpdateCategoryDto): Promise<CategoryResponseDto> {
+  async execute(
+    id: string,
+    dto: UpdateCategoryDto,
+  ): Promise<CategoryResponseDto> {
     const category = await this.categoryRepository.findById(id);
     if (!category) {
       throw new DomainNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND);

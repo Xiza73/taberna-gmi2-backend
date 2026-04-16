@@ -28,7 +28,9 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const orm = await this.repo.findOne({ where: { email: email.toLowerCase() } });
+    const orm = await this.repo.findOne({
+      where: { email: email.toLowerCase() },
+    });
     return orm ? UserMapper.toDomain(orm) : null;
   }
 
@@ -67,7 +69,7 @@ export class UserRepository implements IUserRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(UserMapper.toDomain), total };
+    return { items: orms.map((orm) => UserMapper.toDomain(orm)), total };
   }
 
   withTransaction(ctx: TransactionContext): this {

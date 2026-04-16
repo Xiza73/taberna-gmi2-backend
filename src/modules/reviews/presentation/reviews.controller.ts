@@ -1,4 +1,14 @@
-import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
@@ -21,7 +31,11 @@ export class ReviewsController {
     @Param('id', ParseUUIDPipe) productId: string,
     @Body() dto: CreateReviewDto,
   ) {
-    const result = await this.createReviewUseCase.execute(userId, productId, dto);
+    const result = await this.createReviewUseCase.execute(
+      userId,
+      productId,
+      dto,
+    );
     return BaseResponse.ok(result);
   }
 
@@ -32,7 +46,11 @@ export class ReviewsController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    const result = await this.listProductReviewsUseCase.execute(productId, page, limit);
+    const result = await this.listProductReviewsUseCase.execute(
+      productId,
+      page,
+      limit,
+    );
     return BaseResponse.ok(result);
   }
 }

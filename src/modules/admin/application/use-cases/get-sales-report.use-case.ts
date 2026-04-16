@@ -9,7 +9,9 @@ export class GetSalesReportUseCase {
   constructor(private readonly dataSource: DataSource) {}
 
   async execute(dto: SalesReportQueryDto): Promise<SalesReportResponseDto> {
-    const rows = await this.dataSource.query<Array<{ date: string; orders: string; revenue: string }>>(
+    const rows = await this.dataSource.query<
+      Array<{ date: string; orders: string; revenue: string }>
+    >(
       `SELECT DATE(created_at) AS date, COUNT(*)::int AS orders, COALESCE(SUM(total), 0)::int AS revenue
        FROM orders
        WHERE created_at >= $1 AND created_at < ($2::date + INTERVAL '1 day')

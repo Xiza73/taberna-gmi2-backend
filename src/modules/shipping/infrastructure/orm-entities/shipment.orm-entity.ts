@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { Carrier } from '../../domain/enums/carrier.enum.js';
 import { ShipmentStatus } from '../../domain/enums/shipment-status.enum.js';
@@ -21,7 +28,11 @@ export class ShipmentOrmEntity {
   @Column({ type: 'varchar', name: 'tracking_url' })
   trackingUrl: string;
 
-  @Column({ type: 'enum', enum: ShipmentStatus, default: ShipmentStatus.SHIPPED })
+  @Column({
+    type: 'enum',
+    enum: ShipmentStatus,
+    default: ShipmentStatus.SHIPPED,
+  })
   status: ShipmentStatus;
 
   @Column({ type: 'timestamptz', name: 'shipped_at', nullable: true })

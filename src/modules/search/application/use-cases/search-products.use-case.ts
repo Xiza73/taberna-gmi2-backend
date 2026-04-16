@@ -1,8 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { PRODUCT_REPOSITORY, type IProductRepository } from '@modules/products/domain/interfaces/product-repository.interface.js';
+import {
+  PRODUCT_REPOSITORY,
+  type IProductRepository,
+} from '@modules/products/domain/interfaces/product-repository.interface.js';
 
-import { PRODUCT_SEARCH, type IProductSearchService, type ProductSearchResult } from '../../domain/interfaces/product-search.interface.js';
+import {
+  PRODUCT_SEARCH,
+  type IProductSearchService,
+  type ProductSearchResult,
+} from '../../domain/interfaces/product-search.interface.js';
 import { type SearchQueryDto } from '../dtos/search-query.dto.js';
 
 @Injectable()
@@ -10,11 +17,15 @@ export class SearchProductsUseCase {
   private readonly logger = new Logger(SearchProductsUseCase.name);
 
   constructor(
-    @Inject(PRODUCT_SEARCH) private readonly searchService: IProductSearchService,
-    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
+    @Inject(PRODUCT_SEARCH)
+    private readonly searchService: IProductSearchService,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
   ) {}
 
-  async execute(dto: SearchQueryDto): Promise<{ items: ProductSearchResult[]; total: number }> {
+  async execute(
+    dto: SearchQueryDto,
+  ): Promise<{ items: ProductSearchResult[]; total: number }> {
     try {
       return await this.searchService.search({
         query: dto.q,
@@ -26,12 +37,16 @@ export class SearchProductsUseCase {
         limit: dto.limit ?? 10,
       });
     } catch (error) {
-      this.logger.warn(`Elasticsearch unavailable, falling back to PostgreSQL: ${(error as Error).message}`);
+      this.logger.warn(
+        `Elasticsearch unavailable, falling back to PostgreSQL: ${(error as Error).message}`,
+      );
       return this.fallbackSearch(dto);
     }
   }
 
-  private async fallbackSearch(dto: SearchQueryDto): Promise<{ items: ProductSearchResult[]; total: number }> {
+  private async fallbackSearch(
+    dto: SearchQueryDto,
+  ): Promise<{ items: ProductSearchResult[]; total: number }> {
     const result = await this.productRepository.findAll({
       page: dto.page ?? 1,
       limit: dto.limit ?? 10,

@@ -7,12 +7,13 @@ import { GetShipmentUseCase } from '../application/use-cases/get-shipment.use-ca
 
 @Controller('orders')
 export class ShipmentsController {
-  constructor(
-    private readonly getShipmentUseCase: GetShipmentUseCase,
-  ) {}
+  constructor(private readonly getShipmentUseCase: GetShipmentUseCase) {}
 
   @Get(':id/shipment')
-  async get(@CurrentUser('id') userId: string, @Param('id', ParseUUIDPipe) orderId: string) {
+  async get(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) orderId: string,
+  ) {
     const result = await this.getShipmentUseCase.execute(userId, orderId);
     return BaseResponse.ok(result);
   }

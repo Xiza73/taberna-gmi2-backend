@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { CategoryOrmEntity } from '@modules/categories/infrastructure/orm-entities/category.orm-entity.js';
 
@@ -43,7 +52,13 @@ export class ProductOrmEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive: boolean;
 
-  @Column({ type: 'decimal', name: 'average_rating', precision: 3, scale: 2, nullable: true })
+  @Column({
+    type: 'decimal',
+    name: 'average_rating',
+    precision: 3,
+    scale: 2,
+    nullable: true,
+  })
   averageRating: number | null;
 
   @Column({ type: 'integer', name: 'total_reviews', default: 0 })

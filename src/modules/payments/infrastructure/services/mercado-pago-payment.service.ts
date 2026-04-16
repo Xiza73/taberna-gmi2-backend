@@ -4,7 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { DomainException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { type IPaymentProvider, type PaymentInfo } from '../../domain/interfaces/payment-provider.interface.js';
+import {
+  type IPaymentProvider,
+  type PaymentInfo,
+} from '../../domain/interfaces/payment-provider.interface.js';
 
 @Injectable()
 export class MercadoPagoPaymentService implements IPaymentProvider {
@@ -13,7 +16,10 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
   private readonly baseUrl = 'https://api.mercadopago.com';
 
   constructor(private readonly configService: ConfigService) {
-    this.accessToken = this.configService.get<string>('MERCADOPAGO_ACCESS_TOKEN', '');
+    this.accessToken = this.configService.get<string>(
+      'MERCADOPAGO_ACCESS_TOKEN',
+      '',
+    );
   }
 
   async createPreference(order: {
@@ -34,12 +40,24 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
         payer: { email: order.payerEmail },
         external_reference: order.id,
         back_urls: {
-          success: this.configService.get<string>('MERCADOPAGO_SUCCESS_URL', ''),
-          failure: this.configService.get<string>('MERCADOPAGO_FAILURE_URL', ''),
-          pending: this.configService.get<string>('MERCADOPAGO_PENDING_URL', ''),
+          success: this.configService.get<string>(
+            'MERCADOPAGO_SUCCESS_URL',
+            '',
+          ),
+          failure: this.configService.get<string>(
+            'MERCADOPAGO_FAILURE_URL',
+            '',
+          ),
+          pending: this.configService.get<string>(
+            'MERCADOPAGO_PENDING_URL',
+            '',
+          ),
         },
         auto_return: 'approved',
-        notification_url: this.configService.get<string>('MERCADOPAGO_WEBHOOK_URL', ''),
+        notification_url: this.configService.get<string>(
+          'MERCADOPAGO_WEBHOOK_URL',
+          '',
+        ),
       };
 
       const response = await fetch(`${this.baseUrl}/checkout/preferences`, {
@@ -57,7 +75,10 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
         throw new DomainException(ErrorMessages.PAYMENT_VERIFICATION_FAILED);
       }
 
-      const data = (await response.json()) as { id: string; init_point: string };
+      const data = (await response.json()) as {
+        id: string;
+        init_point: string;
+      };
       return { preferenceId: data.id, paymentUrl: data.init_point };
     } catch (error) {
       if (error instanceof DomainException) throw error;

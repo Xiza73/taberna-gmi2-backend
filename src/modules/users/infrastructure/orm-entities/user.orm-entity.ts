@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class UserOrmEntity {
@@ -23,13 +29,28 @@ export class UserOrmEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive: boolean;
 
-  @Column({ type: 'varchar', length: 255, name: 'reset_password_token', nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'reset_password_token',
+    nullable: true,
+  })
   resetPasswordToken: string | null;
 
-  @Column({ type: 'timestamptz', name: 'reset_password_expires', nullable: true })
+  @Column({
+    type: 'timestamptz',
+    name: 'reset_password_expires',
+    nullable: true,
+  })
   resetPasswordExpires: Date | null;
 
-  @Column({ type: 'varchar', length: 255, name: 'google_id', nullable: true, unique: true })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'google_id',
+    nullable: true,
+    unique: true,
+  })
   googleId: string | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })

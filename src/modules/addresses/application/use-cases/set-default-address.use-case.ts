@@ -1,14 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainForbiddenException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainForbiddenException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { ADDRESS_REPOSITORY, type IAddressRepository } from '../../domain/interfaces/address-repository.interface.js';
+import {
+  ADDRESS_REPOSITORY,
+  type IAddressRepository,
+} from '../../domain/interfaces/address-repository.interface.js';
 
 @Injectable()
 export class SetDefaultAddressUseCase {
   constructor(
-    @Inject(ADDRESS_REPOSITORY) private readonly addressRepository: IAddressRepository,
+    @Inject(ADDRESS_REPOSITORY)
+    private readonly addressRepository: IAddressRepository,
   ) {}
 
   async execute(userId: string, addressId: string): Promise<void> {

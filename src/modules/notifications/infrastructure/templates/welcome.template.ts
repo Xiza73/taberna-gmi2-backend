@@ -1,6 +1,9 @@
 import { escapeHtml } from './escape-html.js';
 
-export function welcomeTemplate(name: string): { subject: string; html: string } {
+export function welcomeTemplate(name: string): {
+  subject: string;
+  html: string;
+} {
   const safeName = escapeHtml(name);
   return {
     subject: '¡Bienvenido a nuestra tienda!',

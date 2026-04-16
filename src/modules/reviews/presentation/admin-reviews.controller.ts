@@ -1,4 +1,14 @@
-import { Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
@@ -21,7 +31,10 @@ export class AdminReviewsController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    const result = await this.adminListPendingReviewsUseCase.execute(page, limit);
+    const result = await this.adminListPendingReviewsUseCase.execute(
+      page,
+      limit,
+    );
     return BaseResponse.ok(result);
   }
 

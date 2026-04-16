@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { CouponType } from '../../domain/enums/coupon-type.enum.js';
 
@@ -26,7 +33,12 @@ export class CouponOrmEntity {
   @Column({ type: 'integer', name: 'max_uses', nullable: true })
   maxUses: number | null;
 
-  @Column({ type: 'integer', name: 'max_uses_per_user', nullable: true, default: 1 })
+  @Column({
+    type: 'integer',
+    name: 'max_uses_per_user',
+    nullable: true,
+    default: 1,
+  })
   maxUsesPerUser: number | null;
 
   @Column({ type: 'integer', name: 'current_uses', default: 0 })

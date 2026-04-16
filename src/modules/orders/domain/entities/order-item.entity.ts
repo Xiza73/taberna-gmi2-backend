@@ -86,12 +86,28 @@ export class OrderItem extends BaseEntity {
     );
   }
 
-  get orderId(): string { return this._orderId; }
-  get productId(): string { return this._productId; }
-  get productName(): string { return this._productName; }
-  get productSlug(): string { return this._productSlug; }
-  get productImage(): string | null { return this._productImage; }
-  get unitPrice(): number { return this._unitPrice; }
-  get quantity(): number { return this._quantity; }
-  get subtotal(): number { return this._subtotal; }
+  get orderId(): string {
+    return this._orderId;
+  }
+  get productId(): string {
+    return this._productId;
+  }
+  get productName(): string {
+    return this._productName;
+  }
+  get productSlug(): string {
+    return this._productSlug;
+  }
+  get productImage(): string | null {
+    return this._productImage;
+  }
+  get unitPrice(): number {
+    return this._unitPrice;
+  }
+  get quantity(): number {
+    return this._quantity;
+  }
+  get subtotal(): number {
+    return this._subtotal;
+  }
 }

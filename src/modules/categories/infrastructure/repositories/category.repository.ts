@@ -37,7 +37,7 @@ export class CategoryRepository implements ICategoryRepository {
       where: { isActive: true },
       order: { sortOrder: 'ASC', name: 'ASC' },
     });
-    return orms.map(CategoryMapper.toDomain);
+    return orms.map((orm) => CategoryMapper.toDomain(orm));
   }
 
   async findAll(params: {
@@ -56,7 +56,7 @@ export class CategoryRepository implements ICategoryRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(CategoryMapper.toDomain), total };
+    return { items: orms.map((orm) => CategoryMapper.toDomain(orm)), total };
   }
 
   async delete(id: string): Promise<void> {
@@ -64,14 +64,14 @@ export class CategoryRepository implements ICategoryRepository {
   }
 
   async hasProducts(categoryId: string): Promise<boolean> {
-    const count = await this.repo.manager
+    const result: unknown = await this.repo.manager
       .createQueryBuilder()
       .select('1')
       .from('products', 'p')
       .where('p.category_id = :categoryId', { categoryId })
       .limit(1)
       .getRawOne();
-    return !!count;
+    return !!result;
   }
 
   async hasSubcategories(categoryId: string): Promise<boolean> {
@@ -80,7 +80,9 @@ export class CategoryRepository implements ICategoryRepository {
   }
 
   async slugExists(slug: string, excludeId?: string): Promise<boolean> {
-    const qb = this.repo.createQueryBuilder('c').where('c.slug = :slug', { slug });
+    const qb = this.repo
+      .createQueryBuilder('c')
+      .where('c.slug = :slug', { slug });
     if (excludeId) {
       qb.andWhere('c.id != :excludeId', { excludeId });
     }

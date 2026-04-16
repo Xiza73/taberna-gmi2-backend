@@ -1,20 +1,31 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
 import { OrderEvent } from '../../domain/entities/order-event.entity.js';
-import { ORDER_REPOSITORY, type IOrderRepository } from '../../domain/interfaces/order-repository.interface.js';
+import {
+  ORDER_REPOSITORY,
+  type IOrderRepository,
+} from '../../domain/interfaces/order-repository.interface.js';
 import { type UpdateOrderStatusDto } from '../dtos/update-order-status.dto.js';
 import { OrderResponseDto } from '../dtos/order-response.dto.js';
 
 @Injectable()
 export class UpdateOrderStatusUseCase {
   constructor(
-    @Inject(ORDER_REPOSITORY) private readonly orderRepository: IOrderRepository,
+    @Inject(ORDER_REPOSITORY)
+    private readonly orderRepository: IOrderRepository,
   ) {}
 
-  async execute(orderId: string, adminId: string, dto: UpdateOrderStatusDto): Promise<OrderResponseDto> {
+  async execute(
+    orderId: string,
+    adminId: string,
+    dto: UpdateOrderStatusDto,
+  ): Promise<OrderResponseDto> {
     const order = await this.orderRepository.findById(orderId);
     if (!order) {
       throw new DomainNotFoundException(ErrorMessages.ORDER_NOT_FOUND);
@@ -23,7 +34,11 @@ export class UpdateOrderStatusUseCase {
     const previousStatus = order.status;
     order.transitionTo(dto.status);
 
-    const transitioned = await this.orderRepository.atomicStatusTransition(orderId, previousStatus, dto.status);
+    const transitioned = await this.orderRepository.atomicStatusTransition(
+      orderId,
+      previousStatus,
+      dto.status,
+    );
     if (!transitioned) {
       throw new DomainConflictException(ErrorMessages.ORDER_STATUS_CONFLICT);
     }

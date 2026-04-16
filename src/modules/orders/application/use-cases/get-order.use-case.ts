@@ -1,15 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainForbiddenException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainForbiddenException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { ORDER_REPOSITORY, type IOrderRepository } from '../../domain/interfaces/order-repository.interface.js';
+import {
+  ORDER_REPOSITORY,
+  type IOrderRepository,
+} from '../../domain/interfaces/order-repository.interface.js';
 import { OrderResponseDto } from '../dtos/order-response.dto.js';
 
 @Injectable()
 export class GetOrderUseCase {
   constructor(
-    @Inject(ORDER_REPOSITORY) private readonly orderRepository: IOrderRepository,
+    @Inject(ORDER_REPOSITORY)
+    private readonly orderRepository: IOrderRepository,
   ) {}
 
   async execute(userId: string, orderId: string): Promise<OrderResponseDto> {

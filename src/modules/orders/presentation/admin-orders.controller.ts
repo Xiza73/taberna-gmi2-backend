@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Query,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
@@ -40,12 +48,19 @@ export class AdminOrdersController {
     @CurrentUser('id') adminId: string,
     @Body() dto: UpdateOrderStatusDto,
   ) {
-    const result = await this.updateOrderStatusUseCase.execute(id, adminId, dto);
+    const result = await this.updateOrderStatusUseCase.execute(
+      id,
+      adminId,
+      dto,
+    );
     return BaseResponse.ok(result);
   }
 
   @Patch(':id/notes')
-  async updateNotes(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateOrderNotesDto) {
+  async updateNotes(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateOrderNotesDto,
+  ) {
     const result = await this.updateOrderNotesUseCase.execute(id, dto);
     return BaseResponse.ok(result);
   }

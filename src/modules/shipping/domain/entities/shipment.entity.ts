@@ -89,14 +89,30 @@ export class Shipment extends BaseEntity {
     );
   }
 
-  get orderId(): string { return this._orderId; }
-  get carrier(): Carrier { return this._carrier; }
-  get trackingNumber(): string { return this._trackingNumber; }
-  get trackingUrl(): string { return this._trackingUrl; }
-  get status(): ShipmentStatus { return this._status; }
-  get shippedAt(): Date | null { return this._shippedAt; }
-  get deliveredAt(): Date | null { return this._deliveredAt; }
-  get notes(): string | null { return this._notes; }
+  get orderId(): string {
+    return this._orderId;
+  }
+  get carrier(): Carrier {
+    return this._carrier;
+  }
+  get trackingNumber(): string {
+    return this._trackingNumber;
+  }
+  get trackingUrl(): string {
+    return this._trackingUrl;
+  }
+  get status(): ShipmentStatus {
+    return this._status;
+  }
+  get shippedAt(): Date | null {
+    return this._shippedAt;
+  }
+  get deliveredAt(): Date | null {
+    return this._deliveredAt;
+  }
+  get notes(): string | null {
+    return this._notes;
+  }
 
   update(props: {
     carrier?: Carrier;
@@ -107,7 +123,8 @@ export class Shipment extends BaseEntity {
     notes?: string | null;
   }): void {
     if (props.carrier !== undefined) this._carrier = props.carrier;
-    if (props.trackingNumber !== undefined) this._trackingNumber = props.trackingNumber;
+    if (props.trackingNumber !== undefined)
+      this._trackingNumber = props.trackingNumber;
     if (props.trackingUrl !== undefined) this._trackingUrl = props.trackingUrl;
     if (props.status !== undefined) this._status = props.status;
     if (props.deliveredAt !== undefined) this._deliveredAt = props.deliveredAt;

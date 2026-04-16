@@ -4,7 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CouponOrmEntity } from './infrastructure/orm-entities/coupon.orm-entity.js';
 import { CouponRepository } from './infrastructure/repositories/coupon.repository.js';
 import { COUPON_REPOSITORY } from './domain/interfaces/coupon-repository.interface.js';
-import { CouponCalculator, COUPON_CALCULATOR } from './domain/services/coupon-calculator.js';
+import {
+  CouponCalculator,
+  COUPON_CALCULATOR,
+} from './domain/services/coupon-calculator.js';
 import { ValidateCouponUseCase } from './application/use-cases/validate-coupon.use-case.js';
 import { AdminListCouponsUseCase } from './application/use-cases/admin-list-coupons.use-case.js';
 import { AdminGetCouponUseCase } from './application/use-cases/admin-get-coupon.use-case.js';

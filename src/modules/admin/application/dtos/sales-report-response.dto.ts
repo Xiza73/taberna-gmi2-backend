@@ -38,7 +38,12 @@ export class TopProductDto {
   totalSold: number;
   totalRevenue: number;
 
-  constructor(data: { productId: string; productName: string; totalSold: number; totalRevenue: number }) {
+  constructor(data: {
+    productId: string;
+    productName: string;
+    totalSold: number;
+    totalRevenue: number;
+  }) {
     this.productId = data.productId;
     this.productName = data.productName;
     this.totalSold = data.totalSold;

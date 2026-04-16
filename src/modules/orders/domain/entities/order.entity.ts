@@ -6,7 +6,11 @@ import { OrderStatus } from '../enums/order-status.enum.js';
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.PAID, OrderStatus.CANCELLED],
-  [OrderStatus.PAID]: [OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.REFUNDED],
+  [OrderStatus.PAID]: [
+    OrderStatus.PROCESSING,
+    OrderStatus.SHIPPED,
+    OrderStatus.REFUNDED,
+  ],
   [OrderStatus.PROCESSING]: [OrderStatus.SHIPPED, OrderStatus.REFUNDED],
   [OrderStatus.SHIPPED]: [OrderStatus.DELIVERED],
   [OrderStatus.DELIVERED]: [],
@@ -155,22 +159,54 @@ export class Order extends BaseEntity {
     );
   }
 
-  get orderNumber(): string { return this._orderNumber; }
-  get userId(): string { return this._userId; }
-  get status(): OrderStatus { return this._status; }
-  get subtotal(): number { return this._subtotal; }
-  get discount(): number { return this._discount; }
-  get shippingCost(): number { return this._shippingCost; }
-  get total(): number { return this._total; }
-  get couponId(): string | null { return this._couponId; }
-  get couponCode(): string | null { return this._couponCode; }
-  get couponDiscount(): number | null { return this._couponDiscount; }
-  get shippingAddressSnapshot(): Record<string, unknown> { return this._shippingAddressSnapshot; }
-  get customerName(): string { return this._customerName; }
-  get customerEmail(): string { return this._customerEmail; }
-  get customerPhone(): string | null { return this._customerPhone; }
-  get notes(): string | null { return this._notes; }
-  get adminNotes(): string | null { return this._adminNotes; }
+  get orderNumber(): string {
+    return this._orderNumber;
+  }
+  get userId(): string {
+    return this._userId;
+  }
+  get status(): OrderStatus {
+    return this._status;
+  }
+  get subtotal(): number {
+    return this._subtotal;
+  }
+  get discount(): number {
+    return this._discount;
+  }
+  get shippingCost(): number {
+    return this._shippingCost;
+  }
+  get total(): number {
+    return this._total;
+  }
+  get couponId(): string | null {
+    return this._couponId;
+  }
+  get couponCode(): string | null {
+    return this._couponCode;
+  }
+  get couponDiscount(): number | null {
+    return this._couponDiscount;
+  }
+  get shippingAddressSnapshot(): Record<string, unknown> {
+    return this._shippingAddressSnapshot;
+  }
+  get customerName(): string {
+    return this._customerName;
+  }
+  get customerEmail(): string {
+    return this._customerEmail;
+  }
+  get customerPhone(): string | null {
+    return this._customerPhone;
+  }
+  get notes(): string | null {
+    return this._notes;
+  }
+  get adminNotes(): string | null {
+    return this._adminNotes;
+  }
 
   transitionTo(newStatus: OrderStatus): void {
     const allowed = VALID_TRANSITIONS[this._status];

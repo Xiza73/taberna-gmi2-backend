@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
@@ -38,26 +46,38 @@ export class OrdersController {
   }
 
   @Get(':id')
-  async get(@CurrentUser('id') userId: string, @Param('id', ParseUUIDPipe) id: string) {
+  async get(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     const result = await this.getOrderUseCase.execute(userId, id);
     return BaseResponse.ok(result);
   }
 
   @Post(':id/cancel')
-  async cancel(@CurrentUser('id') userId: string, @Param('id', ParseUUIDPipe) id: string) {
+  async cancel(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     await this.cancelOrderUseCase.execute(userId, id);
     return BaseResponse.ok(null, 'Order cancelled successfully');
   }
 
   @Post(':id/retry-payment')
-  async retryPayment(@CurrentUser('id') userId: string, @Param('id', ParseUUIDPipe) id: string) {
+  async retryPayment(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     const result = await this.retryPaymentUseCase.execute(userId, id);
     return BaseResponse.ok(result);
   }
 
   @Post(':id/verify-payment')
   @Throttle({ default: { ttl: 60000, limit: 5 } })
-  async verifyPayment(@CurrentUser('id') userId: string, @Param('id', ParseUUIDPipe) id: string) {
+  async verifyPayment(
+    @CurrentUser('id') userId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     const result = await this.verifyPaymentUseCase.execute(userId, id);
     return BaseResponse.ok(result);
   }

@@ -24,13 +24,19 @@ export class UsersController {
   }
 
   @Patch('profile')
-  async updateProfile(@CurrentUser('id') userId: string, @Body() dto: UpdateProfileDto) {
+  async updateProfile(
+    @CurrentUser('id') userId: string,
+    @Body() dto: UpdateProfileDto,
+  ) {
     const result = await this.updateProfileUseCase.execute(userId, dto);
     return BaseResponse.ok(result);
   }
 
   @Patch('change-password')
-  async changePassword(@CurrentUser('id') userId: string, @Body() dto: ChangePasswordDto) {
+  async changePassword(
+    @CurrentUser('id') userId: string,
+    @Body() dto: ChangePasswordDto,
+  ) {
     await this.changePasswordUseCase.execute(userId, dto);
     return BaseResponse.ok(null, 'Password changed successfully');
   }

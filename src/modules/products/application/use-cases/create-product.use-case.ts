@@ -1,21 +1,37 @@
 import { Inject, Injectable, Optional } from '@nestjs/common';
 
-import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '@modules/categories/domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '@modules/categories/domain/interfaces/category-repository.interface.js';
 
 import { Product } from '../../domain/entities/product.entity.js';
-import { PRODUCT_REPOSITORY, type IProductRepository } from '../../domain/interfaces/product-repository.interface.js';
-import { PRODUCT_SEARCH_SYNC, type IProductSearchSync } from '../../domain/interfaces/product-search-sync.interface.js';
+import {
+  PRODUCT_REPOSITORY,
+  type IProductRepository,
+} from '../../domain/interfaces/product-repository.interface.js';
+import {
+  PRODUCT_SEARCH_SYNC,
+  type IProductSearchSync,
+} from '../../domain/interfaces/product-search-sync.interface.js';
 import { type CreateProductDto } from '../dtos/create-product.dto.js';
 import { ProductResponseDto } from '../dtos/product-response.dto.js';
 
 @Injectable()
 export class CreateProductUseCase {
   constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
-    @Optional() @Inject(PRODUCT_SEARCH_SYNC) private readonly searchSync?: IProductSearchSync,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
+    @Optional()
+    @Inject(PRODUCT_SEARCH_SYNC)
+    private readonly searchSync?: IProductSearchSync,
   ) {}
 
   async execute(dto: CreateProductDto): Promise<ProductResponseDto> {

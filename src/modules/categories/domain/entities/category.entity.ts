@@ -76,12 +76,24 @@ export class Category extends BaseEntity {
     );
   }
 
-  get name(): string { return this._name; }
-  get slug(): string { return this._slug; }
-  get description(): string | null { return this._description; }
-  get parentId(): string | null { return this._parentId; }
-  get isActive(): boolean { return this._isActive; }
-  get sortOrder(): number { return this._sortOrder; }
+  get name(): string {
+    return this._name;
+  }
+  get slug(): string {
+    return this._slug;
+  }
+  get description(): string | null {
+    return this._description;
+  }
+  get parentId(): string | null {
+    return this._parentId;
+  }
+  get isActive(): boolean {
+    return this._isActive;
+  }
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
 
   update(props: {
     name?: string;

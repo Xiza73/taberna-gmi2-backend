@@ -49,7 +49,9 @@ export class ProductRepository implements IProductRepository {
     }
 
     if (params.categoryId) {
-      qb.andWhere('p.category_id = :categoryId', { categoryId: params.categoryId });
+      qb.andWhere('p.category_id = :categoryId', {
+        categoryId: params.categoryId,
+      });
     }
 
     if (params.minPrice !== undefined) {
@@ -89,7 +91,7 @@ export class ProductRepository implements IProductRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(ProductMapper.toDomain), total };
+    return { items: orms.map((orm) => ProductMapper.toDomain(orm)), total };
   }
 
   async delete(id: string): Promise<void> {
@@ -97,7 +99,9 @@ export class ProductRepository implements IProductRepository {
   }
 
   async slugExists(slug: string, excludeId?: string): Promise<boolean> {
-    const qb = this.repo.createQueryBuilder('p').where('p.slug = :slug', { slug });
+    const qb = this.repo
+      .createQueryBuilder('p')
+      .where('p.slug = :slug', { slug });
     if (excludeId) {
       qb.andWhere('p.id != :excludeId', { excludeId });
     }

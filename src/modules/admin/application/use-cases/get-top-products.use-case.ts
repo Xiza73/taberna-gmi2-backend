@@ -8,12 +8,14 @@ export class GetTopProductsUseCase {
   constructor(private readonly dataSource: DataSource) {}
 
   async execute(limit: number = 10): Promise<TopProductDto[]> {
-    const rows = await this.dataSource.query<Array<{
-      product_id: string;
-      product_name: string;
-      total_sold: string;
-      total_revenue: string;
-    }>>(
+    const rows = await this.dataSource.query<
+      Array<{
+        product_id: string;
+        product_name: string;
+        total_sold: string;
+        total_revenue: string;
+      }>
+    >(
       `SELECT oi.product_id, oi.product_name,
               SUM(oi.quantity)::int AS total_sold,
               SUM(oi.subtotal)::int AS total_revenue
@@ -26,11 +28,14 @@ export class GetTopProductsUseCase {
       [limit],
     );
 
-    return rows.map((r) => new TopProductDto({
-      productId: r.product_id,
-      productName: r.product_name,
-      totalSold: r.total_sold as unknown as number,
-      totalRevenue: r.total_revenue as unknown as number,
-    }));
+    return rows.map(
+      (r) =>
+        new TopProductDto({
+          productId: r.product_id,
+          productName: r.product_name,
+          totalSold: r.total_sold as unknown as number,
+          totalRevenue: r.total_revenue as unknown as number,
+        }),
+    );
   }
 }

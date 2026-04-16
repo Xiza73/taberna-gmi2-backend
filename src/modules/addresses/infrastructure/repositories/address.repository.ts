@@ -32,7 +32,7 @@ export class AddressRepository implements IAddressRepository {
       where: { userId },
       order: { isDefault: 'DESC', createdAt: 'ASC' },
     });
-    return orms.map(AddressMapper.toDomain);
+    return orms.map((orm) => AddressMapper.toDomain(orm));
   }
 
   async countByUserId(userId: string): Promise<number> {

@@ -3,14 +3,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { BANNER_REPOSITORY, type IBannerRepository } from '../../domain/interfaces/banner-repository.interface.js';
+import {
+  BANNER_REPOSITORY,
+  type IBannerRepository,
+} from '../../domain/interfaces/banner-repository.interface.js';
 import { type UpdateBannerDto } from '../dtos/update-banner.dto.js';
 import { BannerResponseDto } from '../dtos/banner-response.dto.js';
 
 @Injectable()
 export class UpdateBannerUseCase {
   constructor(
-    @Inject(BANNER_REPOSITORY) private readonly bannerRepository: IBannerRepository,
+    @Inject(BANNER_REPOSITORY)
+    private readonly bannerRepository: IBannerRepository,
   ) {}
 
   async execute(id: string, dto: UpdateBannerDto): Promise<BannerResponseDto> {
@@ -21,8 +25,18 @@ export class UpdateBannerUseCase {
 
     banner.update({
       ...dto,
-      startDate: dto.startDate !== undefined ? (dto.startDate ? new Date(dto.startDate) : null) : undefined,
-      endDate: dto.endDate !== undefined ? (dto.endDate ? new Date(dto.endDate) : null) : undefined,
+      startDate:
+        dto.startDate !== undefined
+          ? dto.startDate
+            ? new Date(dto.startDate)
+            : null
+          : undefined,
+      endDate:
+        dto.endDate !== undefined
+          ? dto.endDate
+            ? new Date(dto.endDate)
+            : null
+          : undefined,
     });
 
     const saved = await this.bannerRepository.save(banner);

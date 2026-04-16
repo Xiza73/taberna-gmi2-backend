@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 
-import { USER_REPOSITORY, type IUserRepository } from '../../domain/interfaces/user-repository.interface.js';
+import {
+  USER_REPOSITORY,
+  type IUserRepository,
+} from '../../domain/interfaces/user-repository.interface.js';
 import { type UpdateUserDto } from '../dtos/update-user.dto.js';
 import { UserResponseDto } from '../dtos/user-response.dto.js';
 

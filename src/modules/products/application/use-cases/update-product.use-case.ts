@@ -1,23 +1,42 @@
 import { Inject, Injectable, Optional } from '@nestjs/common';
 
-import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '@modules/categories/domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '@modules/categories/domain/interfaces/category-repository.interface.js';
 
-import { PRODUCT_REPOSITORY, type IProductRepository } from '../../domain/interfaces/product-repository.interface.js';
-import { PRODUCT_SEARCH_SYNC, type IProductSearchSync } from '../../domain/interfaces/product-search-sync.interface.js';
+import {
+  PRODUCT_REPOSITORY,
+  type IProductRepository,
+} from '../../domain/interfaces/product-repository.interface.js';
+import {
+  PRODUCT_SEARCH_SYNC,
+  type IProductSearchSync,
+} from '../../domain/interfaces/product-search-sync.interface.js';
 import { type UpdateProductDto } from '../dtos/update-product.dto.js';
 import { ProductResponseDto } from '../dtos/product-response.dto.js';
 
 @Injectable()
 export class UpdateProductUseCase {
   constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
-    @Optional() @Inject(PRODUCT_SEARCH_SYNC) private readonly searchSync?: IProductSearchSync,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
+    @Optional()
+    @Inject(PRODUCT_SEARCH_SYNC)
+    private readonly searchSync?: IProductSearchSync,
   ) {}
 
-  async execute(id: string, dto: UpdateProductDto): Promise<ProductResponseDto> {
+  async execute(
+    id: string,
+    dto: UpdateProductDto,
+  ): Promise<ProductResponseDto> {
     const product = await this.productRepository.findById(id);
     if (!product) {
       throw new DomainNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);

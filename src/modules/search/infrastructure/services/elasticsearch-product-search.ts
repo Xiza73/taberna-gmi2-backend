@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-import { type IProductSearchService, type ProductSearchResult } from '../../domain/interfaces/product-search.interface.js';
+import {
+  type IProductSearchService,
+  type ProductSearchResult,
+} from '../../domain/interfaces/product-search.interface.js';
 
 @Injectable()
 export class ElasticsearchProductSearch implements IProductSearchService {
@@ -86,7 +89,9 @@ export class ElasticsearchProductSearch implements IProductSearchService {
       });
 
       const hits = result.hits.hits;
-      const total = typeof result.hits.total === 'number' ? result.hits.total : (result.hits.total as { value: number }).value;
+      const hitsTotal = result.hits.total;
+      const total =
+        typeof hitsTotal === 'number' ? hitsTotal : (hitsTotal?.value ?? 0);
 
       const items: ProductSearchResult[] = hits.map((hit) => {
         const src = hit._source as Record<string, unknown>;
@@ -105,7 +110,9 @@ export class ElasticsearchProductSearch implements IProductSearchService {
 
       return { items, total };
     } catch (error) {
-      this.logger.error(`Elasticsearch search failed: ${(error as Error).message}`);
+      this.logger.error(
+        `Elasticsearch search failed: ${(error as Error).message}`,
+      );
       throw error;
     }
   }
@@ -121,7 +128,11 @@ export class ElasticsearchProductSearch implements IProductSearchService {
                 multi_match: {
                   query,
                   type: 'bool_prefix',
-                  fields: ['name.suggest', 'name.suggest._2gram', 'name.suggest._3gram'],
+                  fields: [
+                    'name.suggest',
+                    'name.suggest._2gram',
+                    'name.suggest._3gram',
+                  ],
                 },
               },
             ],
@@ -138,7 +149,9 @@ export class ElasticsearchProductSearch implements IProductSearchService {
       const hits = result.hits.hits;
       return hits.map((hit) => (hit._source as { name: string }).name);
     } catch (error) {
-      this.logger.error(`Elasticsearch suggest failed: ${(error as Error).message}`);
+      this.logger.error(
+        `Elasticsearch suggest failed: ${(error as Error).message}`,
+      );
       return [];
     }
   }

@@ -16,10 +16,7 @@ export class WishlistItem extends BaseEntity {
     this._productId = productId;
   }
 
-  static create(props: {
-    userId: string;
-    productId: string;
-  }): WishlistItem {
+  static create(props: { userId: string; productId: string }): WishlistItem {
     return new WishlistItem(
       undefined!,
       props.userId,
@@ -45,6 +42,10 @@ export class WishlistItem extends BaseEntity {
     );
   }
 
-  get userId(): string { return this._userId; }
-  get productId(): string { return this._productId; }
+  get userId(): string {
+    return this._userId;
+  }
+  get productId(): string {
+    return this._productId;
+  }
 }

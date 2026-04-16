@@ -367,35 +367,73 @@ export class InitialSchema1713100000000 implements MigrationInterface {
     // ═══════════════════════════════════════════════════════════════
 
     // products
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_price CHECK (price > 0)`);
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_stock CHECK (stock >= 0)`);
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_compare_price CHECK (compare_at_price IS NULL OR compare_at_price > price)`);
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_images CHECK (images IS NULL OR jsonb_typeof(images) = 'array')`);
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_avg_rating CHECK (average_rating >= 0 AND average_rating <= 5)`);
-    await queryRunner.query(`ALTER TABLE products ADD CONSTRAINT chk_products_total_reviews CHECK (total_reviews >= 0)`);
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_price CHECK (price > 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_stock CHECK (stock >= 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_compare_price CHECK (compare_at_price IS NULL OR compare_at_price > price)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_images CHECK (images IS NULL OR jsonb_typeof(images) = 'array')`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_avg_rating CHECK (average_rating >= 0 AND average_rating <= 5)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE products ADD CONSTRAINT chk_products_total_reviews CHECK (total_reviews >= 0)`,
+    );
 
     // order_items
-    await queryRunner.query(`ALTER TABLE order_items ADD CONSTRAINT chk_order_items_quantity CHECK (quantity > 0)`);
-    await queryRunner.query(`ALTER TABLE order_items ADD CONSTRAINT chk_order_items_unit_price CHECK (unit_price > 0)`);
+    await queryRunner.query(
+      `ALTER TABLE order_items ADD CONSTRAINT chk_order_items_quantity CHECK (quantity > 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE order_items ADD CONSTRAINT chk_order_items_unit_price CHECK (unit_price > 0)`,
+    );
 
     // cart_items
-    await queryRunner.query(`ALTER TABLE cart_items ADD CONSTRAINT chk_cart_items_quantity CHECK (quantity >= 1)`);
+    await queryRunner.query(
+      `ALTER TABLE cart_items ADD CONSTRAINT chk_cart_items_quantity CHECK (quantity >= 1)`,
+    );
 
     // coupons
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_value CHECK (value > 0)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_dates CHECK (start_date < end_date)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_current_uses CHECK (current_uses >= 0)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_min_purchase CHECK (min_purchase IS NULL OR min_purchase >= 0)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_max_discount CHECK (max_discount IS NULL OR max_discount > 0)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_max_uses CHECK (max_uses IS NULL OR max_uses > 0)`);
-    await queryRunner.query(`ALTER TABLE coupons ADD CONSTRAINT chk_coupons_percentage CHECK (type != 'percentage' OR (value >= 1 AND value <= 100))`);
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_value CHECK (value > 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_dates CHECK (start_date < end_date)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_current_uses CHECK (current_uses >= 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_min_purchase CHECK (min_purchase IS NULL OR min_purchase >= 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_max_discount CHECK (max_discount IS NULL OR max_discount > 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_max_uses CHECK (max_uses IS NULL OR max_uses > 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE coupons ADD CONSTRAINT chk_coupons_percentage CHECK (type != 'percentage' OR (value >= 1 AND value <= 100))`,
+    );
 
     // reviews
-    await queryRunner.query(`ALTER TABLE reviews ADD CONSTRAINT chk_reviews_rating CHECK (rating >= 1 AND rating <= 5)`);
+    await queryRunner.query(
+      `ALTER TABLE reviews ADD CONSTRAINT chk_reviews_rating CHECK (rating >= 1 AND rating <= 5)`,
+    );
 
     // orders
-    await queryRunner.query(`ALTER TABLE orders ADD CONSTRAINT chk_orders_totals CHECK (subtotal >= 0 AND total >= 0 AND discount >= 0)`);
-    await queryRunner.query(`ALTER TABLE orders ADD CONSTRAINT chk_orders_shipping_cost CHECK (shipping_cost >= 0)`);
+    await queryRunner.query(
+      `ALTER TABLE orders ADD CONSTRAINT chk_orders_totals CHECK (subtotal >= 0 AND total >= 0 AND discount >= 0)`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE orders ADD CONSTRAINT chk_orders_shipping_cost CHECK (shipping_cost >= 0)`,
+    );
     await queryRunner.query(`
       ALTER TABLE orders ADD CONSTRAINT chk_orders_shipping_address CHECK (
         shipping_address_snapshot ? 'street' AND shipping_address_snapshot ? 'city'
@@ -404,44 +442,92 @@ export class InitialSchema1713100000000 implements MigrationInterface {
     `);
 
     // payments
-    await queryRunner.query(`ALTER TABLE payments ADD CONSTRAINT chk_payments_amount CHECK (amount > 0)`);
+    await queryRunner.query(
+      `ALTER TABLE payments ADD CONSTRAINT chk_payments_amount CHECK (amount > 0)`,
+    );
 
     // banners
-    await queryRunner.query(`ALTER TABLE banners ADD CONSTRAINT chk_banners_dates CHECK (start_date IS NULL OR end_date IS NULL OR start_date < end_date)`);
+    await queryRunner.query(
+      `ALTER TABLE banners ADD CONSTRAINT chk_banners_dates CHECK (start_date IS NULL OR end_date IS NULL OR start_date < end_date)`,
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // FK INDEXES
     // ═══════════════════════════════════════════════════════════════
-    await queryRunner.query(`CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id)`);
-    await queryRunner.query(`CREATE INDEX idx_order_items_order_id ON order_items(order_id)`);
-    await queryRunner.query(`CREATE INDEX idx_order_events_order_id ON order_events(order_id)`);
-    await queryRunner.query(`CREATE INDEX idx_products_category_id ON products(category_id)`);
-    await queryRunner.query(`CREATE INDEX idx_orders_user_id ON orders(user_id)`);
-    await queryRunner.query(`CREATE INDEX idx_addresses_user_id ON addresses(user_id)`);
-    await queryRunner.query(`CREATE INDEX idx_payments_order_id ON payments(order_id)`);
-    await queryRunner.query(`CREATE INDEX idx_reviews_product_id ON reviews(product_id) WHERE is_approved = true`);
-    await queryRunner.query(`CREATE INDEX idx_reviews_user_id ON reviews(user_id)`);
-    await queryRunner.query(`CREATE INDEX idx_cart_items_product_id ON cart_items(product_id)`);
-    await queryRunner.query(`CREATE INDEX idx_order_items_product_id ON order_items(product_id)`);
-    await queryRunner.query(`CREATE INDEX idx_shipments_order_id ON shipments(order_id)`);
-    await queryRunner.query(`CREATE INDEX idx_wishlist_items_product_id ON wishlist_items(product_id)`);
-    await queryRunner.query(`CREATE INDEX idx_categories_parent_id ON categories(parent_id)`);
-    await queryRunner.query(`CREATE INDEX idx_reviews_order_id ON reviews(order_id)`);
-    await queryRunner.query(`CREATE INDEX idx_reviews_product_id_fk ON reviews(product_id)`);
+    await queryRunner.query(
+      `CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_order_items_order_id ON order_items(order_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_order_events_order_id ON order_events(order_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_products_category_id ON products(category_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_orders_user_id ON orders(user_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_addresses_user_id ON addresses(user_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_payments_order_id ON payments(order_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_reviews_product_id ON reviews(product_id) WHERE is_approved = true`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_reviews_user_id ON reviews(user_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_cart_items_product_id ON cart_items(product_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_order_items_product_id ON order_items(product_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_shipments_order_id ON shipments(order_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_wishlist_items_product_id ON wishlist_items(product_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_categories_parent_id ON categories(parent_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_reviews_order_id ON reviews(order_id)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_reviews_product_id_fk ON reviews(product_id)`,
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // BUSINESS INDEXES
     // ═══════════════════════════════════════════════════════════════
-    await queryRunner.query(`CREATE INDEX idx_orders_pending_created ON orders(created_at) WHERE status = 'pending'`);
-    await queryRunner.query(`CREATE INDEX idx_orders_user_coupon ON orders(user_id, coupon_id) WHERE coupon_id IS NOT NULL`);
-    await queryRunner.query(`CREATE INDEX idx_products_active_category ON products(is_active, category_id, price)`);
-    await queryRunner.query(`CREATE INDEX idx_banners_active ON banners(position, sort_order) WHERE is_active = true`);
-    await queryRunner.query(`CREATE INDEX idx_refresh_tokens_active ON refresh_tokens(user_id) WHERE is_revoked = false`);
+    await queryRunner.query(
+      `CREATE INDEX idx_orders_pending_created ON orders(created_at) WHERE status = 'pending'`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_orders_user_coupon ON orders(user_id, coupon_id) WHERE coupon_id IS NOT NULL`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_products_active_category ON products(is_active, category_id, price)`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_banners_active ON banners(position, sort_order) WHERE is_active = true`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_refresh_tokens_active ON refresh_tokens(user_id) WHERE is_revoked = false`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop tables in reverse dependency order
-    await queryRunner.query(`DROP TABLE IF EXISTS order_number_counters CASCADE`);
+    await queryRunner.query(
+      `DROP TABLE IF EXISTS order_number_counters CASCADE`,
+    );
     await queryRunner.query(`DROP TABLE IF EXISTS reviews CASCADE`);
     await queryRunner.query(`DROP TABLE IF EXISTS shipments CASCADE`);
     await queryRunner.query(`DROP TABLE IF EXISTS payments CASCADE`);

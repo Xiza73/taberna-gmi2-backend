@@ -5,7 +5,9 @@ export function orderDeliveredTemplate(props: {
   customerName: string;
   productNames: string[];
 }): { subject: string; html: string } {
-  const productsList = props.productNames.map((name) => `<li>${escapeHtml(name)}</li>`).join('');
+  const productsList = props.productNames
+    .map((name) => `<li>${escapeHtml(name)}</li>`)
+    .join('');
 
   return {
     subject: `Tu pedido ${props.orderNumber} ha sido entregado`,

@@ -34,7 +34,10 @@ export class NodemailerEmailSender implements IEmailSender {
         pass: this.configService.get<string>('SMTP_PASS', ''),
       },
     });
-    this.from = this.configService.get<string>('EMAIL_FROM', 'noreply@tienda.com');
+    this.from = this.configService.get<string>(
+      'EMAIL_FROM',
+      'noreply@tienda.com',
+    );
   }
 
   async sendWelcome(props: SendWelcomeProps): Promise<void> {
@@ -42,7 +45,9 @@ export class NodemailerEmailSender implements IEmailSender {
     await this.send(props.email, subject, html);
   }
 
-  async sendOrderConfirmation(props: SendOrderConfirmationProps): Promise<void> {
+  async sendOrderConfirmation(
+    props: SendOrderConfirmationProps,
+  ): Promise<void> {
     const { subject, html } = orderConfirmationTemplate({
       orderNumber: props.orderNumber,
       customerName: props.customerName,
@@ -92,8 +97,10 @@ export class NodemailerEmailSender implements IEmailSender {
     try {
       await this.transporter.sendMail({ from: this.from, to, subject, html });
       this.logger.log(`Email sent to ${to}: ${subject}`);
-    } catch (error) {
-      this.logger.error(`Failed to send email to ${to}: ${(error as Error).message}`);
+    } catch (error: unknown) {
+      this.logger.error(
+        `Failed to send email to ${to}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

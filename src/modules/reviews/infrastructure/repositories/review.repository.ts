@@ -31,29 +31,38 @@ export class ReviewRepository implements IReviewRepository {
     await this.repo.delete(id);
   }
 
-  async findByUserAndProduct(userId: string, productId: string): Promise<Review | null> {
+  async findByUserAndProduct(
+    userId: string,
+    productId: string,
+  ): Promise<Review | null> {
     const orm = await this.repo.findOne({ where: { userId, productId } });
     return orm ? ReviewMapper.toDomain(orm) : null;
   }
 
-  async findApprovedByProductId(productId: string, params: { page: number; limit: number }): Promise<{ items: Review[]; total: number }> {
+  async findApprovedByProductId(
+    productId: string,
+    params: { page: number; limit: number },
+  ): Promise<{ items: Review[]; total: number }> {
     const [orms, total] = await this.repo.findAndCount({
       where: { productId, isApproved: true },
       order: { createdAt: 'DESC' },
       skip: (params.page - 1) * params.limit,
       take: params.limit,
     });
-    return { items: orms.map(ReviewMapper.toDomain), total };
+    return { items: orms.map((orm) => ReviewMapper.toDomain(orm)), total };
   }
 
-  async findPending(params: { page: number; limit: number }): Promise<{ items: Review[]; total: number }> {
+  async findPending(params: {
+    page: number;
+    limit: number;
+  }): Promise<{ items: Review[]; total: number }> {
     const [orms, total] = await this.repo.findAndCount({
       where: { isApproved: false },
       order: { createdAt: 'ASC' },
       skip: (params.page - 1) * params.limit,
       take: params.limit,
     });
-    return { items: orms.map(ReviewMapper.toDomain), total };
+    return { items: orms.map((orm) => ReviewMapper.toDomain(orm)), total };
   }
 
   async countApprovedByProductId(productId: string): Promise<number> {
@@ -67,7 +76,9 @@ export class ReviewRepository implements IReviewRepository {
       .where('r.product_id = :productId', { productId })
       .andWhere('r.is_approved = true')
       .getRawOne<{ avg: string | null }>();
-    return result?.avg !== null && result?.avg !== undefined ? parseFloat(Number(result.avg).toFixed(2)) : null;
+    return result?.avg !== null && result?.avg !== undefined
+      ? parseFloat(Number(result.avg).toFixed(2))
+      : null;
   }
 
   withTransaction(ctx: TransactionContext): this {

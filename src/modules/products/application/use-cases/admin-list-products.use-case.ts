@@ -2,17 +2,23 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto.js';
 
-import { PRODUCT_REPOSITORY, type IProductRepository } from '../../domain/interfaces/product-repository.interface.js';
+import {
+  PRODUCT_REPOSITORY,
+  type IProductRepository,
+} from '../../domain/interfaces/product-repository.interface.js';
 import { type ProductQueryDto } from '../dtos/product-query.dto.js';
 import { ProductResponseDto } from '../dtos/product-response.dto.js';
 
 @Injectable()
 export class AdminListProductsUseCase {
   constructor(
-    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
   ) {}
 
-  async execute(query: ProductQueryDto): Promise<PaginatedResponseDto<ProductResponseDto>> {
+  async execute(
+    query: ProductQueryDto,
+  ): Promise<PaginatedResponseDto<ProductResponseDto>> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
 

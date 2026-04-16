@@ -1,4 +1,11 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Injectable, Logger } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { type Response } from 'express';
 
 import { BaseResponse } from '../../application/dtos/base-response.dto.js';
@@ -39,10 +46,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message = exception.message;
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
-      const exceptionResponse = exception.getResponse() as Record<string, unknown>;
+      const exceptionResponse = exception.getResponse() as Record<
+        string,
+        unknown
+      >;
       message = Array.isArray(exceptionResponse.message)
-        ? exceptionResponse.message as string[]
-        : (exceptionResponse.message as string) || (exceptionResponse as unknown as string);
+        ? (exceptionResponse.message as string[])
+        : (exceptionResponse.message as string) ||
+          (exceptionResponse as unknown as string);
     } else {
       status = 500;
       message = 'Internal server error';

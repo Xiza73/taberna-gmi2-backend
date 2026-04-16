@@ -1,8 +1,14 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-import { PRODUCT_REPOSITORY, type IProductRepository } from '@modules/products/domain/interfaces/product-repository.interface.js';
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '@modules/categories/domain/interfaces/category-repository.interface.js';
+import {
+  PRODUCT_REPOSITORY,
+  type IProductRepository,
+} from '@modules/products/domain/interfaces/product-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '@modules/categories/domain/interfaces/category-repository.interface.js';
 
 @Injectable()
 export class ReindexProductsUseCase {
@@ -11,8 +17,10 @@ export class ReindexProductsUseCase {
 
   constructor(
     private readonly elasticsearch: ElasticsearchService,
-    @Inject(PRODUCT_REPOSITORY) private readonly productRepository: IProductRepository,
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
   ) {}
 
   async execute(): Promise<{ indexed: number }> {
@@ -58,7 +66,11 @@ export class ReindexProductsUseCase {
     const batchSize = 100;
 
     while (true) {
-      const result = await this.productRepository.findAll({ page, limit: batchSize, includeInactive: false });
+      const result = await this.productRepository.findAll({
+        page,
+        limit: batchSize,
+        includeInactive: false,
+      });
       if (result.items.length === 0) break;
 
       const operations = result.items.flatMap((product) => [

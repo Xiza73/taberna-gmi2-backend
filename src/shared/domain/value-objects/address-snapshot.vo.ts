@@ -36,8 +36,15 @@ export class AddressSnapshot {
     city: string;
     department: string;
   }): AddressSnapshot {
-    if (!props.recipientName || !props.street || !props.city || !props.department) {
-      throw new DomainException('Address snapshot requires recipientName, street, city, and department');
+    if (
+      !props.recipientName ||
+      !props.street ||
+      !props.city ||
+      !props.department
+    ) {
+      throw new DomainException(
+        'Address snapshot requires recipientName, street, city, and department',
+      );
     }
     return new AddressSnapshot(
       props.recipientName,

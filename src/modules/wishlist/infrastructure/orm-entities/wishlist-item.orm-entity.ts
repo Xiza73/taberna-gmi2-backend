@@ -1,4 +1,14 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, Unique, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  Unique,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { UserOrmEntity } from '@modules/users/infrastructure/orm-entities/user.orm-entity.js';
 import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity.js';

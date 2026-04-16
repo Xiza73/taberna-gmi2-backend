@@ -1,16 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { COUPON_REPOSITORY, type ICouponRepository } from '../../domain/interfaces/coupon-repository.interface.js';
+import {
+  COUPON_REPOSITORY,
+  type ICouponRepository,
+} from '../../domain/interfaces/coupon-repository.interface.js';
 import { type UpdateCouponDto } from '../dtos/update-coupon.dto.js';
 import { CouponResponseDto } from '../dtos/coupon-response.dto.js';
 
 @Injectable()
 export class UpdateCouponUseCase {
   constructor(
-    @Inject(COUPON_REPOSITORY) private readonly couponRepository: ICouponRepository,
+    @Inject(COUPON_REPOSITORY)
+    private readonly couponRepository: ICouponRepository,
   ) {}
 
   async execute(id: string, dto: UpdateCouponDto): Promise<CouponResponseDto> {
@@ -22,7 +29,9 @@ export class UpdateCouponUseCase {
     if (dto.code !== undefined) {
       const codeExists = await this.couponRepository.codeExists(dto.code, id);
       if (codeExists) {
-        throw new DomainConflictException(ErrorMessages.COUPON_CODE_ALREADY_EXISTS);
+        throw new DomainConflictException(
+          ErrorMessages.COUPON_CODE_ALREADY_EXISTS,
+        );
       }
     }
 

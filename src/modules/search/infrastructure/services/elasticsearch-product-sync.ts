@@ -1,7 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '@modules/categories/domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '@modules/categories/domain/interfaces/category-repository.interface.js';
 
 import { type Product } from '@modules/products/domain/entities/product.entity.js';
 import { type IProductSearchSync } from '@modules/products/domain/interfaces/product-search-sync.interface.js';
@@ -13,12 +16,15 @@ export class ElasticsearchProductSync implements IProductSearchSync {
 
   constructor(
     private readonly elasticsearch: ElasticsearchService,
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
   ) {}
 
   async indexProduct(product: Product): Promise<void> {
     try {
-      const category = await this.categoryRepository.findById(product.categoryId);
+      const category = await this.categoryRepository.findById(
+        product.categoryId,
+      );
       await this.elasticsearch.index({
         index: this.index,
         id: product.id,
@@ -39,7 +45,9 @@ export class ElasticsearchProductSync implements IProductSearchSync {
         },
       });
     } catch (error) {
-      this.logger.error(`Failed to index product ${product.id}: ${(error as Error).message}`);
+      this.logger.error(
+        `Failed to index product ${product.id}: ${(error as Error).message}`,
+      );
     }
   }
 
@@ -47,7 +55,9 @@ export class ElasticsearchProductSync implements IProductSearchSync {
     try {
       await this.elasticsearch.delete({ index: this.index, id: productId });
     } catch (error) {
-      this.logger.error(`Failed to remove product ${productId} from index: ${(error as Error).message}`);
+      this.logger.error(
+        `Failed to remove product ${productId} from index: ${(error as Error).message}`,
+      );
     }
   }
 }

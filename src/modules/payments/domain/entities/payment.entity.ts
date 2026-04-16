@@ -85,14 +85,30 @@ export class Payment extends BaseEntity {
     );
   }
 
-  get orderId(): string { return this._orderId; }
-  get externalId(): string | null { return this._externalId; }
-  get preferenceId(): string | null { return this._preferenceId; }
-  get method(): string | null { return this._method; }
-  get status(): PaymentStatus { return this._status; }
-  get amount(): number { return this._amount; }
-  get paidAt(): Date | null { return this._paidAt; }
-  get rawResponse(): Record<string, unknown> | null { return this._rawResponse; }
+  get orderId(): string {
+    return this._orderId;
+  }
+  get externalId(): string | null {
+    return this._externalId;
+  }
+  get preferenceId(): string | null {
+    return this._preferenceId;
+  }
+  get method(): string | null {
+    return this._method;
+  }
+  get status(): PaymentStatus {
+    return this._status;
+  }
+  get amount(): number {
+    return this._amount;
+  }
+  get paidAt(): Date | null {
+    return this._paidAt;
+  }
+  get rawResponse(): Record<string, unknown> | null {
+    return this._rawResponse;
+  }
 
   updateFromProvider(props: {
     externalId?: string;

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { type IUnitOfWork, type TransactionContext } from '../domain/interfaces/unit-of-work.interface.js';
+import {
+  type IUnitOfWork,
+  type TransactionContext,
+} from '../domain/interfaces/unit-of-work.interface.js';
 
 @Injectable()
 export class TypeOrmUnitOfWork implements IUnitOfWork {

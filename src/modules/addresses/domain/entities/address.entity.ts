@@ -107,17 +107,39 @@ export class Address extends BaseEntity {
     );
   }
 
-  get userId(): string { return this._userId; }
-  get label(): string { return this._label; }
-  get recipientName(): string { return this._recipientName; }
-  get phone(): string { return this._phone; }
-  get street(): string { return this._street; }
-  get district(): string { return this._district; }
-  get city(): string { return this._city; }
-  get department(): string { return this._department; }
-  get zipCode(): string | null { return this._zipCode; }
-  get reference(): string | null { return this._reference; }
-  get isDefault(): boolean { return this._isDefault; }
+  get userId(): string {
+    return this._userId;
+  }
+  get label(): string {
+    return this._label;
+  }
+  get recipientName(): string {
+    return this._recipientName;
+  }
+  get phone(): string {
+    return this._phone;
+  }
+  get street(): string {
+    return this._street;
+  }
+  get district(): string {
+    return this._district;
+  }
+  get city(): string {
+    return this._city;
+  }
+  get department(): string {
+    return this._department;
+  }
+  get zipCode(): string | null {
+    return this._zipCode;
+  }
+  get reference(): string | null {
+    return this._reference;
+  }
+  get isDefault(): boolean {
+    return this._isDefault;
+  }
 
   update(props: {
     label?: string;
@@ -131,7 +153,8 @@ export class Address extends BaseEntity {
     reference?: string | null;
   }): void {
     if (props.label !== undefined) this._label = props.label;
-    if (props.recipientName !== undefined) this._recipientName = props.recipientName;
+    if (props.recipientName !== undefined)
+      this._recipientName = props.recipientName;
     if (props.phone !== undefined) this._phone = props.phone;
     if (props.street !== undefined) this._street = props.street;
     if (props.district !== undefined) this._district = props.district;

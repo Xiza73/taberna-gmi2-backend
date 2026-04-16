@@ -66,11 +66,14 @@ export class OrderResponseDto {
   events?: OrderEventResponseDto[];
   paymentUrl?: string | null;
 
-  constructor(order: Order, extras?: {
-    items?: OrderItem[];
-    events?: OrderEvent[];
-    paymentUrl?: string | null;
-  }) {
+  constructor(
+    order: Order,
+    extras?: {
+      items?: OrderItem[];
+      events?: OrderEvent[];
+      paymentUrl?: string | null;
+    },
+  ) {
     this.id = order.id;
     this.orderNumber = order.orderNumber;
     this.userId = order.userId;

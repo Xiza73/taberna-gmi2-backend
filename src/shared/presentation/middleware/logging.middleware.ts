@@ -32,9 +32,13 @@ export class LoggingMiddleware implements NestMiddleware {
       const now = new Date();
       const index = `ecommerce-logs-${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
 
-      this.elasticsearchService.index({ index, document: logEntry }).catch((err) => {
-        this.logger.warn(`Failed to index log entry: ${err.message}`);
-      });
+      this.elasticsearchService
+        .index({ index, document: logEntry })
+        .catch((err: unknown) => {
+          this.logger.warn(
+            `Failed to index log entry: ${err instanceof Error ? err.message : String(err)}`,
+          );
+        });
     });
 
     next();

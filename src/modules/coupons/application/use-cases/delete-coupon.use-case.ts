@@ -3,12 +3,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
-import { COUPON_REPOSITORY, type ICouponRepository } from '../../domain/interfaces/coupon-repository.interface.js';
+import {
+  COUPON_REPOSITORY,
+  type ICouponRepository,
+} from '../../domain/interfaces/coupon-repository.interface.js';
 
 @Injectable()
 export class DeleteCouponUseCase {
   constructor(
-    @Inject(COUPON_REPOSITORY) private readonly couponRepository: ICouponRepository,
+    @Inject(COUPON_REPOSITORY)
+    private readonly couponRepository: ICouponRepository,
   ) {}
 
   async execute(id: string): Promise<void> {

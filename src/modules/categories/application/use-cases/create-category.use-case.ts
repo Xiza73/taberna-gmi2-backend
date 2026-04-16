@@ -1,17 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainConflictException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainConflictException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 
 import { Category } from '../../domain/entities/category.entity.js';
-import { CATEGORY_REPOSITORY, type ICategoryRepository } from '../../domain/interfaces/category-repository.interface.js';
+import {
+  CATEGORY_REPOSITORY,
+  type ICategoryRepository,
+} from '../../domain/interfaces/category-repository.interface.js';
 import { type CreateCategoryDto } from '../dtos/create-category.dto.js';
 import { CategoryResponseDto } from '../dtos/category-response.dto.js';
 
 @Injectable()
 export class CreateCategoryUseCase {
   constructor(
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
   ) {}
 
   async execute(dto: CreateCategoryDto): Promise<CategoryResponseDto> {

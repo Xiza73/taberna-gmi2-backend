@@ -4,15 +4,22 @@ import { compare, hash } from 'bcryptjs';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainException } from '@shared/domain/exceptions/index.js';
 
-import { USER_REPOSITORY, type IUserRepository } from '../../../users/domain/interfaces/user-repository.interface.js';
-import { REFRESH_TOKEN_REPOSITORY, type IRefreshTokenRepository } from '../../domain/interfaces/refresh-token-repository.interface.js';
+import {
+  USER_REPOSITORY,
+  type IUserRepository,
+} from '../../../users/domain/interfaces/user-repository.interface.js';
+import {
+  REFRESH_TOKEN_REPOSITORY,
+  type IRefreshTokenRepository,
+} from '../../domain/interfaces/refresh-token-repository.interface.js';
 import { type ResetPasswordDto } from '../dtos/reset-password.dto.js';
 
 @Injectable()
 export class ResetPasswordUseCase {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
-    @Inject(REFRESH_TOKEN_REPOSITORY) private readonly refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(REFRESH_TOKEN_REPOSITORY)
+    private readonly refreshTokenRepository: IRefreshTokenRepository,
   ) {}
 
   async execute(dto: ResetPasswordDto): Promise<void> {

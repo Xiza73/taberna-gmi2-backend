@@ -56,9 +56,15 @@ export class CartItem extends BaseEntity {
     );
   }
 
-  get cartId(): string { return this._cartId; }
-  get productId(): string { return this._productId; }
-  get quantity(): number { return this._quantity; }
+  get cartId(): string {
+    return this._cartId;
+  }
+  get productId(): string {
+    return this._productId;
+  }
+  get quantity(): number {
+    return this._quantity;
+  }
 
   updateQuantity(quantity: number): void {
     if (quantity < 1) {

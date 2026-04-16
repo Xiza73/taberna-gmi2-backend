@@ -11,9 +11,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Validate critical secrets at startup
-  const jwtSecret = configService.getOrThrow('JWT_SECRET');
+  const jwtSecret = configService.getOrThrow<string>('JWT_SECRET');
   if (jwtSecret.length < 32 || jwtSecret.includes('CHANGE-ME')) {
-    throw new Error('JWT_SECRET must be at least 32 characters and not a placeholder');
+    throw new Error(
+      'JWT_SECRET must be at least 32 characters and not a placeholder',
+    );
   }
   configService.getOrThrow('DB_PASSWORD');
   configService.getOrThrow('MERCADOPAGO_ACCESS_TOKEN');
@@ -42,7 +44,9 @@ async function bootstrap() {
       transform: true,
       forbidNonWhitelisted: true,
       exceptionFactory: (errors) => {
-        const messages = errors.flatMap((e) => Object.values(e.constraints || {}));
+        const messages = errors.flatMap((e) =>
+          Object.values(e.constraints || {}),
+        );
         throw new BadRequestException(messages);
       },
     }),
@@ -51,4 +55,4 @@ async function bootstrap() {
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);
 }
-bootstrap();
+void bootstrap();

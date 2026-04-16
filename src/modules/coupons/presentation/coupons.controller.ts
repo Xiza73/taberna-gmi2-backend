@@ -7,9 +7,7 @@ import { ValidateCouponDto } from '../application/dtos/validate-coupon.dto.js';
 
 @Controller('coupons')
 export class CouponsController {
-  constructor(
-    private readonly validateCouponUseCase: ValidateCouponUseCase,
-  ) {}
+  constructor(private readonly validateCouponUseCase: ValidateCouponUseCase) {}
 
   @Post('validate')
   async validate(@Body() dto: ValidateCouponDto) {

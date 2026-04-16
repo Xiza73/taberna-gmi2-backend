@@ -88,9 +88,9 @@ export class GetDashboardUseCase {
   }
 
   private async getOrdersByStatus(): Promise<Record<string, number>> {
-    const rows = await this.dataSource.query<Array<{ status: string; count: string }>>(
-      `SELECT status, COUNT(*)::int AS count FROM orders GROUP BY status`,
-    );
+    const rows = await this.dataSource.query<
+      Array<{ status: string; count: string }>
+    >(`SELECT status, COUNT(*)::int AS count FROM orders GROUP BY status`);
     const result: Record<string, number> = {};
     for (const row of rows) {
       result[row.status] = row.count as unknown as number;
@@ -98,8 +98,26 @@ export class GetDashboardUseCase {
     return result;
   }
 
-  private async getRecentOrders(): Promise<Array<{ id: string; orderNumber: string; customerName: string; total: number; status: string; createdAt: Date }>> {
-    const rows = await this.dataSource.query<Array<{ id: string; order_number: string; customer_name: string; total: number; status: string; created_at: Date }>>(
+  private async getRecentOrders(): Promise<
+    Array<{
+      id: string;
+      orderNumber: string;
+      customerName: string;
+      total: number;
+      status: string;
+      createdAt: Date;
+    }>
+  > {
+    const rows = await this.dataSource.query<
+      Array<{
+        id: string;
+        order_number: string;
+        customer_name: string;
+        total: number;
+        status: string;
+        created_at: Date;
+      }>
+    >(
       `SELECT id, order_number, customer_name, total, status, created_at FROM orders ORDER BY created_at DESC LIMIT 10`,
     );
     return rows.map((r) => ({

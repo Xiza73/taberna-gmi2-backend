@@ -34,7 +34,11 @@ import { WebhooksController } from './presentation/webhooks.controller.js';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderOrmEntity, OrderItemOrmEntity, OrderEventOrmEntity]),
+    TypeOrmModule.forFeature([
+      OrderOrmEntity,
+      OrderItemOrmEntity,
+      OrderEventOrmEntity,
+    ]),
     CartModule,
     AddressesModule,
     ProductsModule,

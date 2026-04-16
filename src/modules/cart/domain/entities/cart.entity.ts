@@ -14,12 +14,7 @@ export class Cart extends BaseEntity {
   }
 
   static create(props: { userId: string }): Cart {
-    return new Cart(
-      undefined!,
-      props.userId,
-      new Date(),
-      new Date(),
-    );
+    return new Cart(undefined!, props.userId, new Date(), new Date());
   }
 
   static reconstitute(props: {
@@ -28,13 +23,10 @@ export class Cart extends BaseEntity {
     createdAt: Date;
     updatedAt: Date;
   }): Cart {
-    return new Cart(
-      props.id,
-      props.userId,
-      props.createdAt,
-      props.updatedAt,
-    );
+    return new Cart(props.id, props.userId, props.createdAt, props.updatedAt);
   }
 
-  get userId(): string { return this._userId; }
+  get userId(): string {
+    return this._userId;
+  }
 }

@@ -66,7 +66,9 @@ export class Product extends BaseEntity {
     }
     if (props.compareAtPrice !== undefined && props.compareAtPrice !== null) {
       if (!Number.isInteger(props.compareAtPrice) || props.compareAtPrice < 0) {
-        throw new DomainException('Compare-at price must be a non-negative integer (cents)');
+        throw new DomainException(
+          'Compare-at price must be a non-negative integer (cents)',
+        );
       }
     }
     return new Product(
@@ -124,18 +126,42 @@ export class Product extends BaseEntity {
     );
   }
 
-  get name(): string { return this._name; }
-  get slug(): string { return this._slug; }
-  get description(): string { return this._description; }
-  get price(): number { return this._price; }
-  get compareAtPrice(): number | null { return this._compareAtPrice; }
-  get sku(): string | null { return this._sku; }
-  get stock(): number { return this._stock; }
-  get images(): string[] { return [...this._images]; }
-  get categoryId(): string { return this._categoryId; }
-  get isActive(): boolean { return this._isActive; }
-  get averageRating(): number | null { return this._averageRating; }
-  get totalReviews(): number { return this._totalReviews; }
+  get name(): string {
+    return this._name;
+  }
+  get slug(): string {
+    return this._slug;
+  }
+  get description(): string {
+    return this._description;
+  }
+  get price(): number {
+    return this._price;
+  }
+  get compareAtPrice(): number | null {
+    return this._compareAtPrice;
+  }
+  get sku(): string | null {
+    return this._sku;
+  }
+  get stock(): number {
+    return this._stock;
+  }
+  get images(): string[] {
+    return [...this._images];
+  }
+  get categoryId(): string {
+    return this._categoryId;
+  }
+  get isActive(): boolean {
+    return this._isActive;
+  }
+  get averageRating(): number | null {
+    return this._averageRating;
+  }
+  get totalReviews(): number {
+    return this._totalReviews;
+  }
 
   update(props: {
     name?: string;
@@ -153,7 +179,8 @@ export class Product extends BaseEntity {
     if (props.slug !== undefined) this._slug = props.slug;
     if (props.description !== undefined) this._description = props.description;
     if (props.price !== undefined) this._price = props.price;
-    if (props.compareAtPrice !== undefined) this._compareAtPrice = props.compareAtPrice;
+    if (props.compareAtPrice !== undefined)
+      this._compareAtPrice = props.compareAtPrice;
     if (props.sku !== undefined) this._sku = props.sku;
     if (props.stock !== undefined) this._stock = props.stock;
     if (props.images !== undefined) this._images = props.images;

@@ -96,15 +96,33 @@ export class User extends BaseEntity {
     );
   }
 
-  get name(): string { return this._name; }
-  get email(): string { return this._email; }
-  get password(): string { return this._password; }
-  get phone(): string | null { return this._phone; }
-  get role(): UserRole { return this._role; }
-  get isActive(): boolean { return this._isActive; }
-  get resetPasswordToken(): string | null { return this._resetPasswordToken; }
-  get resetPasswordExpires(): Date | null { return this._resetPasswordExpires; }
-  get googleId(): string | null { return this._googleId; }
+  get name(): string {
+    return this._name;
+  }
+  get email(): string {
+    return this._email;
+  }
+  get password(): string {
+    return this._password;
+  }
+  get phone(): string | null {
+    return this._phone;
+  }
+  get role(): UserRole {
+    return this._role;
+  }
+  get isActive(): boolean {
+    return this._isActive;
+  }
+  get resetPasswordToken(): string | null {
+    return this._resetPasswordToken;
+  }
+  get resetPasswordExpires(): Date | null {
+    return this._resetPasswordExpires;
+  }
+  get googleId(): string | null {
+    return this._googleId;
+  }
 
   updateProfile(props: { name?: string; phone?: string | null }): void {
     if (props.name !== undefined) this._name = props.name;

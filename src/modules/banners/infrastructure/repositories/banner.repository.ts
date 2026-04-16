@@ -37,7 +37,7 @@ export class BannerRepository implements IBannerRepository {
     qb.orderBy('b.sort_order', 'ASC');
 
     const orms = await qb.getMany();
-    return orms.map(BannerMapper.toDomain);
+    return orms.map((orm) => BannerMapper.toDomain(orm));
   }
 
   async findAll(params: {
@@ -56,7 +56,7 @@ export class BannerRepository implements IBannerRepository {
     qb.take(params.limit);
 
     const [orms, total] = await qb.getManyAndCount();
-    return { items: orms.map(BannerMapper.toDomain), total };
+    return { items: orms.map((orm) => BannerMapper.toDomain(orm)), total };
   }
 
   async delete(id: string): Promise<void> {

@@ -1,17 +1,33 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { DomainForbiddenException, DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import {
+  DomainForbiddenException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { UNIT_OF_WORK, type IUnitOfWork, type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import {
+  UNIT_OF_WORK,
+  type IUnitOfWork,
+  type TransactionContext,
+} from '@shared/domain/interfaces/unit-of-work.interface.js';
 
-import { PAYMENT_PROVIDER, type IPaymentProvider } from '@modules/payments/domain/interfaces/payment-provider.interface.js';
-import { PAYMENT_REPOSITORY, type IPaymentRepository } from '@modules/payments/domain/interfaces/payment-repository.interface.js';
+import {
+  PAYMENT_PROVIDER,
+  type IPaymentProvider,
+} from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+import {
+  PAYMENT_REPOSITORY,
+  type IPaymentRepository,
+} from '@modules/payments/domain/interfaces/payment-repository.interface.js';
 import { Payment } from '@modules/payments/domain/entities/payment.entity.js';
 import { PaymentStatus } from '@modules/payments/domain/enums/payment-status.enum.js';
 
 import { OrderStatus } from '../../domain/enums/order-status.enum.js';
 import { OrderEvent } from '../../domain/entities/order-event.entity.js';
-import { ORDER_REPOSITORY, type IOrderRepository } from '../../domain/interfaces/order-repository.interface.js';
+import {
+  ORDER_REPOSITORY,
+  type IOrderRepository,
+} from '../../domain/interfaces/order-repository.interface.js';
 import { OrderResponseDto } from '../dtos/order-response.dto.js';
 
 @Injectable()
@@ -19,9 +35,12 @@ export class VerifyPaymentUseCase {
   private readonly logger = new Logger(VerifyPaymentUseCase.name);
 
   constructor(
-    @Inject(ORDER_REPOSITORY) private readonly orderRepository: IOrderRepository,
-    @Inject(PAYMENT_REPOSITORY) private readonly paymentRepository: IPaymentRepository,
-    @Inject(PAYMENT_PROVIDER) private readonly paymentProvider: IPaymentProvider,
+    @Inject(ORDER_REPOSITORY)
+    private readonly orderRepository: IOrderRepository,
+    @Inject(PAYMENT_REPOSITORY)
+    private readonly paymentRepository: IPaymentRepository,
+    @Inject(PAYMENT_PROVIDER)
+    private readonly paymentProvider: IPaymentProvider,
     @Inject(UNIT_OF_WORK) private readonly unitOfWork: IUnitOfWork,
   ) {}
 
@@ -44,7 +63,9 @@ export class VerifyPaymentUseCase {
     }
 
     // Query MercadoPago by order id (external_reference)
-    const payments = await this.paymentProvider.getPreferencePayments(result.order.id);
+    const payments = await this.paymentProvider.getPreferencePayments(
+      result.order.id,
+    );
     const approvedPayment = payments.find((p) => p.status === 'approved');
 
     if (!approvedPayment) {
@@ -56,7 +77,9 @@ export class VerifyPaymentUseCase {
 
     // Verify amount
     if (approvedPayment.transactionAmount !== result.order.total) {
-      this.logger.warn(`Payment amount mismatch on verify: expected ${result.order.total}, got ${approvedPayment.transactionAmount}`);
+      this.logger.warn(
+        `Payment amount mismatch on verify: expected ${result.order.total}, got ${approvedPayment.transactionAmount}`,
+      );
       return new OrderResponseDto(result.order, {
         items: result.items,
         events: result.events,
@@ -82,7 +105,11 @@ export class VerifyPaymentUseCase {
       });
       await paymentRepo.upsertByExternalId(payment);
 
-      const transitioned = await orderRepo.atomicStatusTransition(result.order.id, OrderStatus.PENDING, OrderStatus.PAID);
+      const transitioned = await orderRepo.atomicStatusTransition(
+        result.order.id,
+        OrderStatus.PENDING,
+        OrderStatus.PAID,
+      );
       if (transitioned) {
         const event = OrderEvent.create({
           orderId: result.order.id,

@@ -93,14 +93,30 @@ export class Banner extends BaseEntity {
     );
   }
 
-  get title(): string { return this._title; }
-  get imageUrl(): string { return this._imageUrl; }
-  get linkUrl(): string | null { return this._linkUrl; }
-  get position(): BannerPosition { return this._position; }
-  get isActive(): boolean { return this._isActive; }
-  get sortOrder(): number { return this._sortOrder; }
-  get startDate(): Date | null { return this._startDate; }
-  get endDate(): Date | null { return this._endDate; }
+  get title(): string {
+    return this._title;
+  }
+  get imageUrl(): string {
+    return this._imageUrl;
+  }
+  get linkUrl(): string | null {
+    return this._linkUrl;
+  }
+  get position(): BannerPosition {
+    return this._position;
+  }
+  get isActive(): boolean {
+    return this._isActive;
+  }
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+  get startDate(): Date | null {
+    return this._startDate;
+  }
+  get endDate(): Date | null {
+    return this._endDate;
+  }
 
   update(props: {
     title?: string;

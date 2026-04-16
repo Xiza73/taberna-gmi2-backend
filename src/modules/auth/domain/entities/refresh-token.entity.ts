@@ -65,11 +65,21 @@ export class RefreshToken extends BaseEntity {
     );
   }
 
-  get userId(): string { return this._userId; }
-  get tokenHash(): string { return this._tokenHash; }
-  get familyId(): string { return this._familyId; }
-  get expiresAt(): Date { return this._expiresAt; }
-  get isRevoked(): boolean { return this._isRevoked; }
+  get userId(): string {
+    return this._userId;
+  }
+  get tokenHash(): string {
+    return this._tokenHash;
+  }
+  get familyId(): string {
+    return this._familyId;
+  }
+  get expiresAt(): Date {
+    return this._expiresAt;
+  }
+  get isRevoked(): boolean {
+    return this._isRevoked;
+  }
 
   revoke(): void {
     this._isRevoked = true;

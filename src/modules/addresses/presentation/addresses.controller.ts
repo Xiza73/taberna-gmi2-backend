@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
@@ -28,7 +37,10 @@ export class AddressesController {
   }
 
   @Post()
-  async create(@CurrentUser('id') userId: string, @Body() dto: CreateAddressDto) {
+  async create(
+    @CurrentUser('id') userId: string,
+    @Body() dto: CreateAddressDto,
+  ) {
     const result = await this.createAddressUseCase.execute(userId, dto);
     return BaseResponse.ok(result);
   }

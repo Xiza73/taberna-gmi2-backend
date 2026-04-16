@@ -12,10 +12,7 @@ import { RemoveFromWishlistUseCase } from './application/use-cases/remove-from-w
 import { WishlistController } from './presentation/wishlist.controller.js';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([WishlistItemOrmEntity]),
-    ProductsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([WishlistItemOrmEntity]), ProductsModule],
   controllers: [WishlistController],
   providers: [
     { provide: WISHLIST_REPOSITORY, useClass: WishlistRepository },

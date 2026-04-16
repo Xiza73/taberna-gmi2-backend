@@ -1,10 +1,20 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { PaymentStatus } from '../../domain/enums/payment-status.enum.js';
 
 @Entity('payments')
 @Index('idx_payments_order_id', ['orderId'])
-@Index('idx_payments_external_id', ['externalId'], { unique: true, where: 'external_id IS NOT NULL' })
+@Index('idx_payments_external_id', ['externalId'], {
+  unique: true,
+  where: 'external_id IS NOT NULL',
+})
 export class PaymentOrmEntity {
   @PrimaryColumn('uuid')
   id: string;

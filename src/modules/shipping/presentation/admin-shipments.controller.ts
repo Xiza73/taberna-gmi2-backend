@@ -1,4 +1,11 @@
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
@@ -17,13 +24,19 @@ export class AdminShipmentsController {
   ) {}
 
   @Post(':id/shipment')
-  async create(@Param('id', ParseUUIDPipe) orderId: string, @Body() dto: CreateShipmentDto) {
+  async create(
+    @Param('id', ParseUUIDPipe) orderId: string,
+    @Body() dto: CreateShipmentDto,
+  ) {
     const result = await this.createShipmentUseCase.execute(orderId, dto);
     return BaseResponse.ok(result);
   }
 
   @Patch(':id/shipment')
-  async update(@Param('id', ParseUUIDPipe) orderId: string, @Body() dto: UpdateShipmentDto) {
+  async update(
+    @Param('id', ParseUUIDPipe) orderId: string,
+    @Body() dto: UpdateShipmentDto,
+  ) {
     const result = await this.updateShipmentUseCase.execute(orderId, dto);
     return BaseResponse.ok(result);
   }

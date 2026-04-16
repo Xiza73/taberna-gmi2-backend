@@ -7,7 +7,11 @@ export const CATEGORY_REPOSITORY = Symbol('CATEGORY_REPOSITORY');
 export interface ICategoryRepository extends IBaseRepository<Category> {
   findBySlug(slug: string): Promise<Category | null>;
   findAllActive(): Promise<Category[]>;
-  findAll(params: { page: number; limit: number; includeInactive?: boolean }): Promise<{ items: Category[]; total: number }>;
+  findAll(params: {
+    page: number;
+    limit: number;
+    includeInactive?: boolean;
+  }): Promise<{ items: Category[]; total: number }>;
   hasProducts(categoryId: string): Promise<boolean>;
   hasSubcategories(categoryId: string): Promise<boolean>;
   slugExists(slug: string, excludeId?: string): Promise<boolean>;

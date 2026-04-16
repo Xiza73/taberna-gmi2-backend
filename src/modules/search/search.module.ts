@@ -14,10 +14,7 @@ import { SearchController } from './presentation/search.controller.js';
 import { AdminSearchController } from './presentation/admin-search.controller.js';
 
 @Module({
-  imports: [
-    forwardRef(() => ProductsModule),
-    CategoriesModule,
-  ],
+  imports: [forwardRef(() => ProductsModule), CategoriesModule],
   controllers: [SearchController, AdminSearchController],
   providers: [
     { provide: PRODUCT_SEARCH, useClass: ElasticsearchProductSearch },

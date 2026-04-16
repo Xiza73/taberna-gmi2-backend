@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
 
-import { USER_REPOSITORY, type IUserRepository } from '../../domain/interfaces/user-repository.interface.js';
+import {
+  USER_REPOSITORY,
+  type IUserRepository,
+} from '../../domain/interfaces/user-repository.interface.js';
 import { UserResponseDto } from '../dtos/user-response.dto.js';
 
 @Injectable()

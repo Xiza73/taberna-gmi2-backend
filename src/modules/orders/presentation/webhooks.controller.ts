@@ -1,4 +1,13 @@
-import { Body, Controller, Headers, Logger, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Logger,
+  Post,
+  Req,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { type Request } from 'express';
 
@@ -19,7 +28,13 @@ export class WebhooksController {
   @Post('mercadopago')
   @Public()
   @Throttle({ default: { ttl: 60000, limit: 100 } })
-  @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: false }))
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: false,
+    }),
+  )
   async handleMercadoPago(
     @Req() req: Request,
     @Headers('x-signature') signature: string,
@@ -28,14 +43,20 @@ export class WebhooksController {
     try {
       // Verify HMAC signature — mandatory when secret is configured
       const rawBody = (req as Request & { rawBody?: Buffer }).rawBody;
-      const hasSecret = this.processPaymentNotificationUseCase.hasWebhookSecret();
+      const hasSecret =
+        this.processPaymentNotificationUseCase.hasWebhookSecret();
 
       if (hasSecret) {
         if (!rawBody || !signature) {
-          this.logger.warn('Missing rawBody or signature on webhook with configured secret');
+          this.logger.warn(
+            'Missing rawBody or signature on webhook with configured secret',
+          );
           return BaseResponse.ok(null);
         }
-        const valid = this.processPaymentNotificationUseCase.verifySignature(rawBody, signature);
+        const valid = this.processPaymentNotificationUseCase.verifySignature(
+          rawBody,
+          signature,
+        );
         if (!valid) {
           this.logger.warn('Invalid webhook signature');
           return BaseResponse.ok(null);
