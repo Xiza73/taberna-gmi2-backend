@@ -12,7 +12,8 @@ import {
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { AdminListBannersUseCase } from '../application/use-cases/admin-list-banners.use-case.js';
 import { AdminGetBannerUseCase } from '../application/use-cases/admin-get-banner.use-case.js';
@@ -23,7 +24,7 @@ import { CreateBannerDto } from '../application/dtos/create-banner.dto.js';
 import { UpdateBannerDto } from '../application/dtos/update-banner.dto.js';
 
 @Controller('admin/banners')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminBannersController {
   constructor(
     private readonly adminListBannersUseCase: AdminListBannersUseCase,

@@ -13,21 +13,26 @@ import { GetMeUseCase } from './application/use-cases/get-me.use-case.js';
 import { ForgotPasswordUseCase } from './application/use-cases/forgot-password.use-case.js';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case.js';
 import { GoogleAuthUseCase } from './application/use-cases/google-auth.use-case.js';
+import { StaffLoginUseCase } from './application/use-cases/staff-login.use-case.js';
+import { StaffGetMeUseCase } from './application/use-cases/staff-get-me.use-case.js';
 import { AuthController } from './presentation/auth.controller.js';
-import { UsersModule } from '../users/users.module.js';
+import { StaffAuthController } from './presentation/staff-auth.controller.js';
+import { CustomersModule } from '../customers/customers.module.js';
+import { StaffModule } from '../staff/staff.module.js';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RefreshTokenOrmEntity]),
-    forwardRef(() => UsersModule),
+    forwardRef(() => CustomersModule),
+    StaffModule,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, StaffAuthController],
   providers: [
     // Repositories
     { provide: REFRESH_TOKEN_REPOSITORY, useClass: RefreshTokenRepository },
     // Cron
     RefreshTokenCleanupCron,
-    // Use Cases
+    // Use Cases — Customer Auth
     RegisterUseCase,
     LoginUseCase,
     RefreshTokenUseCase,
@@ -36,6 +41,9 @@ import { UsersModule } from '../users/users.module.js';
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     GoogleAuthUseCase,
+    // Use Cases — Staff Auth
+    StaffLoginUseCase,
+    StaffGetMeUseCase,
   ],
   exports: [REFRESH_TOKEN_REPOSITORY],
 })

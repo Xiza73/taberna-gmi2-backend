@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UserOrmEntity } from '@modules/users/infrastructure/orm-entities/user.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
 import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity.js';
 
 @Entity('wishlist_items')
@@ -26,9 +26,9 @@ export class WishlistItemOrmEntity {
   @Column({ type: 'uuid', name: 'product_id' })
   productId: string;
 
-  @ManyToOne(() => UserOrmEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => CustomerOrmEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user?: UserOrmEntity;
+  customer?: CustomerOrmEntity;
 
   @ManyToOne(() => ProductOrmEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })

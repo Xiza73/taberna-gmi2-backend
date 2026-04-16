@@ -7,7 +7,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { SharedModule } from './shared/shared.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
-import { UsersModule } from './modules/users/users.module.js';
+import { CustomersModule } from './modules/customers/customers.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { BannersModule } from './modules/banners/banners.module.js';
@@ -22,11 +22,12 @@ import { ShippingModule } from './modules/shipping/shipping.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { ReviewsModule } from './modules/reviews/reviews.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
+import { StaffModule } from './modules/staff/staff.module.js';
 import { SearchModule } from './modules/search/search.module.js';
 import { HealthModule } from './health/health.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
-import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
+import { SubjectTypeGuard } from './shared/presentation/guards/subject-type.guard.js';
 
 @Module({
   imports: [
@@ -59,7 +60,7 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     }),
     SharedModule,
     AuthModule,
-    UsersModule,
+    CustomersModule,
     CategoriesModule,
     ProductsModule,
     BannersModule,
@@ -74,17 +75,18 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     NotificationsModule,
     ReviewsModule,
     AdminModule,
+    StaffModule,
     SearchModule,
     HealthModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
-    // Guard chain: Throttle → Auth → Roles
+    // Guard chain: Throttle → Auth → SubjectType
     JwtAuthGuard,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useExisting: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: SubjectTypeGuard },
   ],
 })
 export class AppModule {}

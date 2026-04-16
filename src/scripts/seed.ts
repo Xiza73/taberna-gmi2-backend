@@ -41,7 +41,7 @@ async function seed() {
     console.log('Seeding database...\n');
 
     // ──────────────────────────────────────
-    // Users
+    // Customers
     // ──────────────────────────────────────
     const passwordHash = await hash('Password123!', 12);
 
@@ -50,49 +50,41 @@ async function seed() {
     const userCarlos = uuid();
     const userLucia = uuid();
 
-    const users = [
-      [
-        userJuan,
-        'Juan Pérez',
-        'juan@example.com',
-        passwordHash,
-        'customer',
-        true,
-      ],
-      [
-        userMaria,
-        'María García',
-        'maria@example.com',
-        passwordHash,
-        'customer',
-        true,
-      ],
-      [
-        userCarlos,
-        'Carlos López',
-        'carlos@example.com',
-        passwordHash,
-        'customer',
-        true,
-      ],
-      [
-        userLucia,
-        'Lucía Torres',
-        'lucia@example.com',
-        passwordHash,
-        'customer',
-        false,
-      ],
+    const customers = [
+      [userJuan, 'Juan Pérez', 'juan@example.com', passwordHash, true],
+      [userMaria, 'María García', 'maria@example.com', passwordHash, true],
+      [userCarlos, 'Carlos López', 'carlos@example.com', passwordHash, true],
+      [userLucia, 'Lucía Torres', 'lucia@example.com', passwordHash, false],
     ];
 
-    for (const u of users) {
+    for (const c of customers) {
       await qr.query(
-        `INSERT INTO users (id, name, email, password, role, is_active, created_at, updated_at)
-         VALUES ($1,$2,$3,$4,$5,$6, NOW(), NOW()) ON CONFLICT (email) DO NOTHING`,
-        u,
+        `INSERT INTO customers (id, name, email, password, is_active, created_at, updated_at)
+         VALUES ($1,$2,$3,$4,$5, NOW(), NOW()) ON CONFLICT (email) DO NOTHING`,
+        c,
       );
     }
     console.log(`  ✓ 4 customers created`);
+
+    // ──────────────────────────────────────
+    // Staff Members
+    // ──────────────────────────────────────
+    const staffAdmin = uuid();
+    const staffManager = uuid();
+
+    const staffMembers = [
+      [staffAdmin, 'Admin Principal', 'admin@tienda.com', passwordHash, true],
+      [staffManager, 'Gerente', 'gerente@tienda.com', passwordHash, true],
+    ];
+
+    for (const s of staffMembers) {
+      await qr.query(
+        `INSERT INTO staff_members (id, name, email, password, is_active, created_at, updated_at)
+         VALUES ($1,$2,$3,$4,$5, NOW(), NOW()) ON CONFLICT (email) DO NOTHING`,
+        s,
+      );
+    }
+    console.log(`  ✓ 2 staff members created`);
 
     // ──────────────────────────────────────
     // Categories
@@ -861,11 +853,14 @@ async function seed() {
     console.log('\n✓ Seed completed successfully!\n');
 
     console.log('Test accounts (password: Password123!):');
-    console.log('  - juan@example.com   (customer)');
-    console.log('  - maria@example.com  (customer)');
-    console.log('  - carlos@example.com (customer)');
-    console.log('  - lucia@example.com  (customer, suspended)');
-    console.log('  - admin@tienda.com   (admin, from migration)');
+    console.log('  Customers:');
+    console.log('  - juan@example.com   (active)');
+    console.log('  - maria@example.com  (active)');
+    console.log('  - carlos@example.com (active)');
+    console.log('  - lucia@example.com  (suspended)');
+    console.log('  Staff:');
+    console.log('  - admin@tienda.com   (admin)');
+    console.log('  - gerente@tienda.com (manager)');
   } catch (error) {
     await qr.rollbackTransaction();
     console.error('\n✗ Seed failed:', (error as Error).message);

@@ -5,9 +5,9 @@ import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainException } from '@shared/domain/exceptions/index.js';
 
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '../../../users/domain/interfaces/user-repository.interface.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '../../../customers/domain/interfaces/customer-repository.interface.js';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
@@ -17,7 +17,8 @@ import { type ResetPasswordDto } from '../dtos/reset-password.dto.js';
 @Injectable()
 export class ResetPasswordUseCase {
   constructor(
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: IRefreshTokenRepository,
   ) {}
@@ -30,25 +31,29 @@ export class ResetPasswordUseCase {
       throw new DomainException(ErrorMessages.INVALID_RESET_TOKEN);
     }
 
-    const user = await this.userRepository.findById(userId);
-    if (!user || !user.resetPasswordToken || !user.resetPasswordExpires) {
+    const customer = await this.customerRepository.findById(userId);
+    if (
+      !customer ||
+      !customer.resetPasswordToken ||
+      !customer.resetPasswordExpires
+    ) {
       throw new DomainException(ErrorMessages.INVALID_RESET_TOKEN);
     }
 
-    if (user.resetPasswordExpires < new Date()) {
+    if (customer.resetPasswordExpires < new Date()) {
       throw new DomainException(ErrorMessages.INVALID_RESET_TOKEN);
     }
 
-    const valid = await compare(rawToken, user.resetPasswordToken);
+    const valid = await compare(rawToken, customer.resetPasswordToken);
     if (!valid) {
       throw new DomainException(ErrorMessages.INVALID_RESET_TOKEN);
     }
 
     const hashedPassword = await hash(dto.newPassword, 12);
-    user.changePassword(hashedPassword);
-    user.clearResetPasswordToken();
-    await this.userRepository.save(user);
+    customer.changePassword(hashedPassword);
+    customer.clearResetPasswordToken();
+    await this.customerRepository.save(customer);
 
-    await this.refreshTokenRepository.revokeAllByUser(user.id);
+    await this.refreshTokenRepository.revokeAllByUser(customer.id);
   }
 }

@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UserOrmEntity } from '@modules/users/infrastructure/orm-entities/user.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
 
 @Entity('addresses')
 @Index('idx_addresses_user_id', ['userId'])
@@ -20,9 +20,9 @@ export class AddressOrmEntity {
   @Column({ type: 'uuid', name: 'user_id' })
   userId: string;
 
-  @ManyToOne(() => UserOrmEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => CustomerOrmEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user?: UserOrmEntity;
+  customer?: CustomerOrmEntity;
 
   @Column({ type: 'varchar', length: 100 })
   label: string;

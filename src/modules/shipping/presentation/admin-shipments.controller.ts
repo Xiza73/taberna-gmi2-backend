@@ -8,7 +8,8 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { CreateShipmentUseCase } from '../application/use-cases/create-shipment.use-case.js';
 import { UpdateShipmentUseCase } from '../application/use-cases/update-shipment.use-case.js';
@@ -16,7 +17,7 @@ import { CreateShipmentDto } from '../application/dtos/create-shipment.dto.js';
 import { UpdateShipmentDto } from '../application/dtos/update-shipment.dto.js';
 
 @Controller('admin/orders')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminShipmentsController {
   constructor(
     private readonly createShipmentUseCase: CreateShipmentUseCase,

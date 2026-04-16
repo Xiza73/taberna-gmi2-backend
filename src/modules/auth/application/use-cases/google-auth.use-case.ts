@@ -10,7 +10,6 @@ import {
   DomainUnauthorizedException,
 } from '@shared/domain/exceptions/index.js';
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { UserRole } from '@shared/domain/enums/user-role.enum.js';
 
 import {
   EMAIL_SENDER,
@@ -18,10 +17,10 @@ import {
 } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '../../../users/domain/interfaces/user-repository.interface.js';
-import { User } from '../../../users/domain/entities/user.entity.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '../../../customers/domain/interfaces/customer-repository.interface.js';
+import { Customer } from '../../../customers/domain/entities/customer.entity.js';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
@@ -36,7 +35,8 @@ export class GoogleAuthUseCase {
   private readonly oauthClient: OAuth2Client;
 
   constructor(
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: IRefreshTokenRepository,
     @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
@@ -68,16 +68,16 @@ export class GoogleAuthUseCase {
       throw new DomainUnauthorizedException('Google email is not verified');
     }
 
-    let user = await this.userRepository.findByGoogleId(googleId);
+    let customer = await this.customerRepository.findByGoogleId(googleId);
 
-    if (user) {
-      if (!user.isActive) {
+    if (customer) {
+      if (!customer.isActive) {
         throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
       }
-      return this.generateTokens(user);
+      return this.generateTokens(customer);
     }
 
-    const existingByEmail = await this.userRepository.findByEmail(email);
+    const existingByEmail = await this.customerRepository.findByEmail(email);
 
     if (existingByEmail) {
       if (!existingByEmail.isActive) {
@@ -89,26 +89,25 @@ export class GoogleAuthUseCase {
         );
       }
       existingByEmail.linkGoogle(googleId);
-      user = await this.userRepository.save(existingByEmail);
-      return this.generateTokens(user);
+      customer = await this.customerRepository.save(existingByEmail);
+      return this.generateTokens(customer);
     }
 
     const randomPassword = await hash(randomUUID(), 12);
-    const newUser = User.create({
+    const newCustomer = Customer.create({
       name: name || email.split('@')[0],
       email,
       password: randomPassword,
-      role: UserRole.CUSTOMER,
       googleId,
     });
 
-    user = await this.userRepository.save(newUser);
+    customer = await this.customerRepository.save(newCustomer);
 
     this.emailSender
-      .sendWelcome({ name: user.name, email: user.email })
+      .sendWelcome({ name: customer.name, email: customer.email })
       .catch(() => {});
 
-    return this.generateTokens(user);
+    return this.generateTokens(customer);
   }
 
   private async verifyIdToken(idToken: string, clientId: string) {
@@ -131,12 +130,15 @@ export class GoogleAuthUseCase {
     }
   }
 
-  private async generateTokens(user: User): Promise<AuthTokensResponseDto> {
+  private async generateTokens(
+    customer: Customer,
+  ): Promise<AuthTokensResponseDto> {
     const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      sub: customer.id,
+      email: customer.email,
+      name: customer.name,
+      role: 'customer',
+      subjectType: 'customer',
     };
     const accessToken = await this.jwtService.signAsync(payload);
 
@@ -150,10 +152,11 @@ export class GoogleAuthUseCase {
     const expiresAt = new Date(Date.now() + refreshExpiration * 1000);
 
     const refreshToken = RefreshToken.create({
-      userId: user.id,
+      userId: customer.id,
       tokenHash,
       familyId,
       expiresAt,
+      subjectType: 'customer',
     });
     const savedToken = await this.refreshTokenRepository.save(refreshToken);
 

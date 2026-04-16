@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartModule } from '@modules/cart/cart.module.js';
 import { AddressesModule } from '@modules/addresses/addresses.module.js';
 import { ProductsModule } from '@modules/products/products.module.js';
-import { UsersModule } from '@modules/users/users.module.js';
+import { CustomersModule } from '@modules/customers/customers.module.js';
 import { CouponsModule } from '@modules/coupons/coupons.module.js';
 import { PaymentsModule } from '@modules/payments/payments.module.js';
 
@@ -42,7 +42,7 @@ import { WebhooksController } from './presentation/webhooks.controller.js';
     CartModule,
     AddressesModule,
     ProductsModule,
-    UsersModule,
+    CustomersModule,
     CouponsModule,
     PaymentsModule,
   ],

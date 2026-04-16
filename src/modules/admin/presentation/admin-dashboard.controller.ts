@@ -7,7 +7,8 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { GetDashboardUseCase } from '../application/use-cases/get-dashboard.use-case.js';
 import { GetSalesReportUseCase } from '../application/use-cases/get-sales-report.use-case.js';
@@ -15,7 +16,7 @@ import { GetTopProductsUseCase } from '../application/use-cases/get-top-products
 import { SalesReportQueryDto } from '../application/dtos/sales-report-query.dto.js';
 
 @Controller('admin/dashboard')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminDashboardController {
   constructor(
     private readonly getDashboardUseCase: GetDashboardUseCase,

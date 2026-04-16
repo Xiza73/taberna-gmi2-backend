@@ -3,4 +3,5 @@ export interface AuthenticatedUser {
   email: string;
   name: string;
   role: string;
+  subjectType: 'customer' | 'staff';
 }

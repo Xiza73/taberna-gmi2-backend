@@ -11,7 +11,8 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { AdminListProductsUseCase } from '../application/use-cases/admin-list-products.use-case.js';
 import { AdminGetProductUseCase } from '../application/use-cases/admin-get-product.use-case.js';
@@ -25,7 +26,7 @@ import { UpdateProductDto } from '../application/dtos/update-product.dto.js';
 import { AdjustStockDto } from '../application/dtos/adjust-stock.dto.js';
 
 @Controller('admin/products')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminProductsController {
   constructor(
     private readonly adminListProductsUseCase: AdminListProductsUseCase,

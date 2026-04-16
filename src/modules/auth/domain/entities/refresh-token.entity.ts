@@ -6,6 +6,7 @@ export class RefreshToken extends BaseEntity {
   private _familyId: string;
   private _expiresAt: Date;
   private _isRevoked: boolean;
+  private _subjectType: 'customer' | 'staff';
 
   private constructor(
     id: string,
@@ -14,6 +15,7 @@ export class RefreshToken extends BaseEntity {
     familyId: string,
     expiresAt: Date,
     isRevoked: boolean,
+    subjectType: 'customer' | 'staff',
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -23,6 +25,7 @@ export class RefreshToken extends BaseEntity {
     this._familyId = familyId;
     this._expiresAt = expiresAt;
     this._isRevoked = isRevoked;
+    this._subjectType = subjectType;
   }
 
   static create(props: {
@@ -30,6 +33,7 @@ export class RefreshToken extends BaseEntity {
     tokenHash: string;
     familyId: string;
     expiresAt: Date;
+    subjectType?: 'customer' | 'staff';
   }): RefreshToken {
     return new RefreshToken(
       undefined!,
@@ -38,6 +42,7 @@ export class RefreshToken extends BaseEntity {
       props.familyId,
       props.expiresAt,
       false,
+      props.subjectType ?? 'customer',
       new Date(),
       new Date(),
     );
@@ -50,6 +55,7 @@ export class RefreshToken extends BaseEntity {
     familyId: string;
     expiresAt: Date;
     isRevoked: boolean;
+    subjectType: 'customer' | 'staff';
     createdAt: Date;
     updatedAt: Date;
   }): RefreshToken {
@@ -60,6 +66,7 @@ export class RefreshToken extends BaseEntity {
       props.familyId,
       props.expiresAt,
       props.isRevoked,
+      props.subjectType,
       props.createdAt,
       props.updatedAt,
     );
@@ -79,6 +86,9 @@ export class RefreshToken extends BaseEntity {
   }
   get isRevoked(): boolean {
     return this._isRevoked;
+  }
+  get subjectType(): 'customer' | 'staff' {
+    return this._subjectType;
   }
 
   revoke(): void {

@@ -12,7 +12,8 @@ import {
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { AdminListCouponsUseCase } from '../application/use-cases/admin-list-coupons.use-case.js';
 import { AdminGetCouponUseCase } from '../application/use-cases/admin-get-coupon.use-case.js';
@@ -23,7 +24,7 @@ import { CreateCouponDto } from '../application/dtos/create-coupon.dto.js';
 import { UpdateCouponDto } from '../application/dtos/update-coupon.dto.js';
 
 @Controller('admin/coupons')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminCouponsController {
   constructor(
     private readonly adminListCouponsUseCase: AdminListCouponsUseCase,

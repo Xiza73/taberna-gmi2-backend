@@ -31,6 +31,14 @@ export class RefreshTokenOrmEntity {
   @Column({ type: 'boolean', name: 'is_revoked', default: false })
   isRevoked: boolean;
 
+  @Column({
+    type: 'varchar',
+    length: 20,
+    name: 'subject_type',
+    default: 'customer',
+  })
+  subjectType: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

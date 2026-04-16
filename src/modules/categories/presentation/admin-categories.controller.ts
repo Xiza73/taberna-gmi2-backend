@@ -11,7 +11,8 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { AdminListCategoriesUseCase } from '../application/use-cases/admin-list-categories.use-case.js';
 import { AdminGetCategoryUseCase } from '../application/use-cases/admin-get-category.use-case.js';
@@ -23,7 +24,7 @@ import { CreateCategoryDto } from '../application/dtos/create-category.dto.js';
 import { UpdateCategoryDto } from '../application/dtos/update-category.dto.js';
 
 @Controller('admin/categories')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminCategoriesController {
   constructor(
     private readonly adminListCategoriesUseCase: AdminListCategoriesUseCase,

@@ -39,7 +39,8 @@ async function reset() {
       'banners',
       'coupons',
       'order_number_counters',
-      'users',
+      'staff_members',
+      'customers',
       'migrations',
     ];
 

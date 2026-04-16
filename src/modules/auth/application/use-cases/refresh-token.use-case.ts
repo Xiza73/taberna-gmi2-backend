@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcryptjs';
@@ -8,9 +8,13 @@ import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainUnauthorizedException } from '@shared/domain/exceptions/index.js';
 
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '../../../users/domain/interfaces/user-repository.interface.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '../../../customers/domain/interfaces/customer-repository.interface.js';
+import {
+  STAFF_MEMBER_REPOSITORY,
+  type IStaffMemberRepository,
+} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
@@ -22,7 +26,11 @@ import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
 @Injectable()
 export class RefreshTokenUseCase {
   constructor(
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
+    @Optional()
+    @Inject(STAFF_MEMBER_REPOSITORY)
+    private readonly staffRepository: IStaffMemberRepository | undefined,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: IRefreshTokenRepository,
     private readonly jwtService: JwtService,
@@ -67,18 +75,33 @@ export class RefreshTokenUseCase {
     storedToken.revoke();
     await this.refreshTokenRepository.save(storedToken);
 
-    // Load user
-    const user = await this.userRepository.findById(storedToken.userId);
-    if (!user || !user.isActive) {
+    const subjectType = storedToken.subjectType ?? 'customer';
+
+    // Load subject based on type
+    let subject: {
+      id: string;
+      email: string;
+      name: string;
+      isActive: boolean;
+    } | null = null;
+
+    if (subjectType === 'staff' && this.staffRepository) {
+      subject = await this.staffRepository.findById(storedToken.userId);
+    } else {
+      subject = await this.customerRepository.findById(storedToken.userId);
+    }
+
+    if (!subject || !subject.isActive) {
       throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
     }
 
     // Generate new tokens (same family)
     const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      sub: subject.id,
+      email: subject.email,
+      name: subject.name,
+      role: subjectType,
+      subjectType,
     };
     const accessToken = await this.jwtService.signAsync(payload);
 
@@ -91,10 +114,11 @@ export class RefreshTokenUseCase {
     const expiresAt = new Date(Date.now() + refreshExpiration * 1000);
 
     const newRefreshToken = RefreshToken.create({
-      userId: user.id,
+      userId: subject.id,
       tokenHash: newTokenHash,
       familyId: storedToken.familyId,
       expiresAt,
+      subjectType,
     });
     const savedToken = await this.refreshTokenRepository.save(newRefreshToken);
 

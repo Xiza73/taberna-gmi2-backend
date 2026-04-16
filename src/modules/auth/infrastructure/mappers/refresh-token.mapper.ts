@@ -10,6 +10,7 @@ export class RefreshTokenMapper {
       familyId: orm.familyId,
       expiresAt: orm.expiresAt,
       isRevoked: orm.isRevoked,
+      subjectType: (orm.subjectType as 'customer' | 'staff') ?? 'customer',
       createdAt: orm.createdAt,
       updatedAt: orm.updatedAt,
     });
@@ -23,6 +24,7 @@ export class RefreshTokenMapper {
     orm.familyId = domain.familyId;
     orm.expiresAt = domain.expiresAt;
     orm.isRevoked = domain.isRevoked;
+    orm.subjectType = domain.subjectType;
     return orm;
   }
 }

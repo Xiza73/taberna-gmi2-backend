@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UserOrmEntity } from '@modules/users/infrastructure/orm-entities/user.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
 
 import { CartItemOrmEntity } from './cart-item.orm-entity.js';
 
@@ -23,9 +23,9 @@ export class CartOrmEntity {
   @Index('idx_carts_user_id', { unique: true })
   userId: string;
 
-  @OneToOne(() => UserOrmEntity, { onDelete: 'CASCADE' })
+  @OneToOne(() => CustomerOrmEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user?: UserOrmEntity;
+  customer?: CustomerOrmEntity;
 
   @OneToMany(() => CartItemOrmEntity, (item) => item.cart, { cascade: true })
   items?: CartItemOrmEntity[];

@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Roles } from '@shared/presentation/decorators/roles.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
 
 import { AdminListOrdersUseCase } from '../application/use-cases/admin-list-orders.use-case.js';
@@ -21,7 +22,7 @@ import { UpdateOrderStatusDto } from '../application/dtos/update-order-status.dt
 import { UpdateOrderNotesDto } from '../application/dtos/update-order-notes.dto.js';
 
 @Controller('admin/orders')
-@Roles('admin')
+@RequireSubjectType(SubjectType.STAFF)
 export class AdminOrdersController {
   constructor(
     private readonly adminListOrdersUseCase: AdminListOrdersUseCase,

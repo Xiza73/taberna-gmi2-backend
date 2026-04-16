@@ -5,10 +5,14 @@ export const ErrorMessages = {
   INVALID_REFRESH_TOKEN: 'Invalid or expired refresh token',
   REFRESH_TOKEN_REUSED: 'Refresh token reuse detected, all sessions revoked',
   INVALID_RESET_TOKEN: 'Invalid or expired password reset token',
-  // Users
+  // Customers
   USER_NOT_FOUND: 'User not found',
+  CUSTOMER_NOT_FOUND: 'Customer not found',
   USER_SUSPENDED: 'Account is suspended',
   WRONG_PASSWORD: 'Current password is incorrect',
+  // Staff
+  STAFF_NOT_FOUND: 'Staff member not found',
+  STAFF_SUSPENDED: 'Staff account is suspended',
   // Categories
   CATEGORY_NOT_FOUND: 'Category not found',
   CATEGORY_HAS_PRODUCTS: 'Cannot delete category with products',

@@ -12,8 +12,10 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import { ErrorMessages } from '../../domain/constants/error-messages.js';
 import { DomainUnauthorizedException } from '../../domain/exceptions/index.js';
-import { USER_REPOSITORY } from '../../../modules/users/domain/interfaces/user-repository.interface.js';
-import { type IUserRepository } from '../../../modules/users/domain/interfaces/user-repository.interface.js';
+import { CUSTOMER_REPOSITORY } from '../../../modules/customers/domain/interfaces/customer-repository.interface.js';
+import { type ICustomerRepository } from '../../../modules/customers/domain/interfaces/customer-repository.interface.js';
+import { STAFF_MEMBER_REPOSITORY } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface.js';
+import { type IStaffMemberRepository } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -22,8 +24,11 @@ export class JwtAuthGuard implements CanActivate {
     private readonly configService: ConfigService,
     private readonly reflector: Reflector,
     @Optional()
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository?: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository?: ICustomerRepository,
+    @Optional()
+    @Inject(STAFF_MEMBER_REPOSITORY)
+    private readonly staffRepository?: IStaffMemberRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -49,22 +54,38 @@ export class JwtAuthGuard implements CanActivate {
         email: string;
         name: string;
         role: string;
+        subjectType?: 'customer' | 'staff';
       }>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
 
-      // Load user from DB to verify active status
-      if (this.userRepository) {
-        const user = await this.userRepository.findById(payload.sub);
-        if (!user) throw new DomainUnauthorizedException();
-        if (!user.isActive)
+      const subjectType = payload.subjectType ?? 'customer';
+
+      if (subjectType === 'staff' && this.staffRepository) {
+        const staff = await this.staffRepository.findById(payload.sub);
+        if (!staff) throw new DomainUnauthorizedException();
+        if (!staff.isActive)
           throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
 
         request['user'] = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          id: staff.id,
+          email: staff.email,
+          name: staff.name,
+          role: 'staff',
+          subjectType: 'staff',
+        };
+      } else if (this.customerRepository) {
+        const customer = await this.customerRepository.findById(payload.sub);
+        if (!customer) throw new DomainUnauthorizedException();
+        if (!customer.isActive)
+          throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+
+        request['user'] = {
+          id: customer.id,
+          email: customer.email,
+          name: customer.name,
+          role: 'customer',
+          subjectType: 'customer',
         };
       } else {
         request['user'] = {
@@ -72,6 +93,7 @@ export class JwtAuthGuard implements CanActivate {
           email: payload.email,
           name: payload.name,
           role: payload.role,
+          subjectType,
         };
       }
     } catch (error) {

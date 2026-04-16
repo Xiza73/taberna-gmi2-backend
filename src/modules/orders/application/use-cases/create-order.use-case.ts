@@ -26,9 +26,9 @@ import {
   type IProductRepository,
 } from '@modules/products/domain/interfaces/product-repository.interface.js';
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '@modules/users/domain/interfaces/user-repository.interface.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '@modules/customers/domain/interfaces/customer-repository.interface.js';
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
@@ -73,7 +73,8 @@ export class CreateOrderUseCase {
     private readonly addressRepository: IAddressRepository,
     @Inject(PRODUCT_REPOSITORY)
     private readonly productRepository: IProductRepository,
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
     @Inject(COUPON_REPOSITORY)
     private readonly couponRepository: ICouponRepository,
     @Inject(COUPON_CALCULATOR)
@@ -176,8 +177,8 @@ export class CreateOrderUseCase {
         }
 
         // 6-7. Calculate totals
-        const user = await this.userRepository.findById(userId);
-        if (!user) {
+        const customer = await this.customerRepository.findById(userId);
+        if (!customer) {
           throw new DomainNotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
 
@@ -216,9 +217,9 @@ export class CreateOrderUseCase {
           couponDiscount:
             couponDiscountAmount > 0 ? couponDiscountAmount : null,
           shippingAddressSnapshot,
-          customerName: user.name,
-          customerEmail: user.email,
-          customerPhone: user.phone ?? null,
+          customerName: customer.name,
+          customerEmail: customer.email,
+          customerPhone: customer.phone ?? null,
           notes: dto.notes,
         });
 

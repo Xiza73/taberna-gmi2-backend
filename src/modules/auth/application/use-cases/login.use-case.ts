@@ -8,10 +8,10 @@ import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainUnauthorizedException } from '@shared/domain/exceptions/index.js';
 
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '../../../users/domain/interfaces/user-repository.interface.js';
-import { type User } from '../../../users/domain/entities/user.entity.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '../../../customers/domain/interfaces/customer-repository.interface.js';
+import { type Customer } from '../../../customers/domain/entities/customer.entity.js';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
@@ -23,7 +23,8 @@ import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
 @Injectable()
 export class LoginUseCase {
   constructor(
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: IRefreshTokenRepository,
     private readonly jwtService: JwtService,
@@ -31,26 +32,29 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDto): Promise<AuthTokensResponseDto> {
-    const user = await this.userRepository.findByEmail(dto.email);
-    if (!user)
+    const customer = await this.customerRepository.findByEmail(dto.email);
+    if (!customer)
       throw new DomainUnauthorizedException(ErrorMessages.INVALID_CREDENTIALS);
 
-    if (!user.isActive)
+    if (!customer.isActive)
       throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
 
-    const valid = await compare(dto.password, user.password);
+    const valid = await compare(dto.password, customer.password);
     if (!valid)
       throw new DomainUnauthorizedException(ErrorMessages.INVALID_CREDENTIALS);
 
-    return this.generateTokens(user);
+    return this.generateTokens(customer);
   }
 
-  private async generateTokens(user: User): Promise<AuthTokensResponseDto> {
+  private async generateTokens(
+    customer: Customer,
+  ): Promise<AuthTokensResponseDto> {
     const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      sub: customer.id,
+      email: customer.email,
+      name: customer.name,
+      role: 'customer',
+      subjectType: 'customer',
     };
     const accessToken = await this.jwtService.signAsync(payload);
 
@@ -64,10 +68,11 @@ export class LoginUseCase {
     const expiresAt = new Date(Date.now() + refreshExpiration * 1000);
 
     const refreshToken = RefreshToken.create({
-      userId: user.id,
+      userId: customer.id,
       tokenHash,
       familyId,
       expiresAt,
+      subjectType: 'customer',
     });
     const savedToken = await this.refreshTokenRepository.save(refreshToken);
 

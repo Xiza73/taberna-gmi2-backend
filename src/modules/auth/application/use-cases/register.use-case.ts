@@ -6,7 +6,6 @@ import { randomUUID } from 'crypto';
 
 import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainConflictException } from '@shared/domain/exceptions/index.js';
-import { UserRole } from '@shared/domain/enums/user-role.enum.js';
 
 import {
   EMAIL_SENDER,
@@ -14,10 +13,10 @@ import {
 } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
 import {
-  USER_REPOSITORY,
-  type IUserRepository,
-} from '../../../users/domain/interfaces/user-repository.interface.js';
-import { User } from '../../../users/domain/entities/user.entity.js';
+  CUSTOMER_REPOSITORY,
+  type ICustomerRepository,
+} from '../../../customers/domain/interfaces/customer-repository.interface.js';
+import { Customer } from '../../../customers/domain/entities/customer.entity.js';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
@@ -29,7 +28,8 @@ import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
 @Injectable()
 export class RegisterUseCase {
   constructor(
-    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: ICustomerRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY)
     private readonly refreshTokenRepository: IRefreshTokenRepository,
     @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
@@ -38,20 +38,19 @@ export class RegisterUseCase {
   ) {}
 
   async execute(dto: RegisterDto): Promise<AuthTokensResponseDto> {
-    const existing = await this.userRepository.findByEmail(dto.email);
+    const existing = await this.customerRepository.findByEmail(dto.email);
     if (existing)
       throw new DomainConflictException(ErrorMessages.EMAIL_ALREADY_EXISTS);
 
     const hashedPassword = await hash(dto.password, 12);
-    const user = User.create({
+    const customer = Customer.create({
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
-      role: UserRole.CUSTOMER,
       phone: dto.phone,
     });
 
-    const saved = await this.userRepository.save(user);
+    const saved = await this.customerRepository.save(customer);
 
     this.emailSender
       .sendWelcome({ name: saved.name, email: saved.email })
@@ -60,12 +59,15 @@ export class RegisterUseCase {
     return this.generateTokens(saved);
   }
 
-  private async generateTokens(user: User): Promise<AuthTokensResponseDto> {
+  private async generateTokens(
+    customer: Customer,
+  ): Promise<AuthTokensResponseDto> {
     const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      sub: customer.id,
+      email: customer.email,
+      name: customer.name,
+      role: 'customer',
+      subjectType: 'customer',
     };
     const accessToken = await this.jwtService.signAsync(payload);
 
@@ -79,10 +81,11 @@ export class RegisterUseCase {
     const expiresAt = new Date(Date.now() + refreshExpiration * 1000);
 
     const refreshToken = RefreshToken.create({
-      userId: user.id,
+      userId: customer.id,
       tokenHash,
       familyId,
       expiresAt,
+      subjectType: 'customer',
     });
     const savedToken = await this.refreshTokenRepository.save(refreshToken);
 
