@@ -11,6 +11,8 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
+import { BannersModule } from './modules/banners/banners.module.js';
+import { UploadsModule } from './modules/uploads/uploads.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -49,6 +51,8 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     UsersModule,
     CategoriesModule,
     ProductsModule,
+    BannersModule,
+    UploadsModule,
   ],
   providers: [
     // Global Exception Filter (via DI)
