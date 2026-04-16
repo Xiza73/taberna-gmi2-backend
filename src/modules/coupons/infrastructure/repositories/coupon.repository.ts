@@ -60,6 +60,25 @@ export class CouponRepository implements ICouponRepository {
     return { items: orms.map((orm) => CouponMapper.toDomain(orm)), total };
   }
 
+  async findActive(params: {
+    page: number;
+    limit: number;
+  }): Promise<{ items: Coupon[]; total: number }> {
+    const qb = this.repo
+      .createQueryBuilder('c')
+      .where('c.is_active = :isActive', { isActive: true })
+      .andWhere('c.start_date <= NOW()')
+      .andWhere('c.end_date >= NOW()')
+      .andWhere('(c.max_uses IS NULL OR c.current_uses < c.max_uses)');
+
+    qb.orderBy('c.end_date', 'ASC');
+    qb.skip((params.page - 1) * params.limit);
+    qb.take(params.limit);
+
+    const [orms, total] = await qb.getManyAndCount();
+    return { items: orms.map((orm) => CouponMapper.toDomain(orm)), total };
+  }
+
   async findByIdForUpdate(id: string): Promise<Coupon | null> {
     const orm = await this.repo
       .createQueryBuilder('c')

@@ -4,6 +4,8 @@ import { Throttle } from '@nestjs/throttler';
 import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
 import { Public } from '@shared/presentation/decorators/public.decorator.js';
 import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
 
 import { RegisterUseCase } from '../application/use-cases/register.use-case.js';
 import { LoginUseCase } from '../application/use-cases/login.use-case.js';
@@ -57,12 +59,14 @@ export class AuthController {
     return BaseResponse.ok(result);
   }
 
+  @RequireSubjectType(SubjectType.CUSTOMER)
   @Post('logout')
   async logout(@CurrentUser('id') userId: string) {
     await this.logoutUseCase.execute(userId);
     return BaseResponse.ok(null, 'Logged out successfully');
   }
 
+  @RequireSubjectType(SubjectType.CUSTOMER)
   @Get('me')
   async me(@CurrentUser('id') userId: string) {
     const result = await this.getMeUseCase.execute(userId);

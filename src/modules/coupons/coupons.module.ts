@@ -14,6 +14,7 @@ import { AdminGetCouponUseCase } from './application/use-cases/admin-get-coupon.
 import { CreateCouponUseCase } from './application/use-cases/create-coupon.use-case.js';
 import { UpdateCouponUseCase } from './application/use-cases/update-coupon.use-case.js';
 import { DeleteCouponUseCase } from './application/use-cases/delete-coupon.use-case.js';
+import { ListAvailableCouponsUseCase } from './application/use-cases/list-available-coupons.use-case.js';
 import { CouponsController } from './presentation/coupons.controller.js';
 import { AdminCouponsController } from './presentation/admin-coupons.controller.js';
 
@@ -24,6 +25,7 @@ import { AdminCouponsController } from './presentation/admin-coupons.controller.
     { provide: COUPON_REPOSITORY, useClass: CouponRepository },
     { provide: COUPON_CALCULATOR, useValue: new CouponCalculator() },
     ValidateCouponUseCase,
+    ListAvailableCouponsUseCase,
     AdminListCouponsUseCase,
     AdminGetCouponUseCase,
     CreateCouponUseCase,

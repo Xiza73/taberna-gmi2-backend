@@ -23,6 +23,21 @@ export class StaffMemberOrmEntity {
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive: boolean;
 
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'reset_password_token',
+    nullable: true,
+  })
+  resetPasswordToken: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    name: 'reset_password_expires',
+    nullable: true,
+  })
+  resetPasswordExpires: Date | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

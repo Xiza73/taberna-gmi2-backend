@@ -15,6 +15,11 @@ import { ResetPasswordUseCase } from './application/use-cases/reset-password.use
 import { GoogleAuthUseCase } from './application/use-cases/google-auth.use-case.js';
 import { StaffLoginUseCase } from './application/use-cases/staff-login.use-case.js';
 import { StaffGetMeUseCase } from './application/use-cases/staff-get-me.use-case.js';
+import { StaffUpdateProfileUseCase } from './application/use-cases/staff-update-profile.use-case.js';
+import { StaffChangePasswordUseCase } from './application/use-cases/staff-change-password.use-case.js';
+import { StaffForgotPasswordUseCase } from './application/use-cases/staff-forgot-password.use-case.js';
+import { StaffResetPasswordUseCase } from './application/use-cases/staff-reset-password.use-case.js';
+import { StaffGoogleAuthUseCase } from './application/use-cases/staff-google-auth.use-case.js';
 import { AuthController } from './presentation/auth.controller.js';
 import { StaffAuthController } from './presentation/staff-auth.controller.js';
 import { CustomersModule } from '../customers/customers.module.js';
@@ -44,6 +49,11 @@ import { StaffModule } from '../staff/staff.module.js';
     // Use Cases — Staff Auth
     StaffLoginUseCase,
     StaffGetMeUseCase,
+    StaffUpdateProfileUseCase,
+    StaffChangePasswordUseCase,
+    StaffForgotPasswordUseCase,
+    StaffResetPasswordUseCase,
+    StaffGoogleAuthUseCase,
   ],
   exports: [REFRESH_TOKEN_REPOSITORY],
 })

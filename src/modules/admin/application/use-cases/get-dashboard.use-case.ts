@@ -59,7 +59,7 @@ export class GetDashboardUseCase {
 
   private async countCustomers(): Promise<number> {
     const result = await this.dataSource.query<[{ count: string }]>(
-      `SELECT COUNT(*)::int AS count FROM users WHERE role = 'customer'`,
+      `SELECT COUNT(*)::int AS count FROM customers`,
     );
     return result[0].count as unknown as number;
   }

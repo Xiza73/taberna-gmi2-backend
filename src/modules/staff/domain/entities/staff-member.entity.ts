@@ -6,6 +6,8 @@ export class StaffMember extends BaseEntity {
   private _email: string;
   private _password: string;
   private _isActive: boolean;
+  private _resetPasswordToken: string | null;
+  private _resetPasswordExpires: Date | null;
 
   private constructor(
     id: string,
@@ -13,6 +15,8 @@ export class StaffMember extends BaseEntity {
     email: string,
     password: string,
     isActive: boolean,
+    resetPasswordToken: string | null,
+    resetPasswordExpires: Date | null,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -21,6 +25,8 @@ export class StaffMember extends BaseEntity {
     this._email = email;
     this._password = password;
     this._isActive = isActive;
+    this._resetPasswordToken = resetPasswordToken;
+    this._resetPasswordExpires = resetPasswordExpires;
   }
 
   static create(props: {
@@ -39,6 +45,8 @@ export class StaffMember extends BaseEntity {
       props.email.toLowerCase().trim(),
       props.password,
       true,
+      null,
+      null,
       new Date(),
       new Date(),
     );
@@ -50,6 +58,8 @@ export class StaffMember extends BaseEntity {
     email: string;
     password: string;
     isActive: boolean;
+    resetPasswordToken: string | null;
+    resetPasswordExpires: Date | null;
     createdAt: Date;
     updatedAt: Date;
   }): StaffMember {
@@ -59,6 +69,8 @@ export class StaffMember extends BaseEntity {
       props.email,
       props.password,
       props.isActive,
+      props.resetPasswordToken,
+      props.resetPasswordExpires,
       props.createdAt,
       props.updatedAt,
     );
@@ -76,6 +88,12 @@ export class StaffMember extends BaseEntity {
   get isActive(): boolean {
     return this._isActive;
   }
+  get resetPasswordToken(): string | null {
+    return this._resetPasswordToken;
+  }
+  get resetPasswordExpires(): Date | null {
+    return this._resetPasswordExpires;
+  }
 
   updateProfile(props: { name?: string }): void {
     if (props.name !== undefined) this._name = props.name;
@@ -84,6 +102,18 @@ export class StaffMember extends BaseEntity {
 
   changePassword(hashedPassword: string): void {
     this._password = hashedPassword;
+    this.markUpdated();
+  }
+
+  setResetPasswordToken(tokenHash: string, expires: Date): void {
+    this._resetPasswordToken = tokenHash;
+    this._resetPasswordExpires = expires;
+    this.markUpdated();
+  }
+
+  clearResetPasswordToken(): void {
+    this._resetPasswordToken = null;
+    this._resetPasswordExpires = null;
     this.markUpdated();
   }
 

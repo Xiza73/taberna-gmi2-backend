@@ -9,6 +9,8 @@ export class StaffMemberMapper {
       email: orm.email,
       password: orm.password,
       isActive: orm.isActive,
+      resetPasswordToken: orm.resetPasswordToken,
+      resetPasswordExpires: orm.resetPasswordExpires,
       createdAt: orm.createdAt,
       updatedAt: orm.updatedAt,
     });
@@ -21,6 +23,8 @@ export class StaffMemberMapper {
     orm.email = domain.email;
     orm.password = domain.password;
     orm.isActive = domain.isActive;
+    orm.resetPasswordToken = domain.resetPasswordToken;
+    orm.resetPasswordExpires = domain.resetPasswordExpires;
     return orm;
   }
 }

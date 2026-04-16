@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -16,13 +18,18 @@ import { Public } from '@shared/presentation/decorators/public.decorator.js';
 
 import { CreateReviewUseCase } from '../application/use-cases/create-review.use-case.js';
 import { ListProductReviewsUseCase } from '../application/use-cases/list-product-reviews.use-case.js';
+import { UpdateReviewUseCase } from '../application/use-cases/update-review.use-case.js';
+import { DeleteOwnReviewUseCase } from '../application/use-cases/delete-own-review.use-case.js';
 import { CreateReviewDto } from '../application/dtos/create-review.dto.js';
+import { UpdateReviewDto } from '../application/dtos/update-review.dto.js';
 
 @Controller('products')
 export class ReviewsController {
   constructor(
     private readonly createReviewUseCase: CreateReviewUseCase,
     private readonly listProductReviewsUseCase: ListProductReviewsUseCase,
+    private readonly updateReviewUseCase: UpdateReviewUseCase,
+    private readonly deleteOwnReviewUseCase: DeleteOwnReviewUseCase,
   ) {}
 
   @Post(':id/reviews')
@@ -52,5 +59,28 @@ export class ReviewsController {
       limit,
     );
     return BaseResponse.ok(result);
+  }
+
+  @Patch(':productId/reviews/:reviewId')
+  async update(
+    @CurrentUser('id') userId: string,
+    @Param('reviewId', ParseUUIDPipe) reviewId: string,
+    @Body() dto: UpdateReviewDto,
+  ) {
+    const result = await this.updateReviewUseCase.execute(
+      userId,
+      reviewId,
+      dto,
+    );
+    return BaseResponse.ok(result);
+  }
+
+  @Delete(':productId/reviews/:reviewId')
+  async remove(
+    @CurrentUser('id') userId: string,
+    @Param('reviewId', ParseUUIDPipe) reviewId: string,
+  ) {
+    await this.deleteOwnReviewUseCase.execute(userId, reviewId);
+    return BaseResponse.ok(null, 'Review deleted successfully');
   }
 }

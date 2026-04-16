@@ -103,4 +103,20 @@ export class Review extends BaseEntity {
     this._isApproved = true;
     this.markUpdated();
   }
+
+  update(props: { rating?: number; comment?: string | null }): void {
+    if (props.rating !== undefined) {
+      if (
+        props.rating < 1 ||
+        props.rating > 5 ||
+        !Number.isInteger(props.rating)
+      ) {
+        throw new DomainException('Rating must be an integer between 1 and 5');
+      }
+      this._rating = props.rating;
+    }
+    if (props.comment !== undefined) this._comment = props.comment;
+    this._isApproved = false;
+    this.markUpdated();
+  }
 }

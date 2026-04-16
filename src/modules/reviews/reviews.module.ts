@@ -9,6 +9,8 @@ import { ReviewRepository } from './infrastructure/repositories/review.repositor
 import { REVIEW_REPOSITORY } from './domain/interfaces/review-repository.interface.js';
 import { CreateReviewUseCase } from './application/use-cases/create-review.use-case.js';
 import { ListProductReviewsUseCase } from './application/use-cases/list-product-reviews.use-case.js';
+import { UpdateReviewUseCase } from './application/use-cases/update-review.use-case.js';
+import { DeleteOwnReviewUseCase } from './application/use-cases/delete-own-review.use-case.js';
 import { AdminListPendingReviewsUseCase } from './application/use-cases/admin-list-pending-reviews.use-case.js';
 import { ApproveReviewUseCase } from './application/use-cases/approve-review.use-case.js';
 import { DeleteReviewUseCase } from './application/use-cases/delete-review.use-case.js';
@@ -26,6 +28,8 @@ import { AdminReviewsController } from './presentation/admin-reviews.controller.
     { provide: REVIEW_REPOSITORY, useClass: ReviewRepository },
     CreateReviewUseCase,
     ListProductReviewsUseCase,
+    UpdateReviewUseCase,
+    DeleteOwnReviewUseCase,
     AdminListPendingReviewsUseCase,
     ApproveReviewUseCase,
     DeleteReviewUseCase,
