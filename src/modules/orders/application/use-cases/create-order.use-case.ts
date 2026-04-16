@@ -12,6 +12,7 @@ import { USER_REPOSITORY, type IUserRepository } from '@modules/users/domain/int
 import { COUPON_REPOSITORY, type ICouponRepository } from '@modules/coupons/domain/interfaces/coupon-repository.interface.js';
 import { COUPON_CALCULATOR, type CouponCalculator } from '@modules/coupons/domain/services/coupon-calculator.js';
 import { PAYMENT_PROVIDER, type IPaymentProvider } from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
 import { Order } from '../../domain/entities/order.entity.js';
 import { OrderItem } from '../../domain/entities/order-item.entity.js';
@@ -35,6 +36,7 @@ export class CreateOrderUseCase {
     @Inject(COUPON_CALCULATOR) private readonly couponCalculator: CouponCalculator,
     @Inject(PAYMENT_PROVIDER) private readonly paymentProvider: IPaymentProvider,
     @Inject(UNIT_OF_WORK) private readonly unitOfWork: IUnitOfWork,
+    @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
     private readonly configService: ConfigService,
   ) {}
 
@@ -226,6 +228,14 @@ export class CreateOrderUseCase {
     } catch {
       // Order stays pending without paymentUrl — retry via /orders/:id/retry-payment
     }
+
+    this.emailSender.sendOrderConfirmation({
+      orderNumber: result.order.orderNumber,
+      customerName: result.order.customerName,
+      email: result.order.customerEmail,
+      items: result.items.map((i) => ({ name: i.productName, quantity: i.quantity, unitPrice: i.unitPrice })),
+      total: result.order.total,
+    }).catch(() => {});
 
     return new OrderResponseDto(result.order, {
       items: result.items,

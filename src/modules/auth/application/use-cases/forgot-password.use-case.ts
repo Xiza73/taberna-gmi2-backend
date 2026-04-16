@@ -1,6 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
+
+import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
 import { USER_REPOSITORY, type IUserRepository } from '../../../users/domain/interfaces/user-repository.interface.js';
 import { type ForgotPasswordDto } from '../dtos/forgot-password.dto.js';
@@ -11,6 +14,8 @@ export class ForgotPasswordUseCase {
 
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(dto: ForgotPasswordDto): Promise<void> {
@@ -26,7 +31,8 @@ export class ForgotPasswordUseCase {
     user.setResetPasswordToken(tokenHash, expires);
     await this.userRepository.save(user);
 
-    // TODO: Send email via IEmailSender.sendPasswordReset() (Phase 13: Notifications)
-    this.logger.log(`Password reset token generated for user ${user.id}: ${rawToken}`);
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}&userId=${user.id}`;
+    this.emailSender.sendPasswordReset({ name: user.name, email: user.email, resetUrl }).catch(() => {});
   }
 }

@@ -8,6 +8,8 @@ import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { DomainConflictException } from '@shared/domain/exceptions/index.js';
 import { UserRole } from '@shared/domain/enums/user-role.enum.js';
 
+import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+
 import { USER_REPOSITORY, type IUserRepository } from '../../../users/domain/interfaces/user-repository.interface.js';
 import { User } from '../../../users/domain/entities/user.entity.js';
 import { REFRESH_TOKEN_REPOSITORY, type IRefreshTokenRepository } from '../../domain/interfaces/refresh-token-repository.interface.js';
@@ -20,6 +22,7 @@ export class RegisterUseCase {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
     @Inject(REFRESH_TOKEN_REPOSITORY) private readonly refreshTokenRepository: IRefreshTokenRepository,
+    @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -38,6 +41,9 @@ export class RegisterUseCase {
     });
 
     const saved = await this.userRepository.save(user);
+
+    this.emailSender.sendWelcome({ name: saved.name, email: saved.email }).catch(() => {});
+
     return this.generateTokens(saved);
   }
 

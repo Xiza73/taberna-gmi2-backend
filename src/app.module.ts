@@ -20,6 +20,8 @@ import { CouponsModule } from './modules/coupons/coupons.module.js';
 import { PaymentsModule } from './modules/payments/payments.module.js';
 import { OrdersModule } from './modules/orders/orders.module.js';
 import { ShippingModule } from './modules/shipping/shipping.module.js';
+import { NotificationsModule } from './modules/notifications/notifications.module.js';
+import { ReviewsModule } from './modules/reviews/reviews.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
@@ -67,6 +69,8 @@ import { RolesGuard } from './shared/presentation/guards/roles.guard.js';
     PaymentsModule,
     OrdersModule,
     ShippingModule,
+    NotificationsModule,
+    ReviewsModule,
   ],
   providers: [
     // Global Exception Filter (via DI)

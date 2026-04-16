@@ -6,6 +6,7 @@ import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
 import { ORDER_REPOSITORY, type IOrderRepository } from '@modules/orders/domain/interfaces/order-repository.interface.js';
 import { OrderStatus } from '@modules/orders/domain/enums/order-status.enum.js';
 import { OrderEvent } from '@modules/orders/domain/entities/order-event.entity.js';
+import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 
 import { Shipment } from '../../domain/entities/shipment.entity.js';
 import { ShipmentStatus } from '../../domain/enums/shipment-status.enum.js';
@@ -20,6 +21,7 @@ export class CreateShipmentUseCase {
     @Inject(SHIPMENT_REPOSITORY) private readonly shipmentRepository: IShipmentRepository,
     @Inject(ORDER_REPOSITORY) private readonly orderRepository: IOrderRepository,
     @Inject(TRACKING_URL_GENERATOR) private readonly trackingUrlGenerator: TrackingUrlGenerator,
+    @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
   ) {}
 
   async execute(orderId: string, dto: CreateShipmentDto): Promise<ShipmentResponseDto> {
@@ -61,6 +63,14 @@ export class CreateShipmentUseCase {
       metadata: { carrier: dto.carrier, trackingNumber: dto.trackingNumber },
     });
     await this.orderRepository.saveEvent(event);
+
+    this.emailSender.sendOrderShipped({
+      orderNumber: order.orderNumber,
+      customerName: order.customerName,
+      email: order.customerEmail,
+      carrier: dto.carrier,
+      trackingUrl,
+    }).catch(() => {});
 
     return new ShipmentResponseDto(saved);
   }

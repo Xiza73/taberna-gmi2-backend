@@ -5,6 +5,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { UNIT_OF_WORK, type IUnitOfWork, type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
 
 import { PAYMENT_PROVIDER, type IPaymentProvider } from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface.js';
 import { PAYMENT_REPOSITORY, type IPaymentRepository } from '@modules/payments/domain/interfaces/payment-repository.interface.js';
 import { Payment } from '@modules/payments/domain/entities/payment.entity.js';
 import { PaymentStatus } from '@modules/payments/domain/enums/payment-status.enum.js';
@@ -22,6 +23,7 @@ export class ProcessPaymentNotificationUseCase {
     @Inject(PAYMENT_REPOSITORY) private readonly paymentRepository: IPaymentRepository,
     @Inject(PAYMENT_PROVIDER) private readonly paymentProvider: IPaymentProvider,
     @Inject(UNIT_OF_WORK) private readonly unitOfWork: IUnitOfWork,
+    @Inject(EMAIL_SENDER) private readonly emailSender: IEmailSender,
     private readonly configService: ConfigService,
   ) {}
 
@@ -104,6 +106,13 @@ export class ProcessPaymentNotificationUseCase {
           metadata: { paymentId: paymentInfo.externalId },
         });
         await orderRepo.saveEvent(event);
+
+        this.emailSender.sendPaymentConfirmed({
+          orderNumber: order.orderNumber,
+          customerName: order.customerName,
+          email: order.customerEmail,
+          total: order.total,
+        }).catch(() => {});
       } else {
         // Late payment — order was already cancelled
         this.logger.warn(`Late payment for order ${orderId} — order is ${order.status}, payment approved`);
