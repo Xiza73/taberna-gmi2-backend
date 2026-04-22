@@ -30,6 +30,3 @@ coverage/
 
 # TypeORM
 *.sqlite
-
-# Uploads (local dev)
-uploads/
