@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type WishlistItem } from '../../domain/entities/wishlist-item.entity.js';
-import { type IWishlistRepository } from '../../domain/interfaces/wishlist-repository.interface.js';
-import { WishlistItemOrmEntity } from '../orm-entities/wishlist-item.orm-entity.js';
-import { WishlistItemMapper } from '../mappers/wishlist-item.mapper.js';
+import { type WishlistItem } from '../../domain/entities/wishlist-item.entity';
+import { type IWishlistRepository } from '../../domain/interfaces/wishlist-repository.interface';
+import { WishlistItemOrmEntity } from '../orm-entities/wishlist-item.orm-entity';
+import { WishlistItemMapper } from '../mappers/wishlist-item.mapper';
 
 @Injectable()
 export class WishlistRepository implements IWishlistRepository {

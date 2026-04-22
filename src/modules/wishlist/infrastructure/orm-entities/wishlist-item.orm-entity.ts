@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
-import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity';
+import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity';
 
 @Entity('wishlist_items')
 @Unique('uq_wishlist_user_product', ['userId', 'productId'])

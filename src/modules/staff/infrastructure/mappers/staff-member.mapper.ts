@@ -1,6 +1,6 @@
-import { StaffMember } from '../../domain/entities/staff-member.entity.js';
-import { StaffMemberOrmEntity } from '../orm-entities/staff-member.orm-entity.js';
-import { StaffRole } from '@shared/domain/enums/staff-role.enum.js';
+import { StaffMember } from '../../domain/entities/staff-member.entity';
+import { StaffMemberOrmEntity } from '../orm-entities/staff-member.orm-entity';
+import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
 export class StaffMemberMapper {
   static toDomain(orm: StaffMemberOrmEntity): StaffMember {

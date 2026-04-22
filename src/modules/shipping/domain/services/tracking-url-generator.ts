@@ -1,4 +1,4 @@
-import { Carrier } from '../enums/carrier.enum.js';
+import { Carrier } from '../enums/carrier.enum';
 
 export const TRACKING_URL_GENERATOR = Symbol('TRACKING_URL_GENERATOR');
 

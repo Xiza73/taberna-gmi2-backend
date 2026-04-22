@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { CouponType } from '../../domain/enums/coupon-type.enum.js';
+import { CouponType } from '../../domain/enums/coupon-type.enum';
 
 export class CreateCouponDto {
   @IsString()

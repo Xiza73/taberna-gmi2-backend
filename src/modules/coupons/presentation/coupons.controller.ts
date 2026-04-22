@@ -8,12 +8,12 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { ValidateCouponUseCase } from '../application/use-cases/validate-coupon.use-case.js';
-import { ListAvailableCouponsUseCase } from '../application/use-cases/list-available-coupons.use-case.js';
-import { ValidateCouponDto } from '../application/dtos/validate-coupon.dto.js';
+import { ValidateCouponUseCase } from '../application/use-cases/validate-coupon.use-case';
+import { ListAvailableCouponsUseCase } from '../application/use-cases/list-available-coupons.use-case';
+import { ValidateCouponDto } from '../application/dtos/validate-coupon.dto';
 
 @Controller('coupons')
 export class CouponsController {

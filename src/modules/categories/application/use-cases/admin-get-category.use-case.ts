@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
-import { CategoryResponseDto } from '../dtos/category-response.dto.js';
+} from '../../domain/interfaces/category-repository.interface';
+import { CategoryResponseDto } from '../dtos/category-response.dto';
 
 @Injectable()
 export class AdminGetCategoryUseCase {

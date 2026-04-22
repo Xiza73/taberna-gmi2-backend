@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { PaymentStatus } from '../../domain/enums/payment-status.enum.js';
+import { PaymentStatus } from '../../domain/enums/payment-status.enum';
 
 @Entity('payments')
 @Index('idx_payments_order_id', ['orderId'])

@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Carrier } from '../../domain/enums/carrier.enum.js';
-import { ShipmentStatus } from '../../domain/enums/shipment-status.enum.js';
+import { Carrier } from '../../domain/enums/carrier.enum';
+import { ShipmentStatus } from '../../domain/enums/shipment-status.enum';
 
 @Entity('shipments')
 @Index('idx_shipments_order_id', ['orderId'], { unique: true })

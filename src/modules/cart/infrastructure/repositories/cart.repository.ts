@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { Cart } from '../../domain/entities/cart.entity.js';
-import { type CartItem } from '../../domain/entities/cart-item.entity.js';
-import { type ICartRepository } from '../../domain/interfaces/cart-repository.interface.js';
-import { CartOrmEntity } from '../orm-entities/cart.orm-entity.js';
-import { CartItemOrmEntity } from '../orm-entities/cart-item.orm-entity.js';
-import { CartMapper } from '../mappers/cart.mapper.js';
-import { CartItemMapper } from '../mappers/cart-item.mapper.js';
+import { Cart } from '../../domain/entities/cart.entity';
+import { type CartItem } from '../../domain/entities/cart-item.entity';
+import { type ICartRepository } from '../../domain/interfaces/cart-repository.interface';
+import { CartOrmEntity } from '../orm-entities/cart.orm-entity';
+import { CartItemOrmEntity } from '../orm-entities/cart-item.orm-entity';
+import { CartMapper } from '../mappers/cart.mapper';
+import { CartItemMapper } from '../mappers/cart-item.mapper';
 
 @Injectable()
 export class CartRepository implements ICartRepository {

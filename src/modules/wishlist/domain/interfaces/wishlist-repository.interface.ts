@@ -1,6 +1,6 @@
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type WishlistItem } from '../entities/wishlist-item.entity.js';
+import { type WishlistItem } from '../entities/wishlist-item.entity';
 
 export const WISHLIST_REPOSITORY = Symbol('WISHLIST_REPOSITORY');
 

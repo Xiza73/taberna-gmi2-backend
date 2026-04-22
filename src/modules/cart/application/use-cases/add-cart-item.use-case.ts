@@ -3,18 +3,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
-import { CartItem } from '../../domain/entities/cart-item.entity.js';
+import { CartItem } from '../../domain/entities/cart-item.entity';
 import {
   CART_REPOSITORY,
   type ICartRepository,
-} from '../../domain/interfaces/cart-repository.interface.js';
+} from '../../domain/interfaces/cart-repository.interface';
 
 @Injectable()
 export class AddCartItemUseCase {

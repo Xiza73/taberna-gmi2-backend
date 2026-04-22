@@ -1,4 +1,4 @@
-import { type Coupon } from '../../domain/entities/coupon.entity.js';
+import { type Coupon } from '../../domain/entities/coupon.entity';
 
 export class CouponResponseDto {
   id: string;

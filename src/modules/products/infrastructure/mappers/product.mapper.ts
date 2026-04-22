@@ -1,5 +1,5 @@
-import { Product } from '../../domain/entities/product.entity.js';
-import { ProductOrmEntity } from '../orm-entities/product.orm-entity.js';
+import { Product } from '../../domain/entities/product.entity';
+import { ProductOrmEntity } from '../orm-entities/product.orm-entity';
 
 export class ProductMapper {
   static toDomain(orm: ProductOrmEntity): Product {

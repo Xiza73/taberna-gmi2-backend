@@ -4,26 +4,26 @@ import { ConfigService } from '@nestjs/config';
 import { hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { DomainConflictException } from '@shared/domain/exceptions/index.js';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
+import { DomainConflictException } from '@shared/domain/exceptions/index';
 
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../../customers/domain/interfaces/customer-repository.interface.js';
-import { Customer } from '../../../customers/domain/entities/customer.entity.js';
+} from '../../../customers/domain/interfaces/customer-repository.interface';
+import { Customer } from '../../../customers/domain/entities/customer.entity';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { RefreshToken } from '../../domain/entities/refresh-token.entity.js';
-import { type RegisterDto } from '../dtos/register.dto.js';
-import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
+} from '../../domain/interfaces/refresh-token-repository.interface';
+import { RefreshToken } from '../../domain/entities/refresh-token.entity';
+import { type RegisterDto } from '../dtos/register.dto';
+import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto';
 
 @Injectable()
 export class RegisterUseCase {

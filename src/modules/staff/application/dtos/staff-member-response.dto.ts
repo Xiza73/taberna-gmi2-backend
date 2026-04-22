@@ -1,4 +1,4 @@
-import { type StaffMember } from '../../domain/entities/staff-member.entity.js';
+import { type StaffMember } from '../../domain/entities/staff-member.entity';
 
 export class StaffMemberResponseDto {
   id: string;

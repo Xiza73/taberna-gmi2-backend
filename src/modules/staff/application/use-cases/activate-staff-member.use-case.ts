@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../domain/interfaces/staff-member-repository.interface.js';
+} from '../../domain/interfaces/staff-member-repository.interface';
 
 @Injectable()
 export class ActivateStaffMemberUseCase {

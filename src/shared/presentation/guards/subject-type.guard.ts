@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { SUBJECT_TYPE_KEY } from '../decorators/subject-type.decorator.js';
-import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface.js';
+import { SUBJECT_TYPE_KEY } from '../decorators/subject-type.decorator';
+import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 
 @Injectable()
 export class SubjectTypeGuard implements CanActivate {

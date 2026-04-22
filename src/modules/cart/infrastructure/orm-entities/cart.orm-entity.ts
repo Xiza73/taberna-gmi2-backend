@@ -10,9 +10,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity';
 
-import { CartItemOrmEntity } from './cart-item.orm-entity.js';
+import { CartItemOrmEntity } from './cart-item.orm-entity';
 
 @Entity('carts')
 export class CartOrmEntity {

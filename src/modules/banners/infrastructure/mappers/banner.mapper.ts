@@ -1,5 +1,5 @@
-import { Banner } from '../../domain/entities/banner.entity.js';
-import { BannerOrmEntity } from '../orm-entities/banner.orm-entity.js';
+import { Banner } from '../../domain/entities/banner.entity';
+import { BannerOrmEntity } from '../orm-entities/banner.orm-entity';
 
 export class BannerMapper {
   static toDomain(orm: BannerOrmEntity): Banner {

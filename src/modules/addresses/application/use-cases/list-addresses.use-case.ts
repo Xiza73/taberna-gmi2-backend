@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ADDRESS_REPOSITORY,
   type IAddressRepository,
-} from '../../domain/interfaces/address-repository.interface.js';
-import { AddressResponseDto } from '../dtos/address-response.dto.js';
+} from '../../domain/interfaces/address-repository.interface';
+import { AddressResponseDto } from '../dtos/address-response.dto';
 
 @Injectable()
 export class ListAddressesUseCase {

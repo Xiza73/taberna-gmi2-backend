@@ -4,19 +4,19 @@ import {
   DomainException,
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PAYMENT_PROVIDER,
   type IPaymentProvider,
-} from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+} from '@modules/payments/domain/interfaces/payment-provider.interface';
 
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
+} from '../../domain/interfaces/order-repository.interface';
 
 @Injectable()
 export class RetryPaymentUseCase {

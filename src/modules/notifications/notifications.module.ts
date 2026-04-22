@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 
-import { EMAIL_SENDER } from './domain/interfaces/email-sender.interface.js';
-import { NodemailerEmailSender } from './infrastructure/services/nodemailer-email-sender.js';
+import { EMAIL_SENDER } from './domain/interfaces/email-sender.interface';
+import { NodemailerEmailSender } from './infrastructure/services/nodemailer-email-sender';
 
 @Global()
 @Module({

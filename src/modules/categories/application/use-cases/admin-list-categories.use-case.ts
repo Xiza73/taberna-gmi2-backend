@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
-import { type CategoryQueryDto } from '../dtos/category-query.dto.js';
-import { CategoryResponseDto } from '../dtos/category-response.dto.js';
+} from '../../domain/interfaces/category-repository.interface';
+import { type CategoryQueryDto } from '../dtos/category-query.dto';
+import { CategoryResponseDto } from '../dtos/category-response.dto';
 
 @Injectable()
 export class AdminListCategoriesUseCase {

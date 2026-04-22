@@ -5,61 +5,61 @@ import {
   DomainException,
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   UNIT_OF_WORK,
   type IUnitOfWork,
   type TransactionContext,
-} from '@shared/domain/interfaces/unit-of-work.interface.js';
+} from '@shared/domain/interfaces/unit-of-work.interface';
 
 import {
   CART_REPOSITORY,
   type ICartRepository,
-} from '@modules/cart/domain/interfaces/cart-repository.interface.js';
+} from '@modules/cart/domain/interfaces/cart-repository.interface';
 import {
   ADDRESS_REPOSITORY,
   type IAddressRepository,
-} from '@modules/addresses/domain/interfaces/address-repository.interface.js';
+} from '@modules/addresses/domain/interfaces/address-repository.interface';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '@modules/customers/domain/interfaces/customer-repository.interface.js';
+} from '@modules/customers/domain/interfaces/customer-repository.interface';
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '@modules/coupons/domain/interfaces/coupon-repository.interface.js';
+} from '@modules/coupons/domain/interfaces/coupon-repository.interface';
 import {
   COUPON_CALCULATOR,
   type CouponCalculator,
-} from '@modules/coupons/domain/services/coupon-calculator.js';
+} from '@modules/coupons/domain/services/coupon-calculator';
 import {
   PAYMENT_PROVIDER,
   type IPaymentProvider,
-} from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+} from '@modules/payments/domain/interfaces/payment-provider.interface';
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
-import { Order } from '../../domain/entities/order.entity.js';
-import { OrderItem } from '../../domain/entities/order-item.entity.js';
-import { OrderEvent } from '../../domain/entities/order-event.entity.js';
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
+import { Order } from '../../domain/entities/order.entity';
+import { OrderItem } from '../../domain/entities/order-item.entity';
+import { OrderEvent } from '../../domain/entities/order-event.entity';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
+} from '../../domain/interfaces/order-repository.interface';
 import {
   ORDER_NUMBER_GENERATOR,
   type IOrderNumberGenerator,
-} from '../../domain/interfaces/order-number-generator.interface.js';
-import { type CreateOrderDto } from '../dtos/create-order.dto.js';
-import { OrderResponseDto } from '../dtos/order-response.dto.js';
+} from '../../domain/interfaces/order-number-generator.interface';
+import { type CreateOrderDto } from '../dtos/create-order.dto';
+import { OrderResponseDto } from '../dtos/order-response.dto';
 
 @Injectable()
 export class CreateOrderUseCase {

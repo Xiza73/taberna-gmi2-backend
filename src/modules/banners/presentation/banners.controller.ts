@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { ListActiveBannersUseCase } from '../application/use-cases/list-active-banners.use-case.js';
+import { ListActiveBannersUseCase } from '../application/use-cases/list-active-banners.use-case';
 
 @Controller('banners')
 @Public()

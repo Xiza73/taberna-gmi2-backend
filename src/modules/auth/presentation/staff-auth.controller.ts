@@ -1,28 +1,28 @@
 import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { StaffLoginUseCase } from '../application/use-cases/staff-login.use-case.js';
-import { StaffGetMeUseCase } from '../application/use-cases/staff-get-me.use-case.js';
-import { StaffUpdateProfileUseCase } from '../application/use-cases/staff-update-profile.use-case.js';
-import { StaffChangePasswordUseCase } from '../application/use-cases/staff-change-password.use-case.js';
-import { StaffForgotPasswordUseCase } from '../application/use-cases/staff-forgot-password.use-case.js';
-import { StaffResetPasswordUseCase } from '../application/use-cases/staff-reset-password.use-case.js';
-import { StaffGoogleAuthUseCase } from '../application/use-cases/staff-google-auth.use-case.js';
-import { RefreshTokenUseCase } from '../application/use-cases/refresh-token.use-case.js';
-import { LogoutUseCase } from '../application/use-cases/logout.use-case.js';
-import { LoginDto } from '../application/dtos/login.dto.js';
-import { RefreshTokenDto } from '../application/dtos/refresh-token.dto.js';
-import { ForgotPasswordDto } from '../application/dtos/forgot-password.dto.js';
-import { ResetPasswordDto } from '../application/dtos/reset-password.dto.js';
-import { GoogleAuthDto } from '../application/dtos/google-auth.dto.js';
-import { UpdateStaffProfileDto } from '../../staff/application/dtos/update-staff-profile.dto.js';
-import { ChangePasswordDto } from '../../customers/application/dtos/change-password.dto.js';
+import { StaffLoginUseCase } from '../application/use-cases/staff-login.use-case';
+import { StaffGetMeUseCase } from '../application/use-cases/staff-get-me.use-case';
+import { StaffUpdateProfileUseCase } from '../application/use-cases/staff-update-profile.use-case';
+import { StaffChangePasswordUseCase } from '../application/use-cases/staff-change-password.use-case';
+import { StaffForgotPasswordUseCase } from '../application/use-cases/staff-forgot-password.use-case';
+import { StaffResetPasswordUseCase } from '../application/use-cases/staff-reset-password.use-case';
+import { StaffGoogleAuthUseCase } from '../application/use-cases/staff-google-auth.use-case';
+import { RefreshTokenUseCase } from '../application/use-cases/refresh-token.use-case';
+import { LogoutUseCase } from '../application/use-cases/logout.use-case';
+import { LoginDto } from '../application/dtos/login.dto';
+import { RefreshTokenDto } from '../application/dtos/refresh-token.dto';
+import { ForgotPasswordDto } from '../application/dtos/forgot-password.dto';
+import { ResetPasswordDto } from '../application/dtos/reset-password.dto';
+import { GoogleAuthDto } from '../application/dtos/google-auth.dto';
+import { UpdateStaffProfileDto } from '../../staff/application/dtos/update-staff-profile.dto';
+import { ChangePasswordDto } from '../../customers/application/dtos/change-password.dto';
 
 @Controller('staff/auth')
 export class StaffAuthController {

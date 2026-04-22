@@ -1,6 +1,6 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
-import { StaffRole } from '@shared/domain/enums/staff-role.enum.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
+import { DomainException } from '@shared/domain/exceptions/index';
+import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
 export class StaffMember extends BaseEntity {
   private _name: string;

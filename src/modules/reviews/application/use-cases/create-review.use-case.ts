@@ -5,26 +5,26 @@ import {
   DomainConflictException,
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '@modules/orders/domain/interfaces/order-repository.interface.js';
-import { OrderStatus } from '@modules/orders/domain/enums/order-status.enum.js';
+} from '@modules/orders/domain/interfaces/order-repository.interface';
+import { OrderStatus } from '@modules/orders/domain/enums/order-status.enum';
 
-import { Review } from '../../domain/entities/review.entity.js';
+import { Review } from '../../domain/entities/review.entity';
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
-import { type CreateReviewDto } from '../dtos/create-review.dto.js';
-import { ReviewResponseDto } from '../dtos/review-response.dto.js';
+} from '../../domain/interfaces/review-repository.interface';
+import { type CreateReviewDto } from '../dtos/create-review.dto';
+import { ReviewResponseDto } from '../dtos/review-response.dto';
 
 @Injectable()
 export class CreateReviewUseCase {

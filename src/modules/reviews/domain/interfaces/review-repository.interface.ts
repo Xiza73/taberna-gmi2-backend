@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Review } from '../entities/review.entity.js';
+import { type Review } from '../entities/review.entity';
 
 export const REVIEW_REPOSITORY = Symbol('REVIEW_REPOSITORY');
 

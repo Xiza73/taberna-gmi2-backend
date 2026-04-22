@@ -4,24 +4,24 @@ import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { DomainUnauthorizedException } from '@shared/domain/exceptions/index.js';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
+import { DomainUnauthorizedException } from '@shared/domain/exceptions/index';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../../customers/domain/interfaces/customer-repository.interface.js';
+} from '../../../customers/domain/interfaces/customer-repository.interface';
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { RefreshToken } from '../../domain/entities/refresh-token.entity.js';
-import { type RefreshTokenDto } from '../dtos/refresh-token.dto.js';
-import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
+} from '../../domain/interfaces/refresh-token-repository.interface';
+import { RefreshToken } from '../../domain/entities/refresh-token.entity';
+import { type RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto';
 
 @Injectable()
 export class RefreshTokenUseCase {

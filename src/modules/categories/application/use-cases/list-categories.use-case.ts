@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
-import { CategoryResponseDto } from '../dtos/category-response.dto.js';
+} from '../../domain/interfaces/category-repository.interface';
+import { CategoryResponseDto } from '../dtos/category-response.dto';
 
 @Injectable()
 export class ListCategoriesUseCase {

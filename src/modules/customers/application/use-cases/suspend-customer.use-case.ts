@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../domain/interfaces/customer-repository.interface.js';
+} from '../../domain/interfaces/customer-repository.interface';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../../auth/domain/interfaces/refresh-token-repository.interface.js';
-import { CustomerResponseDto } from '../dtos/customer-response.dto.js';
+} from '../../../auth/domain/interfaces/refresh-token-repository.interface';
+import { CustomerResponseDto } from '../dtos/customer-response.dto';
 
 @Injectable()
 export class SuspendCustomerUseCase {

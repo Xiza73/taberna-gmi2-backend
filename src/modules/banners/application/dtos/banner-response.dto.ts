@@ -1,4 +1,4 @@
-import { type Banner } from '../../domain/entities/banner.entity.js';
+import { type Banner } from '../../domain/entities/banner.entity';
 
 export class BannerResponseDto {
   id: string;

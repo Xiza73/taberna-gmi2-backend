@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { DomainException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   type IPaymentProvider,
   type PaymentInfo,
-} from '../../domain/interfaces/payment-provider.interface.js';
+} from '../../domain/interfaces/payment-provider.interface';
 
 @Injectable()
 export class MercadoPagoPaymentService implements IPaymentProvider {

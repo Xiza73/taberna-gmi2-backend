@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Payment } from '../../domain/entities/payment.entity.js';
-import { type IPaymentRepository } from '../../domain/interfaces/payment-repository.interface.js';
-import { PaymentOrmEntity } from '../orm-entities/payment.orm-entity.js';
-import { PaymentMapper } from '../mappers/payment.mapper.js';
+import { type Payment } from '../../domain/entities/payment.entity';
+import { type IPaymentRepository } from '../../domain/interfaces/payment-repository.interface';
+import { PaymentOrmEntity } from '../orm-entities/payment.orm-entity';
+import { PaymentMapper } from '../mappers/payment.mapper';
 
 @Injectable()
 export class PaymentRepository implements IPaymentRepository {

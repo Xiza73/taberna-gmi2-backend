@@ -5,7 +5,7 @@ import {
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
 @Controller('health')
 @Public()

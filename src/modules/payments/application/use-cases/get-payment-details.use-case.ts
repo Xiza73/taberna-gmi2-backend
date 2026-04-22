@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PAYMENT_REPOSITORY,
   type IPaymentRepository,
-} from '../../domain/interfaces/payment-repository.interface.js';
-import { PaymentResponseDto } from '../dtos/payment-response.dto.js';
+} from '../../domain/interfaces/payment-repository.interface';
+import { PaymentResponseDto } from '../dtos/payment-response.dto';
 
 @Injectable()
 export class GetPaymentDetailsUseCase {

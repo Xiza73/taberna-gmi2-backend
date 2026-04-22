@@ -9,13 +9,13 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
-import { ErrorMessages } from '../../domain/constants/error-messages.js';
-import { DomainUnauthorizedException } from '../../domain/exceptions/index.js';
-import { CUSTOMER_REPOSITORY } from '../../../modules/customers/domain/interfaces/customer-repository.interface.js';
-import { type ICustomerRepository } from '../../../modules/customers/domain/interfaces/customer-repository.interface.js';
-import { STAFF_MEMBER_REPOSITORY } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface.js';
-import { type IStaffMemberRepository } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface.js';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { ErrorMessages } from '../../domain/constants/error-messages';
+import { DomainUnauthorizedException } from '../../domain/exceptions/index';
+import { CUSTOMER_REPOSITORY } from '../../../modules/customers/domain/interfaces/customer-repository.interface';
+import { type ICustomerRepository } from '../../../modules/customers/domain/interfaces/customer-repository.interface';
+import { STAFF_MEMBER_REPOSITORY } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface';
+import { type IStaffMemberRepository } from '../../../modules/staff/domain/interfaces/staff-member-repository.interface';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

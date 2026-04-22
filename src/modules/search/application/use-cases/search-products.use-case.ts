@@ -3,14 +3,14 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
 import {
   PRODUCT_SEARCH,
   type IProductSearchService,
   type ProductSearchResult,
-} from '../../domain/interfaces/product-search.interface.js';
-import { type SearchQueryDto } from '../dtos/search-query.dto.js';
+} from '../../domain/interfaces/product-search.interface';
+import { type SearchQueryDto } from '../dtos/search-query.dto';
 
 @Injectable()
 export class SearchProductsUseCase {

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '../../domain/interfaces/product-repository.interface.js';
-import { type ProductQueryDto } from '../dtos/product-query.dto.js';
-import { ProductResponseDto } from '../dtos/product-response.dto.js';
+} from '../../domain/interfaces/product-repository.interface';
+import { type ProductQueryDto } from '../dtos/product-query.dto';
+import { ProductResponseDto } from '../dtos/product-response.dto';
 
 @Injectable()
 export class AdminListProductsUseCase {

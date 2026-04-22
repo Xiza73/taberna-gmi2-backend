@@ -1,5 +1,5 @@
-import { Shipment } from '../../domain/entities/shipment.entity.js';
-import { ShipmentOrmEntity } from '../orm-entities/shipment.orm-entity.js';
+import { Shipment } from '../../domain/entities/shipment.entity';
+import { ShipmentOrmEntity } from '../orm-entities/shipment.orm-entity';
 
 export class ShipmentMapper {
   static toDomain(orm: ShipmentOrmEntity): Shipment {

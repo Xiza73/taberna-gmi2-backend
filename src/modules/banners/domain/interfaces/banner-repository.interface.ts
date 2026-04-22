@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Banner } from '../entities/banner.entity.js';
+import { type Banner } from '../entities/banner.entity';
 
 export const BANNER_REPOSITORY = Symbol('BANNER_REPOSITORY');
 

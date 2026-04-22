@@ -1,10 +1,10 @@
 import { Controller, Post } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { ReindexProductsUseCase } from '../application/use-cases/reindex-products.use-case.js';
+import { ReindexProductsUseCase } from '../application/use-cases/reindex-products.use-case';
 
 @Controller('admin/search')
 @RequireSubjectType(SubjectType.STAFF)

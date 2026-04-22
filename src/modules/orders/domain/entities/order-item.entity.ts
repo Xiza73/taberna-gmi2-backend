@@ -1,4 +1,4 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
 
 export class OrderItem extends BaseEntity {
   private _orderId: string;

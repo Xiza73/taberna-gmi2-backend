@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity.js';
+import { CustomerOrmEntity } from '@modules/customers/infrastructure/orm-entities/customer.orm-entity';
 
 @Entity('addresses')
 @Index('idx_addresses_user_id', ['userId'])

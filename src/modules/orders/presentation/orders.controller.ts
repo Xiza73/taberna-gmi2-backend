@@ -9,17 +9,17 @@ import {
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { CreateOrderUseCase } from '../application/use-cases/create-order.use-case.js';
-import { ListMyOrdersUseCase } from '../application/use-cases/list-my-orders.use-case.js';
-import { GetOrderUseCase } from '../application/use-cases/get-order.use-case.js';
-import { CancelOrderUseCase } from '../application/use-cases/cancel-order.use-case.js';
-import { RetryPaymentUseCase } from '../application/use-cases/retry-payment.use-case.js';
-import { VerifyPaymentUseCase } from '../application/use-cases/verify-payment.use-case.js';
-import { CreateOrderDto } from '../application/dtos/create-order.dto.js';
-import { OrderQueryDto } from '../application/dtos/order-query.dto.js';
+import { CreateOrderUseCase } from '../application/use-cases/create-order.use-case';
+import { ListMyOrdersUseCase } from '../application/use-cases/list-my-orders.use-case';
+import { GetOrderUseCase } from '../application/use-cases/get-order.use-case';
+import { CancelOrderUseCase } from '../application/use-cases/cancel-order.use-case';
+import { RetryPaymentUseCase } from '../application/use-cases/retry-payment.use-case';
+import { VerifyPaymentUseCase } from '../application/use-cases/verify-payment.use-case';
+import { CreateOrderDto } from '../application/dtos/create-order.dto';
+import { OrderQueryDto } from '../application/dtos/order-query.dto';
 
 @Controller('orders')
 export class OrdersController {

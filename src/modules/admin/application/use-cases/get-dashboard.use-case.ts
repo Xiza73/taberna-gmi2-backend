@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { DashboardResponseDto } from '../dtos/dashboard-response.dto.js';
+import { DashboardResponseDto } from '../dtos/dashboard-response.dto';
 
 @Injectable()
 export class GetDashboardUseCase {

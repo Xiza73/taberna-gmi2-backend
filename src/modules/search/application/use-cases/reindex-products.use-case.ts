@@ -4,11 +4,11 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '@modules/categories/domain/interfaces/category-repository.interface.js';
+} from '@modules/categories/domain/interfaces/category-repository.interface';
 
 @Injectable()
 export class ReindexProductsUseCase {

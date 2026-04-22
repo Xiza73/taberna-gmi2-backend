@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
-import { ReviewResponseDto } from '../dtos/review-response.dto.js';
+} from '../../domain/interfaces/review-repository.interface';
+import { ReviewResponseDto } from '../dtos/review-response.dto';
 
 @Injectable()
 export class AdminListPendingReviewsUseCase {

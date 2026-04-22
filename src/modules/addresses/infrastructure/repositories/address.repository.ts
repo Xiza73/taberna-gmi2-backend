@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Address } from '../../domain/entities/address.entity.js';
-import { type IAddressRepository } from '../../domain/interfaces/address-repository.interface.js';
-import { AddressOrmEntity } from '../orm-entities/address.orm-entity.js';
-import { AddressMapper } from '../mappers/address.mapper.js';
+import { type Address } from '../../domain/entities/address.entity';
+import { type IAddressRepository } from '../../domain/interfaces/address-repository.interface';
+import { AddressOrmEntity } from '../orm-entities/address.orm-entity';
+import { AddressMapper } from '../mappers/address.mapper';
 
 @Injectable()
 export class AddressRepository implements IAddressRepository {

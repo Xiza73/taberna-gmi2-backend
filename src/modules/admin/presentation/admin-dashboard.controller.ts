@@ -6,14 +6,14 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { GetDashboardUseCase } from '../application/use-cases/get-dashboard.use-case.js';
-import { GetSalesReportUseCase } from '../application/use-cases/get-sales-report.use-case.js';
-import { GetTopProductsUseCase } from '../application/use-cases/get-top-products.use-case.js';
-import { SalesReportQueryDto } from '../application/dtos/sales-report-query.dto.js';
+import { GetDashboardUseCase } from '../application/use-cases/get-dashboard.use-case';
+import { GetSalesReportUseCase } from '../application/use-cases/get-sales-report.use-case';
+import { GetTopProductsUseCase } from '../application/use-cases/get-top-products.use-case';
+import { SalesReportQueryDto } from '../application/dtos/sales-report-query.dto';
 
 @Controller('admin/dashboard')
 @RequireSubjectType(SubjectType.STAFF)

@@ -10,20 +10,20 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListProductsUseCase } from '../application/use-cases/admin-list-products.use-case.js';
-import { AdminGetProductUseCase } from '../application/use-cases/admin-get-product.use-case.js';
-import { CreateProductUseCase } from '../application/use-cases/create-product.use-case.js';
-import { UpdateProductUseCase } from '../application/use-cases/update-product.use-case.js';
-import { DeleteProductUseCase } from '../application/use-cases/delete-product.use-case.js';
-import { AdjustStockUseCase } from '../application/use-cases/adjust-stock.use-case.js';
-import { ProductQueryDto } from '../application/dtos/product-query.dto.js';
-import { CreateProductDto } from '../application/dtos/create-product.dto.js';
-import { UpdateProductDto } from '../application/dtos/update-product.dto.js';
-import { AdjustStockDto } from '../application/dtos/adjust-stock.dto.js';
+import { AdminListProductsUseCase } from '../application/use-cases/admin-list-products.use-case';
+import { AdminGetProductUseCase } from '../application/use-cases/admin-get-product.use-case';
+import { CreateProductUseCase } from '../application/use-cases/create-product.use-case';
+import { UpdateProductUseCase } from '../application/use-cases/update-product.use-case';
+import { DeleteProductUseCase } from '../application/use-cases/delete-product.use-case';
+import { AdjustStockUseCase } from '../application/use-cases/adjust-stock.use-case';
+import { ProductQueryDto } from '../application/dtos/product-query.dto';
+import { CreateProductDto } from '../application/dtos/create-product.dto';
+import { UpdateProductDto } from '../application/dtos/update-product.dto';
+import { AdjustStockDto } from '../application/dtos/adjust-stock.dto';
 
 @Controller('admin/products')
 @RequireSubjectType(SubjectType.STAFF)

@@ -1,8 +1,8 @@
-import { DomainException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { type Coupon } from '../entities/coupon.entity.js';
-import { CouponType } from '../enums/coupon-type.enum.js';
+import { type Coupon } from '../entities/coupon.entity';
+import { CouponType } from '../enums/coupon-type.enum';
 
 export const COUPON_CALCULATOR = Symbol('COUPON_CALCULATOR');
 

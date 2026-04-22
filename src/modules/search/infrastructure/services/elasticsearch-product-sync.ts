@@ -4,10 +4,10 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '@modules/categories/domain/interfaces/category-repository.interface.js';
+} from '@modules/categories/domain/interfaces/category-repository.interface';
 
-import { type Product } from '@modules/products/domain/entities/product.entity.js';
-import { type IProductSearchSync } from '@modules/products/domain/interfaces/product-search-sync.interface.js';
+import { type Product } from '@modules/products/domain/entities/product.entity';
+import { type IProductSearchSync } from '@modules/products/domain/interfaces/product-search-sync.interface';
 
 @Injectable()
 export class ElasticsearchProductSync implements IProductSearchSync {

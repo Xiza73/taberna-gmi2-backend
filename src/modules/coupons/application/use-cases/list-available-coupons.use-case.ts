@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '../../domain/interfaces/coupon-repository.interface.js';
-import { PublicCouponResponseDto } from '../dtos/public-coupon-response.dto.js';
+} from '../../domain/interfaces/coupon-repository.interface';
+import { PublicCouponResponseDto } from '../dtos/public-coupon-response.dto';
 
 @Injectable()
 export class ListAvailableCouponsUseCase {

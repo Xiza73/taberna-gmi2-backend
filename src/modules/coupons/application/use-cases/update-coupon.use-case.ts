@@ -3,15 +3,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainConflictException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '../../domain/interfaces/coupon-repository.interface.js';
-import { type UpdateCouponDto } from '../dtos/update-coupon.dto.js';
-import { CouponResponseDto } from '../dtos/coupon-response.dto.js';
+} from '../../domain/interfaces/coupon-repository.interface';
+import { type UpdateCouponDto } from '../dtos/update-coupon.dto';
+import { CouponResponseDto } from '../dtos/coupon-response.dto';
 
 @Injectable()
 export class UpdateCouponUseCase {

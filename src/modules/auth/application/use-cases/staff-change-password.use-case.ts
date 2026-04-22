@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcryptjs';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
+} from '@shared/domain/exceptions/index';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { type ChangePasswordDto } from '../../../customers/application/dtos/change-password.dto.js';
+} from '../../domain/interfaces/refresh-token-repository.interface';
+import { type ChangePasswordDto } from '../../../customers/application/dtos/change-password.dto';
 
 @Injectable()
 export class StaffChangePasswordUseCase {

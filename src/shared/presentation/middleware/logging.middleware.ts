@@ -2,7 +2,7 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { type Request, type Response, type NextFunction } from 'express';
 
-import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface.js';
+import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {

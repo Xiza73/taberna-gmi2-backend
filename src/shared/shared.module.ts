@@ -2,9 +2,9 @@ import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { UNIT_OF_WORK } from './domain/interfaces/unit-of-work.interface.js';
-import { TypeOrmUnitOfWork } from './infrastructure/typeorm-unit-of-work.js';
-import { LoggingMiddleware } from './presentation/middleware/logging.middleware.js';
+import { UNIT_OF_WORK } from './domain/interfaces/unit-of-work.interface';
+import { TypeOrmUnitOfWork } from './infrastructure/typeorm-unit-of-work';
+import { LoggingMiddleware } from './presentation/middleware/logging.middleware';
 
 @Global()
 @Module({

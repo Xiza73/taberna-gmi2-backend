@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '../../domain/interfaces/product-repository.interface.js';
-import { ProductResponseDto } from '../dtos/product-response.dto.js';
+} from '../../domain/interfaces/product-repository.interface';
+import { ProductResponseDto } from '../dtos/product-response.dto';
 
 @Injectable()
 export class GetProductBySlugUseCase {

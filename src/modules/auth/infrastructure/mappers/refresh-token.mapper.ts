@@ -1,5 +1,5 @@
-import { RefreshToken } from '../../domain/entities/refresh-token.entity.js';
-import { RefreshTokenOrmEntity } from '../orm-entities/refresh-token.orm-entity.js';
+import { RefreshToken } from '../../domain/entities/refresh-token.entity';
+import { RefreshTokenOrmEntity } from '../orm-entities/refresh-token.orm-entity';
 
 export class RefreshTokenMapper {
   static toDomain(orm: RefreshTokenOrmEntity): RefreshToken {

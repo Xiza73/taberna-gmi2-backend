@@ -3,16 +3,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainConflictException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { Category } from '../../domain/entities/category.entity.js';
+import { Category } from '../../domain/entities/category.entity';
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
-import { type CreateCategoryDto } from '../dtos/create-category.dto.js';
-import { CategoryResponseDto } from '../dtos/category-response.dto.js';
+} from '../../domain/interfaces/category-repository.interface';
+import { type CreateCategoryDto } from '../dtos/create-category.dto';
+import { CategoryResponseDto } from '../dtos/category-response.dto';
 
 @Injectable()
 export class CreateCategoryUseCase {

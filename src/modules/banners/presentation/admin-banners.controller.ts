@@ -10,18 +10,18 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { PaginationDto } from '@shared/application/dtos/pagination.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListBannersUseCase } from '../application/use-cases/admin-list-banners.use-case.js';
-import { AdminGetBannerUseCase } from '../application/use-cases/admin-get-banner.use-case.js';
-import { CreateBannerUseCase } from '../application/use-cases/create-banner.use-case.js';
-import { UpdateBannerUseCase } from '../application/use-cases/update-banner.use-case.js';
-import { DeleteBannerUseCase } from '../application/use-cases/delete-banner.use-case.js';
-import { CreateBannerDto } from '../application/dtos/create-banner.dto.js';
-import { UpdateBannerDto } from '../application/dtos/update-banner.dto.js';
+import { AdminListBannersUseCase } from '../application/use-cases/admin-list-banners.use-case';
+import { AdminGetBannerUseCase } from '../application/use-cases/admin-get-banner.use-case';
+import { CreateBannerUseCase } from '../application/use-cases/create-banner.use-case';
+import { UpdateBannerUseCase } from '../application/use-cases/update-banner.use-case';
+import { DeleteBannerUseCase } from '../application/use-cases/delete-banner.use-case';
+import { CreateBannerDto } from '../application/dtos/create-banner.dto';
+import { UpdateBannerDto } from '../application/dtos/update-banner.dto';
 
 @Controller('admin/banners')
 @RequireSubjectType(SubjectType.STAFF)

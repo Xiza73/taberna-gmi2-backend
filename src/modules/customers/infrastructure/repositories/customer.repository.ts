@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Customer } from '../../domain/entities/customer.entity.js';
-import { type ICustomerRepository } from '../../domain/interfaces/customer-repository.interface.js';
-import { CustomerOrmEntity } from '../orm-entities/customer.orm-entity.js';
-import { CustomerMapper } from '../mappers/customer.mapper.js';
+import { type Customer } from '../../domain/entities/customer.entity';
+import { type ICustomerRepository } from '../../domain/interfaces/customer-repository.interface';
+import { CustomerOrmEntity } from '../orm-entities/customer.orm-entity';
+import { CustomerMapper } from '../mappers/customer.mapper';
 
 @Injectable()
 export class CustomerRepository implements ICustomerRepository {

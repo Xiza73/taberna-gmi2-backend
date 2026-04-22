@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
+} from '../../domain/interfaces/review-repository.interface';
 
 @Injectable()
 export class DeleteOwnReviewUseCase {

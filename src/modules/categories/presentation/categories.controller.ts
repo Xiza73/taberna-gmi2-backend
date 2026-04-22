@@ -1,10 +1,10 @@
 import { Controller, Get, Param } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { ListCategoriesUseCase } from '../application/use-cases/list-categories.use-case.js';
-import { GetCategoryBySlugUseCase } from '../application/use-cases/get-category-by-slug.use-case.js';
+import { ListCategoriesUseCase } from '../application/use-cases/list-categories.use-case';
+import { GetCategoryBySlugUseCase } from '../application/use-cases/get-category-by-slug.use-case';
 
 @Controller('categories')
 @Public()

@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import {
   type IUnitOfWork,
   type TransactionContext,
-} from '../domain/interfaces/unit-of-work.interface.js';
+} from '../domain/interfaces/unit-of-work.interface';
 
 @Injectable()
 export class TypeOrmUnitOfWork implements IUnitOfWork {

@@ -10,13 +10,13 @@ import {
   type SendOrderShippedProps,
   type SendOrderDeliveredProps,
   type SendPasswordResetProps,
-} from '../../domain/interfaces/email-sender.interface.js';
-import { welcomeTemplate } from '../templates/welcome.template.js';
-import { orderConfirmationTemplate } from '../templates/order-confirmation.template.js';
-import { paymentConfirmedTemplate } from '../templates/payment-confirmed.template.js';
-import { orderShippedTemplate } from '../templates/order-shipped.template.js';
-import { orderDeliveredTemplate } from '../templates/order-delivered.template.js';
-import { passwordResetTemplate } from '../templates/password-reset.template.js';
+} from '../../domain/interfaces/email-sender.interface';
+import { welcomeTemplate } from '../templates/welcome.template';
+import { orderConfirmationTemplate } from '../templates/order-confirmation.template';
+import { paymentConfirmedTemplate } from '../templates/payment-confirmed.template';
+import { orderShippedTemplate } from '../templates/order-shipped.template';
+import { orderDeliveredTemplate } from '../templates/order-delivered.template';
+import { passwordResetTemplate } from '../templates/password-reset.template';
 
 @Injectable()
 export class NodemailerEmailSender implements IEmailSender {

@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CouponType } from '../../domain/enums/coupon-type.enum.js';
+import { CouponType } from '../../domain/enums/coupon-type.enum';
 
 @Entity('coupons')
 @Index('idx_coupons_code', ['code'], { unique: true })

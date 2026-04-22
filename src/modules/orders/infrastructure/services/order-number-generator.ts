@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { type IOrderNumberGenerator } from '../../domain/interfaces/order-number-generator.interface.js';
+import { type IOrderNumberGenerator } from '../../domain/interfaces/order-number-generator.interface';
 
 @Injectable()
 export class OrderNumberGenerator implements IOrderNumberGenerator {

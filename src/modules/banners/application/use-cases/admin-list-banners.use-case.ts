@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   PaginatedResponseDto,
   PaginationDto,
-} from '@shared/application/dtos/pagination.dto.js';
+} from '@shared/application/dtos/pagination.dto';
 
 import {
   BANNER_REPOSITORY,
   type IBannerRepository,
-} from '../../domain/interfaces/banner-repository.interface.js';
-import { BannerResponseDto } from '../dtos/banner-response.dto.js';
+} from '../../domain/interfaces/banner-repository.interface';
+import { BannerResponseDto } from '../dtos/banner-response.dto';
 
 @Injectable()
 export class AdminListBannersUseCase {

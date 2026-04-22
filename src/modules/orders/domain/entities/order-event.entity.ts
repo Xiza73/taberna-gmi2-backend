@@ -1,6 +1,6 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
 
-import { type OrderStatus } from '../enums/order-status.enum.js';
+import { type OrderStatus } from '../enums/order-status.enum';
 
 export class OrderEvent extends BaseEntity {
   private _orderId: string;

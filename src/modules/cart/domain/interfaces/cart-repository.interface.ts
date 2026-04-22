@@ -1,7 +1,7 @@
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Cart } from '../entities/cart.entity.js';
-import { type CartItem } from '../entities/cart-item.entity.js';
+import { type Cart } from '../entities/cart.entity';
+import { type CartItem } from '../entities/cart-item.entity';
 
 export const CART_REPOSITORY = Symbol('CART_REPOSITORY');
 

@@ -3,14 +3,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
-import { OrderResponseDto } from '../dtos/order-response.dto.js';
+} from '../../domain/interfaces/order-repository.interface';
+import { OrderResponseDto } from '../dtos/order-response.dto';
 
 @Injectable()
 export class GetOrderUseCase {

@@ -6,29 +6,29 @@ import {
   UNIT_OF_WORK,
   type IUnitOfWork,
   type TransactionContext,
-} from '@shared/domain/interfaces/unit-of-work.interface.js';
+} from '@shared/domain/interfaces/unit-of-work.interface';
 
 import {
   PAYMENT_PROVIDER,
   type IPaymentProvider,
-} from '@modules/payments/domain/interfaces/payment-provider.interface.js';
+} from '@modules/payments/domain/interfaces/payment-provider.interface';
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 import {
   PAYMENT_REPOSITORY,
   type IPaymentRepository,
-} from '@modules/payments/domain/interfaces/payment-repository.interface.js';
-import { Payment } from '@modules/payments/domain/entities/payment.entity.js';
-import { PaymentStatus } from '@modules/payments/domain/enums/payment-status.enum.js';
+} from '@modules/payments/domain/interfaces/payment-repository.interface';
+import { Payment } from '@modules/payments/domain/entities/payment.entity';
+import { PaymentStatus } from '@modules/payments/domain/enums/payment-status.enum';
 
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
-import { OrderEvent } from '../../domain/entities/order-event.entity.js';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
+import { OrderEvent } from '../../domain/entities/order-event.entity';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
+} from '../../domain/interfaces/order-repository.interface';
 
 @Injectable()
 export class ProcessPaymentNotificationUseCase {

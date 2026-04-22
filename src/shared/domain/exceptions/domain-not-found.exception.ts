@@ -1,4 +1,4 @@
-import { DomainException } from './domain.exception.js';
+import { DomainException } from './domain.exception';
 
 export class DomainNotFoundException extends DomainException {
   constructor(entity: string, id?: string) {

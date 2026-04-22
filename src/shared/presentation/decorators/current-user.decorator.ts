@@ -1,6 +1,6 @@
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 
-import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface.js';
+import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 
 export const CurrentUser = createParamDecorator(
   (data: keyof AuthenticatedUser | undefined, ctx: ExecutionContext) => {

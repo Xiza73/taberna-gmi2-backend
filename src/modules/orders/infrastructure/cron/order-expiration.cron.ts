@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 
-import { ExpireUnpaidOrdersUseCase } from '../../application/use-cases/expire-unpaid-orders.use-case.js';
+import { ExpireUnpaidOrdersUseCase } from '../../application/use-cases/expire-unpaid-orders.use-case';
 
 @Injectable()
 export class OrderExpirationCron {

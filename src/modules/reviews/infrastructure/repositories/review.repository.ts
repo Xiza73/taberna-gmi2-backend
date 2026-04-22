@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Review } from '../../domain/entities/review.entity.js';
-import { type IReviewRepository } from '../../domain/interfaces/review-repository.interface.js';
-import { ReviewOrmEntity } from '../orm-entities/review.orm-entity.js';
-import { ReviewMapper } from '../mappers/review.mapper.js';
+import { type Review } from '../../domain/entities/review.entity';
+import { type IReviewRepository } from '../../domain/interfaces/review-repository.interface';
+import { ReviewOrmEntity } from '../orm-entities/review.orm-entity';
+import { ReviewMapper } from '../mappers/review.mapper';
 
 @Injectable()
 export class ReviewRepository implements IReviewRepository {

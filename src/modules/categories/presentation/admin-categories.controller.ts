@@ -10,18 +10,18 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListCategoriesUseCase } from '../application/use-cases/admin-list-categories.use-case.js';
-import { AdminGetCategoryUseCase } from '../application/use-cases/admin-get-category.use-case.js';
-import { CreateCategoryUseCase } from '../application/use-cases/create-category.use-case.js';
-import { UpdateCategoryUseCase } from '../application/use-cases/update-category.use-case.js';
-import { DeleteCategoryUseCase } from '../application/use-cases/delete-category.use-case.js';
-import { CategoryQueryDto } from '../application/dtos/category-query.dto.js';
-import { CreateCategoryDto } from '../application/dtos/create-category.dto.js';
-import { UpdateCategoryDto } from '../application/dtos/update-category.dto.js';
+import { AdminListCategoriesUseCase } from '../application/use-cases/admin-list-categories.use-case';
+import { AdminGetCategoryUseCase } from '../application/use-cases/admin-get-category.use-case';
+import { CreateCategoryUseCase } from '../application/use-cases/create-category.use-case';
+import { UpdateCategoryUseCase } from '../application/use-cases/update-category.use-case';
+import { DeleteCategoryUseCase } from '../application/use-cases/delete-category.use-case';
+import { CategoryQueryDto } from '../application/dtos/category-query.dto';
+import { CreateCategoryDto } from '../application/dtos/create-category.dto';
+import { UpdateCategoryDto } from '../application/dtos/update-category.dto';
 
 @Controller('admin/categories')
 @RequireSubjectType(SubjectType.STAFF)

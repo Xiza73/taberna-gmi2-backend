@@ -9,16 +9,16 @@ import {
   Post,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { ListAddressesUseCase } from '../application/use-cases/list-addresses.use-case.js';
-import { CreateAddressUseCase } from '../application/use-cases/create-address.use-case.js';
-import { UpdateAddressUseCase } from '../application/use-cases/update-address.use-case.js';
-import { DeleteAddressUseCase } from '../application/use-cases/delete-address.use-case.js';
-import { SetDefaultAddressUseCase } from '../application/use-cases/set-default-address.use-case.js';
-import { CreateAddressDto } from '../application/dtos/create-address.dto.js';
-import { UpdateAddressDto } from '../application/dtos/update-address.dto.js';
+import { ListAddressesUseCase } from '../application/use-cases/list-addresses.use-case';
+import { CreateAddressUseCase } from '../application/use-cases/create-address.use-case';
+import { UpdateAddressUseCase } from '../application/use-cases/update-address.use-case';
+import { DeleteAddressUseCase } from '../application/use-cases/delete-address.use-case';
+import { SetDefaultAddressUseCase } from '../application/use-cases/set-default-address.use-case';
+import { CreateAddressDto } from '../application/dtos/create-address.dto';
+import { UpdateAddressDto } from '../application/dtos/update-address.dto';
 
 @Controller('addresses')
 export class AddressesController {

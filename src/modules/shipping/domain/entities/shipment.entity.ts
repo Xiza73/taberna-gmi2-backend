@@ -1,7 +1,7 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
 
-import { type Carrier } from '../enums/carrier.enum.js';
-import { type ShipmentStatus } from '../enums/shipment-status.enum.js';
+import { type Carrier } from '../enums/carrier.enum';
+import { type ShipmentStatus } from '../enums/shipment-status.enum';
 
 export class Shipment extends BaseEntity {
   private _orderId: string;

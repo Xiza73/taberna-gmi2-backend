@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AddressOrmEntity } from './infrastructure/orm-entities/address.orm-entity.js';
-import { AddressRepository } from './infrastructure/repositories/address.repository.js';
-import { ADDRESS_REPOSITORY } from './domain/interfaces/address-repository.interface.js';
-import { ListAddressesUseCase } from './application/use-cases/list-addresses.use-case.js';
-import { CreateAddressUseCase } from './application/use-cases/create-address.use-case.js';
-import { UpdateAddressUseCase } from './application/use-cases/update-address.use-case.js';
-import { DeleteAddressUseCase } from './application/use-cases/delete-address.use-case.js';
-import { SetDefaultAddressUseCase } from './application/use-cases/set-default-address.use-case.js';
-import { AddressesController } from './presentation/addresses.controller.js';
+import { AddressOrmEntity } from './infrastructure/orm-entities/address.orm-entity';
+import { AddressRepository } from './infrastructure/repositories/address.repository';
+import { ADDRESS_REPOSITORY } from './domain/interfaces/address-repository.interface';
+import { ListAddressesUseCase } from './application/use-cases/list-addresses.use-case';
+import { CreateAddressUseCase } from './application/use-cases/create-address.use-case';
+import { UpdateAddressUseCase } from './application/use-cases/update-address.use-case';
+import { DeleteAddressUseCase } from './application/use-cases/delete-address.use-case';
+import { SetDefaultAddressUseCase } from './application/use-cases/set-default-address.use-case';
+import { AddressesController } from './presentation/addresses.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AddressOrmEntity])],

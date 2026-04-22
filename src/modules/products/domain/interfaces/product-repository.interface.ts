@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Product } from '../entities/product.entity.js';
+import { type Product } from '../entities/product.entity';
 
 export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');
 

@@ -9,16 +9,16 @@ import {
   Post,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { GetCartUseCase } from '../application/use-cases/get-cart.use-case.js';
-import { AddCartItemUseCase } from '../application/use-cases/add-cart-item.use-case.js';
-import { UpdateCartItemUseCase } from '../application/use-cases/update-cart-item.use-case.js';
-import { RemoveCartItemUseCase } from '../application/use-cases/remove-cart-item.use-case.js';
-import { ClearCartUseCase } from '../application/use-cases/clear-cart.use-case.js';
-import { AddCartItemDto } from '../application/dtos/add-cart-item.dto.js';
-import { UpdateCartItemDto } from '../application/dtos/update-cart-item.dto.js';
+import { GetCartUseCase } from '../application/use-cases/get-cart.use-case';
+import { AddCartItemUseCase } from '../application/use-cases/add-cart-item.use-case';
+import { UpdateCartItemUseCase } from '../application/use-cases/update-cart-item.use-case';
+import { RemoveCartItemUseCase } from '../application/use-cases/remove-cart-item.use-case';
+import { ClearCartUseCase } from '../application/use-cases/clear-cart.use-case';
+import { AddCartItemDto } from '../application/dtos/add-cart-item.dto';
+import { UpdateCartItemDto } from '../application/dtos/update-cart-item.dto';
 
 @Controller('cart')
 export class CartController {

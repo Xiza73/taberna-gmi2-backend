@@ -1,16 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 
-import { DomainConflictException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainConflictException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../domain/interfaces/staff-member-repository.interface.js';
-import { StaffMember } from '../../domain/entities/staff-member.entity.js';
-import { type CreateStaffMemberDto } from '../dtos/create-staff-member.dto.js';
-import { StaffMemberResponseDto } from '../dtos/staff-member-response.dto.js';
+} from '../../domain/interfaces/staff-member-repository.interface';
+import { StaffMember } from '../../domain/entities/staff-member.entity';
+import { type CreateStaffMemberDto } from '../dtos/create-staff-member.dto';
+import { StaffMemberResponseDto } from '../dtos/staff-member-response.dto';
 
 @Injectable()
 export class CreateStaffMemberUseCase {

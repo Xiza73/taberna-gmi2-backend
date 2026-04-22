@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { Payment } from '../../domain/entities/payment.entity.js';
-import { PaymentStatus } from '../../domain/enums/payment-status.enum.js';
+import { Payment } from '../../domain/entities/payment.entity';
+import { PaymentStatus } from '../../domain/enums/payment-status.enum';
 import {
   PAYMENT_REPOSITORY,
   type IPaymentRepository,
-} from '../../domain/interfaces/payment-repository.interface.js';
+} from '../../domain/interfaces/payment-repository.interface';
 import {
   PAYMENT_PROVIDER,
   type IPaymentProvider,
-} from '../../domain/interfaces/payment-provider.interface.js';
+} from '../../domain/interfaces/payment-provider.interface';
 
 @Injectable()
 export class CreatePaymentPreferenceUseCase {

@@ -1,4 +1,4 @@
-import { type Payment } from '../../domain/entities/payment.entity.js';
+import { type Payment } from '../../domain/entities/payment.entity';
 
 export class PaymentResponseDto {
   id: string;

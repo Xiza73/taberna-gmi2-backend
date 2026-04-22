@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   ADDRESS_REPOSITORY,
   type IAddressRepository,
-} from '../../domain/interfaces/address-repository.interface.js';
+} from '../../domain/interfaces/address-repository.interface';
 
 @Injectable()
 export class DeleteAddressUseCase {

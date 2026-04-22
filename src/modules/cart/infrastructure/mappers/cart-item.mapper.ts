@@ -1,5 +1,5 @@
-import { CartItem } from '../../domain/entities/cart-item.entity.js';
-import { CartItemOrmEntity } from '../orm-entities/cart-item.orm-entity.js';
+import { CartItem } from '../../domain/entities/cart-item.entity';
+import { CartItemOrmEntity } from '../orm-entities/cart-item.orm-entity';
 
 export class CartItemMapper {
   static toDomain(orm: CartItemOrmEntity): CartItem {

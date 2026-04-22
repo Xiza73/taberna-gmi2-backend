@@ -1,5 +1,5 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
+import { DomainException } from '@shared/domain/exceptions/index';
 
 export class Review extends BaseEntity {
   private _userId: string;

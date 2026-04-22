@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ProductsModule } from '@modules/products/products.module.js';
-import { OrdersModule } from '@modules/orders/orders.module.js';
+import { ProductsModule } from '@modules/products/products.module';
+import { OrdersModule } from '@modules/orders/orders.module';
 
-import { ReviewOrmEntity } from './infrastructure/orm-entities/review.orm-entity.js';
-import { ReviewRepository } from './infrastructure/repositories/review.repository.js';
-import { REVIEW_REPOSITORY } from './domain/interfaces/review-repository.interface.js';
-import { CreateReviewUseCase } from './application/use-cases/create-review.use-case.js';
-import { ListProductReviewsUseCase } from './application/use-cases/list-product-reviews.use-case.js';
-import { UpdateReviewUseCase } from './application/use-cases/update-review.use-case.js';
-import { DeleteOwnReviewUseCase } from './application/use-cases/delete-own-review.use-case.js';
-import { AdminListPendingReviewsUseCase } from './application/use-cases/admin-list-pending-reviews.use-case.js';
-import { ApproveReviewUseCase } from './application/use-cases/approve-review.use-case.js';
-import { DeleteReviewUseCase } from './application/use-cases/delete-review.use-case.js';
-import { ReviewsController } from './presentation/reviews.controller.js';
-import { AdminReviewsController } from './presentation/admin-reviews.controller.js';
+import { ReviewOrmEntity } from './infrastructure/orm-entities/review.orm-entity';
+import { ReviewRepository } from './infrastructure/repositories/review.repository';
+import { REVIEW_REPOSITORY } from './domain/interfaces/review-repository.interface';
+import { CreateReviewUseCase } from './application/use-cases/create-review.use-case';
+import { ListProductReviewsUseCase } from './application/use-cases/list-product-reviews.use-case';
+import { UpdateReviewUseCase } from './application/use-cases/update-review.use-case';
+import { DeleteOwnReviewUseCase } from './application/use-cases/delete-own-review.use-case';
+import { AdminListPendingReviewsUseCase } from './application/use-cases/admin-list-pending-reviews.use-case';
+import { ApproveReviewUseCase } from './application/use-cases/approve-review.use-case';
+import { DeleteReviewUseCase } from './application/use-cases/delete-review.use-case';
+import { ReviewsController } from './presentation/reviews.controller';
+import { AdminReviewsController } from './presentation/admin-reviews.controller';
 
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-import { DomainException } from './domain.exception.js';
+import { DomainException } from './domain.exception';
 
 export class DomainConflictException extends DomainException {
   constructor(message: string) {

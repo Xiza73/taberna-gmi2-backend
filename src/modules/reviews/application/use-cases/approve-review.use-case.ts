@@ -1,23 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   UNIT_OF_WORK,
   type IUnitOfWork,
   type TransactionContext,
-} from '@shared/domain/interfaces/unit-of-work.interface.js';
+} from '@shared/domain/interfaces/unit-of-work.interface';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
-import { ReviewResponseDto } from '../dtos/review-response.dto.js';
+} from '../../domain/interfaces/review-repository.interface';
+import { ReviewResponseDto } from '../dtos/review-response.dto';
 
 @Injectable()
 export class ApproveReviewUseCase {

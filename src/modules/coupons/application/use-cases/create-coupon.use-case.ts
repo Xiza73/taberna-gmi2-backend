@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainConflictException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainConflictException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { Coupon } from '../../domain/entities/coupon.entity.js';
+import { Coupon } from '../../domain/entities/coupon.entity';
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '../../domain/interfaces/coupon-repository.interface.js';
-import { type CreateCouponDto } from '../dtos/create-coupon.dto.js';
-import { CouponResponseDto } from '../dtos/coupon-response.dto.js';
+} from '../../domain/interfaces/coupon-repository.interface';
+import { type CreateCouponDto } from '../dtos/create-coupon.dto';
+import { CouponResponseDto } from '../dtos/coupon-response.dto';
 
 @Injectable()
 export class CreateCouponUseCase {

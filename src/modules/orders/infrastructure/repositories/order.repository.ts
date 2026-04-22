@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Order } from '../../domain/entities/order.entity.js';
-import { type OrderItem } from '../../domain/entities/order-item.entity.js';
-import { type OrderEvent } from '../../domain/entities/order-event.entity.js';
-import { type OrderStatus } from '../../domain/enums/order-status.enum.js';
-import { type IOrderRepository } from '../../domain/interfaces/order-repository.interface.js';
-import { OrderOrmEntity } from '../orm-entities/order.orm-entity.js';
-import { OrderItemOrmEntity } from '../orm-entities/order-item.orm-entity.js';
-import { OrderEventOrmEntity } from '../orm-entities/order-event.orm-entity.js';
-import { OrderMapper } from '../mappers/order.mapper.js';
-import { OrderItemMapper } from '../mappers/order-item.mapper.js';
-import { OrderEventMapper } from '../mappers/order-event.mapper.js';
+import { type Order } from '../../domain/entities/order.entity';
+import { type OrderItem } from '../../domain/entities/order-item.entity';
+import { type OrderEvent } from '../../domain/entities/order-event.entity';
+import { type OrderStatus } from '../../domain/enums/order-status.enum';
+import { type IOrderRepository } from '../../domain/interfaces/order-repository.interface';
+import { OrderOrmEntity } from '../orm-entities/order.orm-entity';
+import { OrderItemOrmEntity } from '../orm-entities/order-item.orm-entity';
+import { OrderEventOrmEntity } from '../orm-entities/order-event.orm-entity';
+import { OrderMapper } from '../mappers/order.mapper';
+import { OrderItemMapper } from '../mappers/order-item.mapper';
+import { OrderEventMapper } from '../mappers/order-event.mapper';
 
 @Injectable()
 export class OrderRepository implements IOrderRepository {

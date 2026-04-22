@@ -1,5 +1,5 @@
-import { OrderEvent } from '../../domain/entities/order-event.entity.js';
-import { OrderEventOrmEntity } from '../orm-entities/order-event.orm-entity.js';
+import { OrderEvent } from '../../domain/entities/order-event.entity';
+import { OrderEventOrmEntity } from '../orm-entities/order-event.orm-entity';
 
 export class OrderEventMapper {
   static toDomain(orm: OrderEventOrmEntity): OrderEvent {

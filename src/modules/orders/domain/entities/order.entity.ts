@@ -1,8 +1,8 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
+import { DomainException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { OrderStatus } from '../enums/order-status.enum.js';
+import { OrderStatus } from '../enums/order-status.enum';
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.PAID, OrderStatus.CANCELLED],

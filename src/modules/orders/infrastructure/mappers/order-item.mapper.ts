@@ -1,5 +1,5 @@
-import { OrderItem } from '../../domain/entities/order-item.entity.js';
-import { OrderItemOrmEntity } from '../orm-entities/order-item.orm-entity.js';
+import { OrderItem } from '../../domain/entities/order-item.entity';
+import { OrderItemOrmEntity } from '../orm-entities/order-item.orm-entity';
 
 export class OrderItemMapper {
   static toDomain(orm: OrderItemOrmEntity): OrderItem {

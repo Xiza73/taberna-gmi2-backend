@@ -4,32 +4,32 @@ import {
   DomainConflictException,
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '@modules/orders/domain/interfaces/order-repository.interface.js';
-import { OrderStatus } from '@modules/orders/domain/enums/order-status.enum.js';
-import { OrderEvent } from '@modules/orders/domain/entities/order-event.entity.js';
+} from '@modules/orders/domain/interfaces/order-repository.interface';
+import { OrderStatus } from '@modules/orders/domain/enums/order-status.enum';
+import { OrderEvent } from '@modules/orders/domain/entities/order-event.entity';
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
-import { Shipment } from '../../domain/entities/shipment.entity.js';
-import { ShipmentStatus } from '../../domain/enums/shipment-status.enum.js';
+import { Shipment } from '../../domain/entities/shipment.entity';
+import { ShipmentStatus } from '../../domain/enums/shipment-status.enum';
 import {
   SHIPMENT_REPOSITORY,
   type IShipmentRepository,
-} from '../../domain/interfaces/shipment-repository.interface.js';
+} from '../../domain/interfaces/shipment-repository.interface';
 import {
   TRACKING_URL_GENERATOR,
   type TrackingUrlGenerator,
-} from '../../domain/services/tracking-url-generator.js';
-import { type CreateShipmentDto } from '../dtos/create-shipment.dto.js';
-import { ShipmentResponseDto } from '../dtos/shipment-response.dto.js';
+} from '../../domain/services/tracking-url-generator';
+import { type CreateShipmentDto } from '../dtos/create-shipment.dto';
+import { ShipmentResponseDto } from '../dtos/shipment-response.dto';
 
 @Injectable()
 export class CreateShipmentUseCase {

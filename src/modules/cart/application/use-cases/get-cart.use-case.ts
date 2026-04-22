@@ -3,16 +3,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
 import {
   CART_REPOSITORY,
   type ICartRepository,
-} from '../../domain/interfaces/cart-repository.interface.js';
+} from '../../domain/interfaces/cart-repository.interface';
 import {
   CartResponseDto,
   CartItemResponseDto,
-} from '../dtos/cart-response.dto.js';
+} from '../dtos/cart-response.dto';
 
 @Injectable()
 export class GetCartUseCase {

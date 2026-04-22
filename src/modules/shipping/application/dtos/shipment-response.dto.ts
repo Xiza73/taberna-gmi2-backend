@@ -1,4 +1,4 @@
-import { type Shipment } from '../../domain/entities/shipment.entity.js';
+import { type Shipment } from '../../domain/entities/shipment.entity';
 
 export class ShipmentResponseDto {
   id: string;

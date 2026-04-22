@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type StaffMember } from '../../domain/entities/staff-member.entity.js';
-import { type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface.js';
-import { StaffMemberOrmEntity } from '../orm-entities/staff-member.orm-entity.js';
-import { StaffMemberMapper } from '../mappers/staff-member.mapper.js';
+import { type StaffMember } from '../../domain/entities/staff-member.entity';
+import { type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface';
+import { StaffMemberOrmEntity } from '../orm-entities/staff-member.orm-entity';
+import { StaffMemberMapper } from '../mappers/staff-member.mapper';
 
 @Injectable()
 export class StaffMemberRepository implements IStaffMemberRepository {

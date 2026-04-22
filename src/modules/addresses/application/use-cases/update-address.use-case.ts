@@ -3,15 +3,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   ADDRESS_REPOSITORY,
   type IAddressRepository,
-} from '../../domain/interfaces/address-repository.interface.js';
-import { type UpdateAddressDto } from '../dtos/update-address.dto.js';
-import { AddressResponseDto } from '../dtos/address-response.dto.js';
+} from '../../domain/interfaces/address-repository.interface';
+import { type UpdateAddressDto } from '../dtos/update-address.dto';
+import { AddressResponseDto } from '../dtos/address-response.dto';
 
 @Injectable()
 export class UpdateAddressUseCase {

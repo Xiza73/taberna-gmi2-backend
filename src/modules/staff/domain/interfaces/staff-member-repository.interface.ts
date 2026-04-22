@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type StaffMember } from '../entities/staff-member.entity.js';
+import { type StaffMember } from '../entities/staff-member.entity';
 
 export const STAFF_MEMBER_REPOSITORY = Symbol('STAFF_MEMBER_REPOSITORY');
 

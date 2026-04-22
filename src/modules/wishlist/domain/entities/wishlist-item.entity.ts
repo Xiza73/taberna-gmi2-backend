@@ -1,4 +1,4 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
 
 export class WishlistItem extends BaseEntity {
   private _userId: string;

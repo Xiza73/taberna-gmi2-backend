@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Shipment } from '../../domain/entities/shipment.entity.js';
-import { type IShipmentRepository } from '../../domain/interfaces/shipment-repository.interface.js';
-import { ShipmentOrmEntity } from '../orm-entities/shipment.orm-entity.js';
-import { ShipmentMapper } from '../mappers/shipment.mapper.js';
+import { type Shipment } from '../../domain/entities/shipment.entity';
+import { type IShipmentRepository } from '../../domain/interfaces/shipment-repository.interface';
+import { ShipmentOrmEntity } from '../orm-entities/shipment.orm-entity';
+import { ShipmentMapper } from '../mappers/shipment.mapper';
 
 @Injectable()
 export class ShipmentRepository implements IShipmentRepository {

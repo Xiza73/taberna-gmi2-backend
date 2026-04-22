@@ -1,8 +1,8 @@
 import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
-import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginationDto } from '@shared/application/dtos/pagination.dto';
 
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
 
 export class OrderQueryDto extends PaginationDto {
   @IsEnum(OrderStatus)

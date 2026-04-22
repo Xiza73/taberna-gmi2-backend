@@ -3,9 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../domain/interfaces/staff-member-repository.interface.js';
-import { type StaffQueryDto } from '../dtos/staff-query.dto.js';
-import { StaffMemberResponseDto } from '../dtos/staff-member-response.dto.js';
+} from '../../domain/interfaces/staff-member-repository.interface';
+import { type StaffQueryDto } from '../dtos/staff-query.dto';
+import { StaffMemberResponseDto } from '../dtos/staff-member-response.dto';
 
 @Injectable()
 export class ListStaffMembersUseCase {

@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Customer } from '../entities/customer.entity.js';
+import { type Customer } from '../entities/customer.entity';
 
 export const CUSTOMER_REPOSITORY = Symbol('CUSTOMER_REPOSITORY');
 

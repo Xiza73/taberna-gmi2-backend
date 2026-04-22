@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   BANNER_REPOSITORY,
   type IBannerRepository,
-} from '../../domain/interfaces/banner-repository.interface.js';
-import { type UpdateBannerDto } from '../dtos/update-banner.dto.js';
-import { BannerResponseDto } from '../dtos/banner-response.dto.js';
+} from '../../domain/interfaces/banner-repository.interface';
+import { type UpdateBannerDto } from '../dtos/update-banner.dto';
+import { BannerResponseDto } from '../dtos/banner-response.dto';
 
 @Injectable()
 export class UpdateBannerUseCase {

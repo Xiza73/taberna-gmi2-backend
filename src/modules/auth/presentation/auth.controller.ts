@@ -1,26 +1,26 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { RegisterUseCase } from '../application/use-cases/register.use-case.js';
-import { LoginUseCase } from '../application/use-cases/login.use-case.js';
-import { RefreshTokenUseCase } from '../application/use-cases/refresh-token.use-case.js';
-import { LogoutUseCase } from '../application/use-cases/logout.use-case.js';
-import { GetMeUseCase } from '../application/use-cases/get-me.use-case.js';
-import { ForgotPasswordUseCase } from '../application/use-cases/forgot-password.use-case.js';
-import { ResetPasswordUseCase } from '../application/use-cases/reset-password.use-case.js';
-import { GoogleAuthUseCase } from '../application/use-cases/google-auth.use-case.js';
-import { RegisterDto } from '../application/dtos/register.dto.js';
-import { LoginDto } from '../application/dtos/login.dto.js';
-import { RefreshTokenDto } from '../application/dtos/refresh-token.dto.js';
-import { ForgotPasswordDto } from '../application/dtos/forgot-password.dto.js';
-import { ResetPasswordDto } from '../application/dtos/reset-password.dto.js';
-import { GoogleAuthDto } from '../application/dtos/google-auth.dto.js';
+import { RegisterUseCase } from '../application/use-cases/register.use-case';
+import { LoginUseCase } from '../application/use-cases/login.use-case';
+import { RefreshTokenUseCase } from '../application/use-cases/refresh-token.use-case';
+import { LogoutUseCase } from '../application/use-cases/logout.use-case';
+import { GetMeUseCase } from '../application/use-cases/get-me.use-case';
+import { ForgotPasswordUseCase } from '../application/use-cases/forgot-password.use-case';
+import { ResetPasswordUseCase } from '../application/use-cases/reset-password.use-case';
+import { GoogleAuthUseCase } from '../application/use-cases/google-auth.use-case';
+import { RegisterDto } from '../application/dtos/register.dto';
+import { LoginDto } from '../application/dtos/login.dto';
+import { RefreshTokenDto } from '../application/dtos/refresh-token.dto';
+import { ForgotPasswordDto } from '../application/dtos/forgot-password.dto';
+import { ResetPasswordDto } from '../application/dtos/reset-password.dto';
+import { GoogleAuthDto } from '../application/dtos/google-auth.dto';
 
 @Controller('auth')
 export class AuthController {

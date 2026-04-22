@@ -11,11 +11,11 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { type Request } from 'express';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { ProcessPaymentNotificationUseCase } from '../application/use-cases/process-payment-notification.use-case.js';
-import { MercadoPagoNotificationDto } from '../application/dtos/mercado-pago-notification.dto.js';
+import { ProcessPaymentNotificationUseCase } from '../application/use-cases/process-payment-notification.use-case';
+import { MercadoPagoNotificationDto } from '../application/dtos/mercado-pago-notification.dto';
 
 @Controller('webhooks')
 export class WebhooksController {

@@ -1,9 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { STAFF_ROLE_KEY } from '../decorators/staff-role.decorator.js';
-import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface.js';
-import { DomainForbiddenException } from '../../domain/exceptions/index.js';
+import { STAFF_ROLE_KEY } from '../decorators/staff-role.decorator';
+import { type AuthenticatedUser } from '../interfaces/authenticated-user.interface';
+import { DomainForbiddenException } from '../../domain/exceptions/index';
 
 @Injectable()
 export class StaffRoleGuard implements CanActivate {

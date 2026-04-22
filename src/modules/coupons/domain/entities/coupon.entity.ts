@@ -1,7 +1,7 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
+import { DomainException } from '@shared/domain/exceptions/index';
 
-import { type CouponType } from '../enums/coupon-type.enum.js';
+import { type CouponType } from '../enums/coupon-type.enum';
 
 export class Coupon extends BaseEntity {
   private _code: string;

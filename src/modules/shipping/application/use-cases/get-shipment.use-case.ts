@@ -3,19 +3,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '@modules/orders/domain/interfaces/order-repository.interface.js';
+} from '@modules/orders/domain/interfaces/order-repository.interface';
 
 import {
   SHIPMENT_REPOSITORY,
   type IShipmentRepository,
-} from '../../domain/interfaces/shipment-repository.interface.js';
-import { ShipmentResponseDto } from '../dtos/shipment-response.dto.js';
+} from '../../domain/interfaces/shipment-repository.interface';
+import { ShipmentResponseDto } from '../dtos/shipment-response.dto';
 
 @Injectable()
 export class GetShipmentUseCase {

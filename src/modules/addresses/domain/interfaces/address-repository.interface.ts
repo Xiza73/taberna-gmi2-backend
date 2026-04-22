@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Address } from '../entities/address.entity.js';
+import { type Address } from '../entities/address.entity';
 
 export const ADDRESS_REPOSITORY = Symbol('ADDRESS_REPOSITORY');
 

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
-import { type OrderQueryDto } from '../dtos/order-query.dto.js';
-import { OrderResponseDto } from '../dtos/order-response.dto.js';
+} from '../../domain/interfaces/order-repository.interface';
+import { type OrderQueryDto } from '../dtos/order-query.dto';
+import { OrderResponseDto } from '../dtos/order-response.dto';
 
 @Injectable()
 export class ListMyOrdersUseCase {

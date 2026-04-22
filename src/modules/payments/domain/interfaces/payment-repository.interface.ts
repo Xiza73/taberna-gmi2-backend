@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Payment } from '../entities/payment.entity.js';
+import { type Payment } from '../entities/payment.entity';
 
 export const PAYMENT_REPOSITORY = Symbol('PAYMENT_REPOSITORY');
 

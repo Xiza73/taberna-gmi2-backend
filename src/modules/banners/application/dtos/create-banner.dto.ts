@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BannerPosition } from '../../domain/enums/banner-position.enum.js';
+import { BannerPosition } from '../../domain/enums/banner-position.enum';
 
 export class CreateBannerDto {
   @IsString()

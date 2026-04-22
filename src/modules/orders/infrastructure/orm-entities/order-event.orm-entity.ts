@@ -9,8 +9,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
-import { OrderOrmEntity } from './order.orm-entity.js';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
+import { OrderOrmEntity } from './order.orm-entity';
 
 @Entity('order_events')
 @Index('idx_order_events_order_id', ['orderId'])

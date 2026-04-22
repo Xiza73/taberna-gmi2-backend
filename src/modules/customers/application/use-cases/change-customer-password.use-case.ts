@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcryptjs';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
+} from '@shared/domain/exceptions/index';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../domain/interfaces/customer-repository.interface.js';
+} from '../../domain/interfaces/customer-repository.interface';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../../auth/domain/interfaces/refresh-token-repository.interface.js';
-import { type ChangePasswordDto } from '../dtos/change-password.dto.js';
+} from '../../../auth/domain/interfaces/refresh-token-repository.interface';
+import { type ChangePasswordDto } from '../dtos/change-password.dto';
 
 @Injectable()
 export class ChangeCustomerPasswordUseCase {

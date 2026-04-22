@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
+} from '../../domain/interfaces/review-repository.interface';
 
 @Injectable()
 export class DeleteReviewUseCase {

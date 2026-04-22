@@ -1,5 +1,5 @@
-import { Customer } from '../../domain/entities/customer.entity.js';
-import { CustomerOrmEntity } from '../orm-entities/customer.orm-entity.js';
+import { Customer } from '../../domain/entities/customer.entity';
+import { CustomerOrmEntity } from '../orm-entities/customer.orm-entity';
 
 export class CustomerMapper {
   static toDomain(orm: CustomerOrmEntity): Customer {

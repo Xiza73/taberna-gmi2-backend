@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { BannerPosition } from '../../domain/enums/banner-position.enum.js';
+import { BannerPosition } from '../../domain/enums/banner-position.enum';
 
 @Entity('banners')
 export class BannerOrmEntity {

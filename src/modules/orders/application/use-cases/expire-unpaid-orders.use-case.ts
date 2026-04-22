@@ -5,19 +5,19 @@ import {
   UNIT_OF_WORK,
   type IUnitOfWork,
   type TransactionContext,
-} from '@shared/domain/interfaces/unit-of-work.interface.js';
+} from '@shared/domain/interfaces/unit-of-work.interface';
 
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '@modules/coupons/domain/interfaces/coupon-repository.interface.js';
+} from '@modules/coupons/domain/interfaces/coupon-repository.interface';
 
-import { OrderStatus } from '../../domain/enums/order-status.enum.js';
-import { OrderEvent } from '../../domain/entities/order-event.entity.js';
+import { OrderStatus } from '../../domain/enums/order-status.enum';
+import { OrderEvent } from '../../domain/entities/order-event.entity';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
-} from '../../domain/interfaces/order-repository.interface.js';
+} from '../../domain/interfaces/order-repository.interface';
 
 @Injectable()
 export class ExpireUnpaidOrdersUseCase {

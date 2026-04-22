@@ -1,12 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { SearchProductsUseCase } from '../application/use-cases/search-products.use-case.js';
-import { SuggestProductsUseCase } from '../application/use-cases/suggest-products.use-case.js';
-import { SearchQueryDto } from '../application/dtos/search-query.dto.js';
-import { SearchSuggestQueryDto } from '../application/dtos/search-suggest-query.dto.js';
+import { SearchProductsUseCase } from '../application/use-cases/search-products.use-case';
+import { SuggestProductsUseCase } from '../application/use-cases/suggest-products.use-case';
+import { SearchQueryDto } from '../application/dtos/search-query.dto';
+import { SearchSuggestQueryDto } from '../application/dtos/search-suggest-query.dto';
 
 @Controller('search')
 @Public()

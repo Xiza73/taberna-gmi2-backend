@@ -1,4 +1,4 @@
-import { escapeHtml } from './escape-html.js';
+import { escapeHtml } from './escape-html';
 
 export function passwordResetTemplate(props: {
   name: string;

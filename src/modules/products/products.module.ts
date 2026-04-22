@@ -1,22 +1,22 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CategoriesModule } from '@modules/categories/categories.module.js';
-import { SearchModule } from '@modules/search/search.module.js';
+import { CategoriesModule } from '@modules/categories/categories.module';
+import { SearchModule } from '@modules/search/search.module';
 
-import { ProductOrmEntity } from './infrastructure/orm-entities/product.orm-entity.js';
-import { ProductRepository } from './infrastructure/repositories/product.repository.js';
-import { PRODUCT_REPOSITORY } from './domain/interfaces/product-repository.interface.js';
-import { ListProductsUseCase } from './application/use-cases/list-products.use-case.js';
-import { GetProductBySlugUseCase } from './application/use-cases/get-product-by-slug.use-case.js';
-import { AdminListProductsUseCase } from './application/use-cases/admin-list-products.use-case.js';
-import { AdminGetProductUseCase } from './application/use-cases/admin-get-product.use-case.js';
-import { CreateProductUseCase } from './application/use-cases/create-product.use-case.js';
-import { UpdateProductUseCase } from './application/use-cases/update-product.use-case.js';
-import { DeleteProductUseCase } from './application/use-cases/delete-product.use-case.js';
-import { AdjustStockUseCase } from './application/use-cases/adjust-stock.use-case.js';
-import { ProductsController } from './presentation/products.controller.js';
-import { AdminProductsController } from './presentation/admin-products.controller.js';
+import { ProductOrmEntity } from './infrastructure/orm-entities/product.orm-entity';
+import { ProductRepository } from './infrastructure/repositories/product.repository';
+import { PRODUCT_REPOSITORY } from './domain/interfaces/product-repository.interface';
+import { ListProductsUseCase } from './application/use-cases/list-products.use-case';
+import { GetProductBySlugUseCase } from './application/use-cases/get-product-by-slug.use-case';
+import { AdminListProductsUseCase } from './application/use-cases/admin-list-products.use-case';
+import { AdminGetProductUseCase } from './application/use-cases/admin-get-product.use-case';
+import { CreateProductUseCase } from './application/use-cases/create-product.use-case';
+import { UpdateProductUseCase } from './application/use-cases/update-product.use-case';
+import { DeleteProductUseCase } from './application/use-cases/delete-product.use-case';
+import { AdjustStockUseCase } from './application/use-cases/adjust-stock.use-case';
+import { ProductsController } from './presentation/products.controller';
+import { AdminProductsController } from './presentation/admin-products.controller';
 
 @Module({
   imports: [

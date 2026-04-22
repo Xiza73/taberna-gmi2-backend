@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Category } from '../entities/category.entity.js';
+import { type Category } from '../entities/category.entity';
 
 export const CATEGORY_REPOSITORY = Symbol('CATEGORY_REPOSITORY');
 

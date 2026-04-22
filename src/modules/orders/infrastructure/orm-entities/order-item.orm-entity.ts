@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { OrderOrmEntity } from './order.orm-entity.js';
+import { OrderOrmEntity } from './order.orm-entity';
 
 @Entity('order_items')
 @Index('idx_order_items_order_id', ['orderId'])

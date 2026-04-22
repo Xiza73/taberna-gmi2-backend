@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   PRODUCT_SEARCH,
   type IProductSearchService,
-} from '../../domain/interfaces/product-search.interface.js';
-import { type SearchSuggestQueryDto } from '../dtos/search-suggest-query.dto.js';
+} from '../../domain/interfaces/product-search.interface';
+import { type SearchSuggestQueryDto } from '../dtos/search-suggest-query.dto';
 
 @Injectable()
 export class SuggestProductsUseCase {

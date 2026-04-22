@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
 import {
   WISHLIST_REPOSITORY,
   type IWishlistRepository,
-} from '../../domain/interfaces/wishlist-repository.interface.js';
-import { WishlistItemResponseDto } from '../dtos/wishlist-response.dto.js';
+} from '../../domain/interfaces/wishlist-repository.interface';
+import { WishlistItemResponseDto } from '../dtos/wishlist-response.dto';
 
 @Injectable()
 export class ListWishlistUseCase {

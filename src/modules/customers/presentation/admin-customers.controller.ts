@@ -9,17 +9,17 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { ListCustomersUseCase } from '../application/use-cases/list-customers.use-case.js';
-import { GetCustomerUseCase } from '../application/use-cases/get-customer.use-case.js';
-import { UpdateCustomerUseCase } from '../application/use-cases/update-customer.use-case.js';
-import { SuspendCustomerUseCase } from '../application/use-cases/suspend-customer.use-case.js';
-import { ActivateCustomerUseCase } from '../application/use-cases/activate-customer.use-case.js';
-import { CustomerQueryDto } from '../application/dtos/customer-query.dto.js';
-import { UpdateCustomerDto } from '../application/dtos/update-customer.dto.js';
+import { ListCustomersUseCase } from '../application/use-cases/list-customers.use-case';
+import { GetCustomerUseCase } from '../application/use-cases/get-customer.use-case';
+import { UpdateCustomerUseCase } from '../application/use-cases/update-customer.use-case';
+import { SuspendCustomerUseCase } from '../application/use-cases/suspend-customer.use-case';
+import { ActivateCustomerUseCase } from '../application/use-cases/activate-customer.use-case';
+import { CustomerQueryDto } from '../application/dtos/customer-query.dto';
+import { UpdateCustomerDto } from '../application/dtos/update-customer.dto';
 
 @Controller('admin/customers')
 @RequireSubjectType(SubjectType.STAFF)

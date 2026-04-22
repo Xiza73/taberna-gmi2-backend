@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { Carrier } from '../../domain/enums/carrier.enum.js';
-import { ShipmentStatus } from '../../domain/enums/shipment-status.enum.js';
+import { Carrier } from '../../domain/enums/carrier.enum';
+import { ShipmentStatus } from '../../domain/enums/shipment-status.enum';
 
 export class UpdateShipmentDto {
   @IsEnum(Carrier)

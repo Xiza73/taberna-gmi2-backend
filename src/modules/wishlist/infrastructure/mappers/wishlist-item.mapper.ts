@@ -1,5 +1,5 @@
-import { WishlistItem } from '../../domain/entities/wishlist-item.entity.js';
-import { WishlistItemOrmEntity } from '../orm-entities/wishlist-item.orm-entity.js';
+import { WishlistItem } from '../../domain/entities/wishlist-item.entity';
+import { WishlistItemOrmEntity } from '../orm-entities/wishlist-item.orm-entity';
 
 export class WishlistItemMapper {
   static toDomain(orm: WishlistItemOrmEntity): WishlistItem {

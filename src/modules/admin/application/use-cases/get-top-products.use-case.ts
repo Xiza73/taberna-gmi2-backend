@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { TopProductDto } from '../dtos/sales-report-response.dto.js';
+import { TopProductDto } from '../dtos/sales-report-response.dto';
 
 @Injectable()
 export class GetTopProductsUseCase {

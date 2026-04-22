@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../domain/interfaces/customer-repository.interface.js';
-import { type UpdateCustomerDto } from '../dtos/update-customer.dto.js';
-import { CustomerResponseDto } from '../dtos/customer-response.dto.js';
+} from '../../domain/interfaces/customer-repository.interface';
+import { type UpdateCustomerDto } from '../dtos/update-customer.dto';
+import { CustomerResponseDto } from '../dtos/customer-response.dto';
 
 @Injectable()
 export class UpdateCustomerUseCase {

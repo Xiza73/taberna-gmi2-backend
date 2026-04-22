@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Product } from '../../domain/entities/product.entity.js';
-import { type IProductRepository } from '../../domain/interfaces/product-repository.interface.js';
-import { ProductOrmEntity } from '../orm-entities/product.orm-entity.js';
-import { ProductMapper } from '../mappers/product.mapper.js';
+import { type Product } from '../../domain/entities/product.entity';
+import { type IProductRepository } from '../../domain/interfaces/product-repository.interface';
+import { ProductOrmEntity } from '../orm-entities/product.orm-entity';
+import { ProductMapper } from '../mappers/product.mapper';
 
 @Injectable()
 export class ProductRepository implements IProductRepository {

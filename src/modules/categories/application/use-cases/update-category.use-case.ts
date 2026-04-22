@@ -4,15 +4,15 @@ import {
   DomainConflictException,
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
-import { type UpdateCategoryDto } from '../dtos/update-category.dto.js';
-import { CategoryResponseDto } from '../dtos/category-response.dto.js';
+} from '../../domain/interfaces/category-repository.interface';
+import { type UpdateCategoryDto } from '../dtos/update-category.dto';
+import { CategoryResponseDto } from '../dtos/category-response.dto';
 
 @Injectable()
 export class UpdateCategoryUseCase {

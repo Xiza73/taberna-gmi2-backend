@@ -4,15 +4,15 @@ import sanitizeHtml from 'sanitize-html';
 import {
   DomainForbiddenException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   REVIEW_REPOSITORY,
   type IReviewRepository,
-} from '../../domain/interfaces/review-repository.interface.js';
-import { type UpdateReviewDto } from '../dtos/update-review.dto.js';
-import { ReviewResponseDto } from '../dtos/review-response.dto.js';
+} from '../../domain/interfaces/review-repository.interface';
+import { type UpdateReviewDto } from '../dtos/update-review.dto';
+import { ReviewResponseDto } from '../dtos/review-response.dto';
 
 @Injectable()
 export class UpdateReviewUseCase {

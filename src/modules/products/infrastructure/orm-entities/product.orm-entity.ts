@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { CategoryOrmEntity } from '@modules/categories/infrastructure/orm-entities/category.orm-entity.js';
+import { CategoryOrmEntity } from '@modules/categories/infrastructure/orm-entities/category.orm-entity';
 
 @Entity('products')
 @Index('idx_products_category_id', ['categoryId'])

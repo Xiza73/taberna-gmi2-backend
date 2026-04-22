@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Coupon } from '../../domain/entities/coupon.entity.js';
-import { type ICouponRepository } from '../../domain/interfaces/coupon-repository.interface.js';
-import { CouponOrmEntity } from '../orm-entities/coupon.orm-entity.js';
-import { CouponMapper } from '../mappers/coupon.mapper.js';
+import { type Coupon } from '../../domain/entities/coupon.entity';
+import { type ICouponRepository } from '../../domain/interfaces/coupon-repository.interface';
+import { CouponOrmEntity } from '../orm-entities/coupon.orm-entity';
+import { CouponMapper } from '../mappers/coupon.mapper';
 
 @Injectable()
 export class CouponRepository implements ICouponRepository {

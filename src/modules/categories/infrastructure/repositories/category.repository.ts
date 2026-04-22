@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Category } from '../../domain/entities/category.entity.js';
-import { type ICategoryRepository } from '../../domain/interfaces/category-repository.interface.js';
-import { CategoryOrmEntity } from '../orm-entities/category.orm-entity.js';
-import { CategoryMapper } from '../mappers/category.mapper.js';
+import { type Category } from '../../domain/entities/category.entity';
+import { type ICategoryRepository } from '../../domain/interfaces/category-repository.interface';
+import { CategoryOrmEntity } from '../orm-entities/category.orm-entity';
+import { CategoryMapper } from '../mappers/category.mapper';
 
 @Injectable()
 export class CategoryRepository implements ICategoryRepository {

@@ -10,13 +10,13 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListPendingReviewsUseCase } from '../application/use-cases/admin-list-pending-reviews.use-case.js';
-import { ApproveReviewUseCase } from '../application/use-cases/approve-review.use-case.js';
-import { DeleteReviewUseCase } from '../application/use-cases/delete-review.use-case.js';
+import { AdminListPendingReviewsUseCase } from '../application/use-cases/admin-list-pending-reviews.use-case';
+import { ApproveReviewUseCase } from '../application/use-cases/approve-review.use-case';
+import { DeleteReviewUseCase } from '../application/use-cases/delete-review.use-case';
 
 @Controller('admin/reviews')
 @RequireSubjectType(SubjectType.STAFF)

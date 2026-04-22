@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-import { Carrier } from '../../domain/enums/carrier.enum.js';
+import { Carrier } from '../../domain/enums/carrier.enum';
 
 export class CreateShipmentDto {
   @IsEnum(Carrier)

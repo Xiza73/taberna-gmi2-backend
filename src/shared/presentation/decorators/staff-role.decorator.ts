@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-import { type StaffRole } from '../../domain/enums/staff-role.enum.js';
+import { type StaffRole } from '../../domain/enums/staff-role.enum';
 
 export const STAFF_ROLE_KEY = 'staffRole';
 export const RequireStaffRole = (...roles: StaffRole[]) =>

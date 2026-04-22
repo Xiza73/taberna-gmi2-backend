@@ -12,16 +12,16 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { CreateReviewUseCase } from '../application/use-cases/create-review.use-case.js';
-import { ListProductReviewsUseCase } from '../application/use-cases/list-product-reviews.use-case.js';
-import { UpdateReviewUseCase } from '../application/use-cases/update-review.use-case.js';
-import { DeleteOwnReviewUseCase } from '../application/use-cases/delete-own-review.use-case.js';
-import { CreateReviewDto } from '../application/dtos/create-review.dto.js';
-import { UpdateReviewDto } from '../application/dtos/update-review.dto.js';
+import { CreateReviewUseCase } from '../application/use-cases/create-review.use-case';
+import { ListProductReviewsUseCase } from '../application/use-cases/list-product-reviews.use-case';
+import { UpdateReviewUseCase } from '../application/use-cases/update-review.use-case';
+import { DeleteOwnReviewUseCase } from '../application/use-cases/delete-own-review.use-case';
+import { CreateReviewDto } from '../application/dtos/create-review.dto';
+import { UpdateReviewDto } from '../application/dtos/update-review.dto';
 
 @Controller('products')
 export class ReviewsController {

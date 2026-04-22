@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '../../domain/interfaces/category-repository.interface.js';
+} from '../../domain/interfaces/category-repository.interface';
 
 @Injectable()
 export class DeleteCategoryUseCase {

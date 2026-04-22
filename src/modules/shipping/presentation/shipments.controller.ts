@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { GetShipmentUseCase } from '../application/use-cases/get-shipment.use-case.js';
+import { GetShipmentUseCase } from '../application/use-cases/get-shipment.use-case';
 
 @Controller('orders')
 export class ShipmentsController {

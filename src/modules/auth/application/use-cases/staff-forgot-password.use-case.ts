@@ -6,13 +6,13 @@ import { randomUUID } from 'crypto';
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
-import { type ForgotPasswordDto } from '../dtos/forgot-password.dto.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
+import { type ForgotPasswordDto } from '../dtos/forgot-password.dto';
 
 @Injectable()
 export class StaffForgotPasswordUseCase {

@@ -1,6 +1,6 @@
-import { type Order } from '../../domain/entities/order.entity.js';
-import { type OrderItem } from '../../domain/entities/order-item.entity.js';
-import { type OrderEvent } from '../../domain/entities/order-event.entity.js';
+import { type Order } from '../../domain/entities/order.entity';
+import { type OrderItem } from '../../domain/entities/order-item.entity';
+import { type OrderEvent } from '../../domain/entities/order-event.entity';
 
 export class OrderItemResponseDto {
   id: string;

@@ -1,4 +1,4 @@
-import { type TransactionContext } from './unit-of-work.interface.js';
+import { type TransactionContext } from './unit-of-work.interface';
 
 export interface IBaseRepository<T> {
   save(entity: T): Promise<T>;

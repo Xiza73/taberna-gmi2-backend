@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   PaginatedResponseDto,
   PaginationDto,
-} from '@shared/application/dtos/pagination.dto.js';
+} from '@shared/application/dtos/pagination.dto';
 
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '../../domain/interfaces/coupon-repository.interface.js';
-import { CouponResponseDto } from '../dtos/coupon-response.dto.js';
+} from '../../domain/interfaces/coupon-repository.interface';
+import { CouponResponseDto } from '../dtos/coupon-response.dto';
 
 @Injectable()
 export class AdminListCouponsUseCase {

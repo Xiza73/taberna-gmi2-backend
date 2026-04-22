@@ -6,13 +6,13 @@ import { randomUUID } from 'crypto';
 import {
   EMAIL_SENDER,
   type IEmailSender,
-} from '@modules/notifications/domain/interfaces/email-sender.interface.js';
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../../customers/domain/interfaces/customer-repository.interface.js';
-import { type ForgotPasswordDto } from '../dtos/forgot-password.dto.js';
+} from '../../../customers/domain/interfaces/customer-repository.interface';
+import { type ForgotPasswordDto } from '../dtos/forgot-password.dto';
 
 @Injectable()
 export class ForgotPasswordUseCase {

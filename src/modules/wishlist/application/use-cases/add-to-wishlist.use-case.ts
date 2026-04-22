@@ -3,18 +3,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   DomainConflictException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '@modules/products/domain/interfaces/product-repository.interface.js';
+} from '@modules/products/domain/interfaces/product-repository.interface';
 
-import { WishlistItem } from '../../domain/entities/wishlist-item.entity.js';
+import { WishlistItem } from '../../domain/entities/wishlist-item.entity';
 import {
   WISHLIST_REPOSITORY,
   type IWishlistRepository,
-} from '../../domain/interfaces/wishlist-repository.interface.js';
+} from '../../domain/interfaces/wishlist-repository.interface';
 
 @Injectable()
 export class AddToWishlistUseCase {

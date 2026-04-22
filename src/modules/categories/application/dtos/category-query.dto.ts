@@ -1,7 +1,7 @@
 import { IsBoolean, IsOptional } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
-import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginationDto } from '@shared/application/dtos/pagination.dto';
 
 export class CategoryQueryDto extends PaginationDto {
   @IsBoolean()

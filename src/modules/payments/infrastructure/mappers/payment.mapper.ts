@@ -1,5 +1,5 @@
-import { Payment } from '../../domain/entities/payment.entity.js';
-import { PaymentOrmEntity } from '../orm-entities/payment.orm-entity.js';
+import { Payment } from '../../domain/entities/payment.entity';
+import { PaymentOrmEntity } from '../orm-entities/payment.orm-entity';
 
 export class PaymentMapper {
   static toDomain(orm: PaymentOrmEntity): Payment {

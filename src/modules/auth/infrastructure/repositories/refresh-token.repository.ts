@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type RefreshToken } from '../../domain/entities/refresh-token.entity.js';
-import { type IRefreshTokenRepository } from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { RefreshTokenOrmEntity } from '../orm-entities/refresh-token.orm-entity.js';
-import { RefreshTokenMapper } from '../mappers/refresh-token.mapper.js';
+import { type RefreshToken } from '../../domain/entities/refresh-token.entity';
+import { type IRefreshTokenRepository } from '../../domain/interfaces/refresh-token-repository.interface';
+import { RefreshTokenOrmEntity } from '../orm-entities/refresh-token.orm-entity';
+import { RefreshTokenMapper } from '../mappers/refresh-token.mapper';
 
 @Injectable()
 export class RefreshTokenRepository implements IRefreshTokenRepository {

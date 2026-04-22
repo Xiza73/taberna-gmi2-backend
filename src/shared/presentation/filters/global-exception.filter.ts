@@ -8,14 +8,14 @@ import {
 } from '@nestjs/common';
 import { type Response } from 'express';
 
-import { BaseResponse } from '../../application/dtos/base-response.dto.js';
+import { BaseResponse } from '../../application/dtos/base-response.dto';
 import {
   DomainConflictException,
   DomainException,
   DomainForbiddenException,
   DomainNotFoundException,
   DomainUnauthorizedException,
-} from '../../domain/exceptions/index.js';
+} from '../../domain/exceptions/index';
 
 @Catch()
 @Injectable()

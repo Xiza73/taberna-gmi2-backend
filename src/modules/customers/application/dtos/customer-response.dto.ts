@@ -1,4 +1,4 @@
-import { type Customer } from '../../domain/entities/customer.entity.js';
+import { type Customer } from '../../domain/entities/customer.entity';
 
 export class CustomerResponseDto {
   id: string;

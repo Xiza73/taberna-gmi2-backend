@@ -1,6 +1,6 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Coupon } from '../entities/coupon.entity.js';
+import { type Coupon } from '../entities/coupon.entity';
 
 export const COUPON_REPOSITORY = Symbol('COUPON_REPOSITORY');
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { type SalesReportQueryDto } from '../dtos/sales-report-query.dto.js';
-import { SalesReportResponseDto } from '../dtos/sales-report-response.dto.js';
+import { type SalesReportQueryDto } from '../dtos/sales-report-query.dto';
+import { SalesReportResponseDto } from '../dtos/sales-report-response.dto';
 
 @Injectable()
 export class GetSalesReportUseCase {

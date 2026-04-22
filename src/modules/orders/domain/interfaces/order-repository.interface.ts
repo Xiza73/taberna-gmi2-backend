@@ -1,9 +1,9 @@
-import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface.js';
+import { type IBaseRepository } from '@shared/domain/interfaces/base-repository.interface';
 
-import { type Order } from '../entities/order.entity.js';
-import { type OrderItem } from '../entities/order-item.entity.js';
-import { type OrderEvent } from '../entities/order-event.entity.js';
-import { type OrderStatus } from '../enums/order-status.enum.js';
+import { type Order } from '../entities/order.entity';
+import { type OrderItem } from '../entities/order-item.entity';
+import { type OrderEvent } from '../entities/order-event.entity';
+import { type OrderStatus } from '../enums/order-status.enum';
 
 export const ORDER_REPOSITORY = Symbol('ORDER_REPOSITORY');
 

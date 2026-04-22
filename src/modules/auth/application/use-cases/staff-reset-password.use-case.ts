@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
 
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
+import { DomainException } from '@shared/domain/exceptions/index';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { type ResetPasswordDto } from '../dtos/reset-password.dto.js';
+} from '../../domain/interfaces/refresh-token-repository.interface';
+import { type ResetPasswordDto } from '../dtos/reset-password.dto';
 
 @Injectable()
 export class StaffResetPasswordUseCase {

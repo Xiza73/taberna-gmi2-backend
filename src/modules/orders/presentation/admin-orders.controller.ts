@@ -8,18 +8,18 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { AdminListOrdersUseCase } from '../application/use-cases/admin-list-orders.use-case.js';
-import { AdminGetOrderUseCase } from '../application/use-cases/admin-get-order.use-case.js';
-import { UpdateOrderStatusUseCase } from '../application/use-cases/update-order-status.use-case.js';
-import { UpdateOrderNotesUseCase } from '../application/use-cases/update-order-notes.use-case.js';
-import { AdminOrderQueryDto } from '../application/dtos/order-query.dto.js';
-import { UpdateOrderStatusDto } from '../application/dtos/update-order-status.dto.js';
-import { UpdateOrderNotesDto } from '../application/dtos/update-order-notes.dto.js';
+import { AdminListOrdersUseCase } from '../application/use-cases/admin-list-orders.use-case';
+import { AdminGetOrderUseCase } from '../application/use-cases/admin-get-order.use-case';
+import { UpdateOrderStatusUseCase } from '../application/use-cases/update-order-status.use-case';
+import { UpdateOrderNotesUseCase } from '../application/use-cases/update-order-notes.use-case';
+import { AdminOrderQueryDto } from '../application/dtos/order-query.dto';
+import { UpdateOrderStatusDto } from '../application/dtos/update-order-status.dto';
+import { UpdateOrderNotesDto } from '../application/dtos/update-order-notes.dto';
 
 @Controller('admin/orders')
 @RequireSubjectType(SubjectType.STAFF)

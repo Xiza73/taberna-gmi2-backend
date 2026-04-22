@@ -1,4 +1,4 @@
-import { type Review } from '../../domain/entities/review.entity.js';
+import { type Review } from '../../domain/entities/review.entity';
 
 export class ReviewResponseDto {
   id: string;

@@ -1,7 +1,7 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
-import { DomainException } from '@shared/domain/exceptions/index.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
+import { DomainException } from '@shared/domain/exceptions/index';
 
-import { type BannerPosition } from '../enums/banner-position.enum.js';
+import { type BannerPosition } from '../enums/banner-position.enum';
 
 export class Banner extends BaseEntity {
   private _title: string;

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto.js';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   CUSTOMER_REPOSITORY,
   type ICustomerRepository,
-} from '../../domain/interfaces/customer-repository.interface.js';
-import { type CustomerQueryDto } from '../dtos/customer-query.dto.js';
-import { CustomerResponseDto } from '../dtos/customer-response.dto.js';
+} from '../../domain/interfaces/customer-repository.interface';
+import { type CustomerQueryDto } from '../dtos/customer-query.dto';
+import { CustomerResponseDto } from '../dtos/customer-response.dto';
 
 @Injectable()
 export class ListCustomersUseCase {

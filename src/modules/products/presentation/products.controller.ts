@@ -1,11 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { Public } from '@shared/presentation/decorators/public.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { Public } from '@shared/presentation/decorators/public.decorator';
 
-import { ListProductsUseCase } from '../application/use-cases/list-products.use-case.js';
-import { GetProductBySlugUseCase } from '../application/use-cases/get-product-by-slug.use-case.js';
-import { ProductQueryDto } from '../application/dtos/product-query.dto.js';
+import { ListProductsUseCase } from '../application/use-cases/list-products.use-case';
+import { GetProductBySlugUseCase } from '../application/use-cases/get-product-by-slug.use-case';
+import { ProductQueryDto } from '../application/dtos/product-query.dto';
 
 @Controller('products')
 @Public()

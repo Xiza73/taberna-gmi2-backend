@@ -1,5 +1,5 @@
-import { Address } from '../../domain/entities/address.entity.js';
-import { AddressOrmEntity } from '../orm-entities/address.orm-entity.js';
+import { Address } from '../../domain/entities/address.entity';
+import { AddressOrmEntity } from '../orm-entities/address.orm-entity';
 
 export class AddressMapper {
   static toDomain(orm: AddressOrmEntity): Address {

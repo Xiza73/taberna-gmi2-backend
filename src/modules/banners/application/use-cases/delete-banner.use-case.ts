@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   BANNER_REPOSITORY,
   type IBannerRepository,
-} from '../../domain/interfaces/banner-repository.interface.js';
+} from '../../domain/interfaces/banner-repository.interface';
 
 @Injectable()
 export class DeleteBannerUseCase {

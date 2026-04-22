@@ -10,18 +10,18 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { PaginationDto } from '@shared/application/dtos/pagination.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { PaginationDto } from '@shared/application/dtos/pagination.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListCouponsUseCase } from '../application/use-cases/admin-list-coupons.use-case.js';
-import { AdminGetCouponUseCase } from '../application/use-cases/admin-get-coupon.use-case.js';
-import { CreateCouponUseCase } from '../application/use-cases/create-coupon.use-case.js';
-import { UpdateCouponUseCase } from '../application/use-cases/update-coupon.use-case.js';
-import { DeleteCouponUseCase } from '../application/use-cases/delete-coupon.use-case.js';
-import { CreateCouponDto } from '../application/dtos/create-coupon.dto.js';
-import { UpdateCouponDto } from '../application/dtos/update-coupon.dto.js';
+import { AdminListCouponsUseCase } from '../application/use-cases/admin-list-coupons.use-case';
+import { AdminGetCouponUseCase } from '../application/use-cases/admin-get-coupon.use-case';
+import { CreateCouponUseCase } from '../application/use-cases/create-coupon.use-case';
+import { UpdateCouponUseCase } from '../application/use-cases/update-coupon.use-case';
+import { DeleteCouponUseCase } from '../application/use-cases/delete-coupon.use-case';
+import { CreateCouponDto } from '../application/dtos/create-coupon.dto';
+import { UpdateCouponDto } from '../application/dtos/update-coupon.dto';
 
 @Controller('admin/coupons')
 @RequireSubjectType(SubjectType.STAFF)

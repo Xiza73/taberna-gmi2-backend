@@ -8,21 +8,21 @@ import { randomUUID } from 'crypto';
 import {
   DomainException,
   DomainUnauthorizedException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
-import { type StaffMember } from '../../../staff/domain/entities/staff-member.entity.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
+import { type StaffMember } from '../../../staff/domain/entities/staff-member.entity';
 import {
   REFRESH_TOKEN_REPOSITORY,
   type IRefreshTokenRepository,
-} from '../../domain/interfaces/refresh-token-repository.interface.js';
-import { RefreshToken } from '../../domain/entities/refresh-token.entity.js';
-import { type GoogleAuthDto } from '../dtos/google-auth.dto.js';
-import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto.js';
+} from '../../domain/interfaces/refresh-token-repository.interface';
+import { RefreshToken } from '../../domain/entities/refresh-token.entity';
+import { type GoogleAuthDto } from '../dtos/google-auth.dto';
+import { AuthTokensResponseDto } from '../dtos/auth-tokens-response.dto';
 
 @Injectable()
 export class StaffGoogleAuthUseCase {

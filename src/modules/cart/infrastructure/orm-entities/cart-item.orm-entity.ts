@@ -10,9 +10,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity.js';
+import { ProductOrmEntity } from '@modules/products/infrastructure/orm-entities/product.orm-entity';
 
-import { CartOrmEntity } from './cart.orm-entity.js';
+import { CartOrmEntity } from './cart.orm-entity';
 
 @Entity('cart_items')
 @Unique('uq_cart_items_cart_product', ['cartId', 'productId'])

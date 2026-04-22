@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
-} from '../../domain/interfaces/coupon-repository.interface.js';
-import { CouponResponseDto } from '../dtos/coupon-response.dto.js';
+} from '../../domain/interfaces/coupon-repository.interface';
+import { CouponResponseDto } from '../dtos/coupon-response.dto';
 
 @Injectable()
 export class AdminGetCouponUseCase {

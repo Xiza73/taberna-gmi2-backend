@@ -1,6 +1,6 @@
-import { BaseEntity } from '@shared/domain/entities/base.entity.js';
+import { BaseEntity } from '@shared/domain/entities/base.entity';
 
-import { type PaymentStatus } from '../enums/payment-status.enum.js';
+import { type PaymentStatus } from '../enums/payment-status.enum';
 
 export class Payment extends BaseEntity {
   private _orderId: string;

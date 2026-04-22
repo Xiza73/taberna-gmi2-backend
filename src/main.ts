@@ -4,22 +4,25 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { json } from 'express';
 
-import { AppModule } from './app.module.js';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
   const configService = app.get(ConfigService);
 
-  // Validate critical secrets at startup
-  const jwtSecret = configService.getOrThrow<string>('JWT_SECRET');
-  if (jwtSecret.length < 32 || jwtSecret.includes('CHANGE-ME')) {
-    throw new Error(
-      'JWT_SECRET must be at least 32 characters and not a placeholder',
-    );
+  // Validate critical secrets at startup (skip in development)
+  const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+  if (nodeEnv === 'production') {
+    const jwtSecret = configService.getOrThrow<string>('JWT_SECRET');
+    if (jwtSecret.length < 32 || jwtSecret.includes('CHANGE-ME')) {
+      throw new Error(
+        'JWT_SECRET must be at least 32 characters and not a placeholder',
+      );
+    }
+    configService.getOrThrow('MERCADOPAGO_ACCESS_TOKEN');
+    configService.getOrThrow('MERCADOPAGO_WEBHOOK_SECRET');
   }
   configService.getOrThrow('DB_PASSWORD');
-  configService.getOrThrow('MERCADOPAGO_ACCESS_TOKEN');
-  configService.getOrThrow('MERCADOPAGO_WEBHOOK_SECRET');
 
   // Graceful shutdown
   app.enableShutdownHooks();

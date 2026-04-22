@@ -7,12 +7,12 @@ import {
   Post,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { CurrentUser } from '@shared/presentation/decorators/current-user.decorator';
 
-import { ListWishlistUseCase } from '../application/use-cases/list-wishlist.use-case.js';
-import { AddToWishlistUseCase } from '../application/use-cases/add-to-wishlist.use-case.js';
-import { RemoveFromWishlistUseCase } from '../application/use-cases/remove-from-wishlist.use-case.js';
+import { ListWishlistUseCase } from '../application/use-cases/list-wishlist.use-case';
+import { AddToWishlistUseCase } from '../application/use-cases/add-to-wishlist.use-case';
+import { RemoveFromWishlistUseCase } from '../application/use-cases/remove-from-wishlist.use-case';
 
 @Controller('wishlist')
 export class WishlistController {

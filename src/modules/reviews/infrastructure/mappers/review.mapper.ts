@@ -1,5 +1,5 @@
-import { Review } from '../../domain/entities/review.entity.js';
-import { ReviewOrmEntity } from '../orm-entities/review.orm-entity.js';
+import { Review } from '../../domain/entities/review.entity';
+import { ReviewOrmEntity } from '../orm-entities/review.orm-entity';
 
 export class ReviewMapper {
   static toDomain(orm: ReviewOrmEntity): Review {

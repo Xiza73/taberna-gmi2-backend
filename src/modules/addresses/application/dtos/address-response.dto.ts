@@ -1,4 +1,4 @@
-import { type Address } from '../../domain/entities/address.entity.js';
+import { type Address } from '../../domain/entities/address.entity';
 
 export class AddressResponseDto {
   id: string;

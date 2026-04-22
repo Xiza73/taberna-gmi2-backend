@@ -1,16 +1,16 @@
 import { Inject, Injectable, Optional } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '../../domain/interfaces/product-repository.interface.js';
+} from '../../domain/interfaces/product-repository.interface';
 import {
   PRODUCT_SEARCH_SYNC,
   type IProductSearchSync,
-} from '../../domain/interfaces/product-search-sync.interface.js';
+} from '../../domain/interfaces/product-search-sync.interface';
 
 @Injectable()
 export class DeleteProductUseCase {

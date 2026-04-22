@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { Address } from '../../domain/entities/address.entity.js';
+import { Address } from '../../domain/entities/address.entity';
 import {
   ADDRESS_REPOSITORY,
   type IAddressRepository,
-} from '../../domain/interfaces/address-repository.interface.js';
-import { type CreateAddressDto } from '../dtos/create-address.dto.js';
-import { AddressResponseDto } from '../dtos/address-response.dto.js';
+} from '../../domain/interfaces/address-repository.interface';
+import { type CreateAddressDto } from '../dtos/create-address.dto';
+import { AddressResponseDto } from '../dtos/address-response.dto';
 
 @Injectable()
 export class CreateAddressUseCase {

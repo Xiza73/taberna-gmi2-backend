@@ -10,7 +10,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'ecommerce_gmi2',
-  entities: ['dist/**/*.orm-entity.js'],
-  migrations: ['dist/migrations/*.js'],
+  entities: ['src/**/*.orm-entity.ts'],
+  migrations: ['src/migrations/*.ts'],
   synchronize: false,
 });

@@ -4,7 +4,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import {
   type IProductSearchService,
   type ProductSearchResult,
-} from '../../domain/interfaces/product-search.interface.js';
+} from '../../domain/interfaces/product-search.interface';
 
 @Injectable()
 export class ElasticsearchProductSearch implements IProductSearchService {

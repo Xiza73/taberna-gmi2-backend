@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainNotFoundException } from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+import { DomainNotFoundException } from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import {
   STAFF_MEMBER_REPOSITORY,
   type IStaffMemberRepository,
-} from '../../../staff/domain/interfaces/staff-member-repository.interface.js';
-import { StaffMemberResponseDto } from '../../../staff/application/dtos/staff-member-response.dto.js';
+} from '../../../staff/domain/interfaces/staff-member-repository.interface';
+import { StaffMemberResponseDto } from '../../../staff/application/dtos/staff-member-response.dto';
 
 @Injectable()
 export class StaffUpdateProfileUseCase {

@@ -9,19 +9,19 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { BaseResponse } from '@shared/application/dtos/base-response.dto.js';
-import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator.js';
-import { SubjectType } from '@shared/domain/enums/subject-type.enum.js';
+import { BaseResponse } from '@shared/application/dtos/base-response.dto';
+import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { CreateStaffMemberUseCase } from '../application/use-cases/create-staff-member.use-case.js';
-import { ListStaffMembersUseCase } from '../application/use-cases/list-staff-members.use-case.js';
-import { GetStaffMemberUseCase } from '../application/use-cases/get-staff-member.use-case.js';
-import { UpdateStaffMemberUseCase } from '../application/use-cases/update-staff-member.use-case.js';
-import { SuspendStaffMemberUseCase } from '../application/use-cases/suspend-staff-member.use-case.js';
-import { ActivateStaffMemberUseCase } from '../application/use-cases/activate-staff-member.use-case.js';
-import { CreateStaffMemberDto } from '../application/dtos/create-staff-member.dto.js';
-import { StaffQueryDto } from '../application/dtos/staff-query.dto.js';
-import { UpdateStaffMemberDto } from '../application/dtos/update-staff-member.dto.js';
+import { CreateStaffMemberUseCase } from '../application/use-cases/create-staff-member.use-case';
+import { ListStaffMembersUseCase } from '../application/use-cases/list-staff-members.use-case';
+import { GetStaffMemberUseCase } from '../application/use-cases/get-staff-member.use-case';
+import { UpdateStaffMemberUseCase } from '../application/use-cases/update-staff-member.use-case';
+import { SuspendStaffMemberUseCase } from '../application/use-cases/suspend-staff-member.use-case';
+import { ActivateStaffMemberUseCase } from '../application/use-cases/activate-staff-member.use-case';
+import { CreateStaffMemberDto } from '../application/dtos/create-staff-member.dto';
+import { StaffQueryDto } from '../application/dtos/staff-query.dto';
+import { UpdateStaffMemberDto } from '../application/dtos/update-staff-member.dto';
 
 @Controller('admin/staff')
 @RequireSubjectType(SubjectType.STAFF)

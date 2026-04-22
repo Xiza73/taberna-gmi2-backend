@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
-import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface.js';
+import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
-import { type Banner } from '../../domain/entities/banner.entity.js';
-import { type IBannerRepository } from '../../domain/interfaces/banner-repository.interface.js';
-import { BannerOrmEntity } from '../orm-entities/banner.orm-entity.js';
-import { BannerMapper } from '../mappers/banner.mapper.js';
+import { type Banner } from '../../domain/entities/banner.entity';
+import { type IBannerRepository } from '../../domain/interfaces/banner-repository.interface';
+import { BannerOrmEntity } from '../orm-entities/banner.orm-entity';
+import { BannerMapper } from '../mappers/banner.mapper';
 
 @Injectable()
 export class BannerRepository implements IBannerRepository {

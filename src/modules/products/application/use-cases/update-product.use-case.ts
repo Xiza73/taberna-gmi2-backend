@@ -3,23 +3,23 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import {
   DomainConflictException,
   DomainNotFoundException,
-} from '@shared/domain/exceptions/index.js';
-import { ErrorMessages } from '@shared/domain/constants/error-messages.js';
+} from '@shared/domain/exceptions/index';
+import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import {
   CATEGORY_REPOSITORY,
   type ICategoryRepository,
-} from '@modules/categories/domain/interfaces/category-repository.interface.js';
+} from '@modules/categories/domain/interfaces/category-repository.interface';
 
 import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
-} from '../../domain/interfaces/product-repository.interface.js';
+} from '../../domain/interfaces/product-repository.interface';
 import {
   PRODUCT_SEARCH_SYNC,
   type IProductSearchSync,
-} from '../../domain/interfaces/product-search-sync.interface.js';
-import { type UpdateProductDto } from '../dtos/update-product.dto.js';
-import { ProductResponseDto } from '../dtos/product-response.dto.js';
+} from '../../domain/interfaces/product-search-sync.interface';
+import { type UpdateProductDto } from '../dtos/update-product.dto';
+import { ProductResponseDto } from '../dtos/product-response.dto';
 
 @Injectable()
 export class UpdateProductUseCase {
