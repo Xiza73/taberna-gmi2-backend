@@ -41,6 +41,17 @@ async function seed() {
     console.log('Seeding database...\n');
 
     // ──────────────────────────────────────
+    // Clean existing data (order matters for FK)
+    // ──────────────────────────────────────
+    await qr.query(`TRUNCATE TABLE
+      order_events, payments, shipments, order_items, orders,
+      reviews, cart_items, carts, wishlist_items, addresses,
+      refresh_tokens, products, categories, banners, coupons,
+      order_number_counters, staff_members, customers
+      CASCADE`);
+    console.log('  ✓ Existing data cleared');
+
+    // ──────────────────────────────────────
     // Customers
     // ──────────────────────────────────────
     const passwordHash = await hash('Password123!', 12);
