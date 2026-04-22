@@ -7,7 +7,7 @@ Phase 0: Project Setup (config, deps, docker-compose con PG + ES + Kibana)
     │
 Phase 1: Shared Infrastructure + Logging Middleware
     │
-Phase 2: Auth + Users ─────────────────────┐
+Phase 2: Auth + Customers + Staff ─────────┐
     │                                       │
 Phase 3: Categories                         │
     │                                       │
@@ -168,7 +168,8 @@ src/shared/
       base-repository.interface.ts          # IBaseRepository<T> (includes withTransaction(ctx): this)
       unit-of-work.interface.ts             # IUnitOfWork + TransactionContext (opaco, infra castea a EntityManager)
     enums/
-      user-role.enum.ts                     # UserRole (shared by Auth + Users)
+      subject-type.enum.ts               # SubjectType: CUSTOMER | STAFF
+      staff-role.enum.ts                 # StaffRole: SUPER_ADMIN | ADMIN | USER
     constants/
       error-messages.ts                     # ErrorMessages object
   infrastructure/
@@ -180,11 +181,13 @@ src/shared/
   presentation/
     decorators/
       public.decorator.ts                   # @Public()
-      roles.decorator.ts                    # @Roles('admin')
+      subject-type.decorator.ts          # @RequireSubjectType(STAFF)
+      staff-role.decorator.ts            # @RequireStaffRole(SUPER_ADMIN, ADMIN)
       current-user.decorator.ts             # @CurrentUser()
     guards/
       jwt-auth.guard.ts                     # JwtAuthGuard
-      roles.guard.ts                        # RolesGuard
+      subject-type.guard.ts              # SubjectTypeGuard
+      staff-role.guard.ts                # StaffRoleGuard
     filters/
       global-exception.filter.ts             # @Catch() — handles DomainException + HttpException → BaseResponse
     middleware/
@@ -199,9 +202,9 @@ src/shared/
 
 ---
 
-## Phase 2: Auth + Users
+## Phase 2: Auth + Customers + Staff
 
-**Skill**: `/ecommerce-api-generator auth` luego `/ecommerce-api-generator users`
+**Skill**: `/ecommerce-api-generator auth` luego `/ecommerce-api-generator customers` luego `/ecommerce-api-generator staff`
 
 ### Auth Module
 ```
@@ -210,12 +213,12 @@ src/modules/auth/
   domain/
     entities/refresh-token.entity.ts
     interfaces/refresh-token-repository.interface.ts
-    enums/                                  # (UserRole enum movido a src/shared/domain/enums/user-role.enum.ts)
+    enums/                                  # (SubjectType y StaffRole enums movidos a src/shared/domain/enums/)
   infrastructure/
     orm-entities/refresh-token.orm-entity.ts
     repositories/refresh-token.repository.ts
     mappers/refresh-token.mapper.ts
-    strategies/jwt.strategy.ts              # JwtStrategy (validate: load user + check isActive, cache 30s)
+    strategies/jwt.strategy.ts              # JwtStrategy (validate: load customer or staff + check isActive, cache 30s)
     cron/refresh-token-cleanup.cron.ts     # @Cron('0 0 3 * * 0') semanal, purga tokens expirados/revocados
   application/
     dtos/register.dto.ts, login.dto.ts, refresh-token.dto.ts, auth-tokens-response.dto.ts, forgot-password.dto.ts, reset-password.dto.ts
@@ -223,30 +226,50 @@ src/modules/auth/
   presentation/auth.controller.ts
 ```
 
-### Users Module
+### Customers Module
 ```
-src/modules/users/
-  users.module.ts
+src/modules/customers/
+  customers.module.ts
   domain/
-    entities/user.entity.ts                # incluye resetPasswordToken? y resetPasswordExpires?
-    interfaces/user-repository.interface.ts
+    entities/customer.entity.ts
+    interfaces/customer-repository.interface.ts
   infrastructure/
-    orm-entities/user.orm-entity.ts
-    repositories/user.repository.ts
-    mappers/user.mapper.ts
+    orm-entities/customer.orm-entity.ts
+    repositories/customer.repository.ts
+    mappers/customer.mapper.ts
   application/
-    dtos/create-user.dto.ts, update-profile.dto.ts, change-password.dto.ts, user-response.dto.ts, user-query.dto.ts
-    use-cases/get-profile.use-case.ts, update-profile.use-case.ts, change-password.use-case.ts
-    use-cases/list-users.use-case.ts, get-user.use-case.ts, update-user.use-case.ts, suspend-user.use-case.ts, activate-user.use-case.ts
-  presentation/users.controller.ts, admin-users.controller.ts
+    dtos/update-customer-profile.dto.ts, change-password.dto.ts, customer-response.dto.ts, customer-query.dto.ts
+    use-cases/get-customer-profile.use-case.ts, update-customer-profile.use-case.ts, change-customer-password.use-case.ts
+    use-cases/admin-list-customers.use-case.ts, admin-get-customer.use-case.ts, admin-update-customer.use-case.ts, suspend-customer.use-case.ts, activate-customer.use-case.ts
+  presentation/customers.controller.ts, admin-customers.controller.ts
 ```
 
-**Migration**: `pnpm migration:generate src/migrations/CreateUsersAndRefreshTokens`
+### Staff Module
+```
+src/modules/staff/
+  staff.module.ts
+  domain/
+    entities/staff-member.entity.ts, staff-invitation.entity.ts
+    interfaces/staff-member-repository.interface.ts, staff-invitation-repository.interface.ts
+  infrastructure/
+    orm-entities/staff-member.orm-entity.ts, staff-invitation.orm-entity.ts
+    repositories/staff-member.repository.ts, staff-invitation.repository.ts
+    mappers/staff-member.mapper.ts, staff-invitation.mapper.ts
+  application/
+    dtos/invite-staff.dto.ts, accept-invitation.dto.ts, staff-member-response.dto.ts, staff-query.dto.ts, update-staff-role.dto.ts
+    use-cases/invite-staff.use-case.ts, validate-invitation.use-case.ts, accept-invitation.use-case.ts, list-invitations.use-case.ts, revoke-invitation.use-case.ts
+    use-cases/get-staff-profile.use-case.ts, update-staff-profile.use-case.ts, change-staff-password.use-case.ts
+    use-cases/admin-list-staff.use-case.ts, admin-get-staff.use-case.ts, update-staff-role.use-case.ts, suspend-staff.use-case.ts, activate-staff.use-case.ts
+  presentation/admin-staff.controller.ts, staff-invitations.controller.ts
+```
+
+**Migration**: `pnpm migration:generate src/migrations/CreateCustomersStaffAndRefreshTokens`
 
 **Nota DI**:
-- UsersModule DEBE exportar `USER_REPOSITORY` para que JwtAuthGuard (registrado en AppModule) pueda inyectarlo.
+- CustomersModule DEBE exportar `CUSTOMER_REPOSITORY` para que JwtAuthGuard pueda inyectarlo.
+- StaffModule DEBE exportar `STAFF_MEMBER_REPOSITORY` para que JwtAuthGuard pueda inyectarlo.
 - AuthModule DEBE exportar `JwtModule` para que JwtAuthGuard pueda resolver `JwtService` a nivel de AppModule.
-- AuthModule importa UsersModule para acceder al repositorio.
+- AuthModule importa CustomersModule y StaffModule para acceder a los repositorios.
 
 **Validation**: Register + login + refresh + me funcionan. Refresh token cleanup cron registrado. `pnpm run build` OK.
 
@@ -662,7 +685,7 @@ src/modules/admin/
   presentation/admin-dashboard.controller.ts
 ```
 
-**Imports**: UsersModule, OrdersModule, ProductsModule (accede via repository tokens exportados)
+**Imports**: CustomersModule, StaffModule, OrdersModule, ProductsModule (accede via repository tokens exportados)
 
 ---
 
@@ -710,8 +733,8 @@ src/modules/search/
 # Si no se generaron por fase, generar todo junto:
 pnpm migration:generate src/migrations/InitialSchema
 
-# Seed admin:
-pnpm migration:create src/migrations/SeedAdminUser
+# Seed super admin staff:
+pnpm migration:create src/migrations/SeedSuperAdminStaff
 ```
 
 ### 17.2 Update app.module.ts
@@ -727,7 +750,8 @@ pnpm migration:create src/migrations/SeedAdminUser
     UploadsModule,          // @Global
     NotificationsModule,    // @Global
     AuthModule,
-    UsersModule,
+    CustomersModule,
+    StaffModule,
     CategoriesModule,
     ProductsModule,
     BannersModule,
@@ -745,11 +769,14 @@ pnpm migration:create src/migrations/SeedAdminUser
   providers: [
     // GlobalExceptionFilter via DI (soporta injection de Logger, etc)
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
-    // Guard chain: Throttle → Auth → Roles
-    JwtAuthGuard,  // registrar como provider para que useExisting funcione
+    // Guard chain: Throttle → Auth → SubjectType → StaffRole
+    JwtAuthGuard,
+    SubjectTypeGuard,
+    StaffRoleGuard,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useExisting: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useExisting: SubjectTypeGuard },
+    { provide: APP_GUARD, useExisting: StaffRoleGuard },
   ],
 })
 export class AppModule {}
@@ -801,9 +828,9 @@ EMAIL_ALREADY_EXISTS: 'Email already registered',
 INVALID_REFRESH_TOKEN: 'Invalid or expired refresh token',
 REFRESH_TOKEN_REUSED: 'Refresh token reuse detected, all sessions revoked',
 INVALID_RESET_TOKEN: 'Invalid or expired password reset token',
-// Users
-USER_NOT_FOUND: 'User not found',
-USER_SUSPENDED: 'Account is suspended',
+// Customers
+CUSTOMER_NOT_FOUND: 'Customer not found',
+CUSTOMER_SUSPENDED: 'Customer account is suspended',
 WRONG_PASSWORD: 'Current password is incorrect',
 // Categories
 CATEGORY_NOT_FOUND: 'Category not found',
@@ -858,6 +885,37 @@ COUPON_CODE_ALREADY_EXISTS: 'Coupon code already exists',
 UPLOAD_FAILED: 'Image upload failed',
 UPLOAD_INVALID_FORMAT: 'Invalid image format. Allowed: jpg, png, webp',
 UPLOAD_TOO_LARGE: 'Image exceeds maximum size of 5MB',
+// Invoicing
+INVOICE_ALREADY_EXISTS: 'Invoice already exists for this order',
+INVOICE_ORDER_NOT_PAID: 'Cannot generate invoice for unpaid order',
+INVOICE_FACTURA_REQUIRES_RUC: 'Factura requires RUC document',
+INVOICE_CANCEL_EXPIRED: 'Invoice can only be cancelled within 72 hours',
+INVOICE_NOT_FOUND: 'Invoice not found',
+// Staff
+STAFF_NOT_FOUND: 'Staff member not found',
+STAFF_SUSPENDED: 'Staff account is suspended',
+STAFF_EMAIL_ALREADY_EXISTS: 'A staff member with this email already exists',
+STAFF_CANNOT_CHANGE_OWN_ROLE: 'Cannot change your own role',
+STAFF_CANNOT_SUSPEND_SELF: 'Cannot suspend yourself',
+STAFF_LAST_SUPER_ADMIN: 'Cannot remove the last active super admin',
+STAFF_INSUFFICIENT_ROLE: 'Insufficient role to perform this action',
+// Invitations
+INVITATION_NOT_FOUND: 'Invitation not found',
+INVITATION_EXPIRED: 'Invitation has expired',
+INVITATION_ALREADY_ACCEPTED: 'Invitation has already been accepted',
+INVITATION_REVOKED: 'Invitation has been revoked',
+INVITATION_EMAIL_EXISTS: 'A staff member with this email already exists',
+INVITATION_CANNOT_INVITE_ROLE: 'You cannot invite staff with this role',
+// POS (expanded)
+POS_CASH_REGISTER_ALREADY_OPEN: 'You already have an open cash register',
+POS_CASH_REGISTER_NOT_OPEN: 'No open cash register found',
+POS_CASH_REGISTER_NOT_FOUND: 'Cash register not found',
+POS_ORDER_NOT_POS: 'This order is not a POS/WhatsApp order',
+POS_ORDER_CANNOT_CANCEL: 'Only paid POS orders can be cancelled',
+POS_ORDER_CANNOT_REFUND: 'Only paid or processing POS orders can be refunded',
+POS_REFUND_QUANTITY_EXCEEDED: 'Refund quantity exceeds purchased quantity',
+POS_ITEMS_EMPTY: 'At least one item is required',
+POS_INVALID_DOC_NUMBER: 'Invalid document number for the specified type',
 ```
 
 ### 17.5 Health check
@@ -884,12 +942,13 @@ export class HealthController {
 
 ### 17.6 Seed data
 ```bash
-# Seed admin user
-pnpm migration:create src/migrations/SeedAdminUser
+# Seed super admin staff
+pnpm migration:create src/migrations/SeedSuperAdminStaff
 
 # Seed initial categories (opcional)
 pnpm migration:create src/migrations/SeedDefaultCategories
 ```
+The seed migration inserts into `staff_members` table with role `super_admin`, NOT into a `users` table.
 
 ### 17.7 Tests
 - Unit tests para cada domain entity
@@ -910,6 +969,233 @@ pnpm run test:e2e
 
 ---
 
+## Phase 18: POS (Point of Sale)
+
+**Dependencias**: Phase 10 (Orders), Phase 4 (Products), Phase 9 (Coupons)
+**Spec**: `docs/modules/pos.md`
+
+### 18.1 Enums (en Orders domain)
+```
+src/modules/orders/domain/enums/
+  order-channel.enum.ts        # ONLINE = 'online', POS = 'pos', WHATSAPP = 'whatsapp'
+  payment-method.enum.ts       # MERCADOPAGO = 'mercadopago', CASH = 'cash', YAPE_PLIN = 'yape_plin', BANK_TRANSFER = 'bank_transfer'
+  customer-doc-type.enum.ts    # DNI = 'dni', RUC = 'ruc'
+```
+
+### 18.2 Update Order entity
+- Agregar campos: `channel`, `paymentMethod`, `customerDocType`, `customerDocNumber`
+- Hacer `shippingAddressSnapshot` nullable
+- Actualizar `Order.create()` y `Order.reconstitute()` con nuevos campos
+- Actualizar `OrderMapper` con nuevos campos
+- Actualizar ORM entity con columnas nuevas
+
+### 18.3 POS module (Full DDD)
+```
+src/modules/pos/
+  pos.module.ts
+  domain/
+    entities/cash-register.entity.ts, cash-movement.entity.ts
+    enums/cash-movement-type.enum.ts       # OPEN = 'open', SALE = 'sale', REFUND = 'refund', MANUAL_IN = 'manual_in', MANUAL_OUT = 'manual_out', CLOSE = 'close'
+    interfaces/cash-register-repository.interface.ts, cash-movement-repository.interface.ts
+  infrastructure/
+    orm-entities/cash-register.orm-entity.ts, cash-movement.orm-entity.ts
+    repositories/cash-register.repository.ts, cash-movement.repository.ts
+    mappers/cash-register.mapper.ts, cash-movement.mapper.ts
+  application/
+    use-cases/
+      create-pos-order.use-case.ts
+      list-pos-orders.use-case.ts
+      get-pos-order.use-case.ts
+      cancel-pos-order.use-case.ts
+      refund-pos-order.use-case.ts
+      open-cash-register.use-case.ts
+      close-cash-register.use-case.ts
+      get-cash-register.use-case.ts
+      add-cash-movement.use-case.ts
+      get-pos-daily-report.use-case.ts
+      get-pos-sales-summary.use-case.ts
+    dtos/
+      create-pos-order.dto.ts
+      pos-order-filters.dto.ts
+      pos-order-response.dto.ts
+      open-cash-register.dto.ts
+      close-cash-register.dto.ts
+      cash-movement.dto.ts
+      cash-register-response.dto.ts
+      pos-report-response.dto.ts
+  presentation/
+    pos.controller.ts            # /admin/pos/orders
+    pos-cash-register.controller.ts  # /admin/pos/cash-registers
+    pos-reports.controller.ts    # /admin/pos/reports
+```
+
+### 18.4 Migration
+```bash
+pnpm migration:generate src/migrations/AddOrderChannelAndPos
+# Agrega: channel, payment_method, customer_doc_type, customer_doc_number
+# Modifica: shipping_address_snapshot nullable
+# Agrega: CHECK constraints para channel, payment_method, online_address
+# Default: channel='online', payment_method='mercadopago' (para ordenes existentes)
+
+pnpm migration:generate src/migrations/CreateCashRegistersAndMovements
+# Crea tabla cash_registers: id, staff_member_id, opened_at, closed_at, opening_amount, closing_amount, expected_amount, difference, notes
+# Crea tabla cash_movements: id, cash_register_id, type, amount, order_id (nullable), notes, created_at
+# FK indexes + CHECK constraints
+```
+
+### 18.5 app.module.ts
+```typescript
+PosModule,  // agregar despues de AdminModule
+```
+
+### 18.6 Tests
+- Unit: `CreatePosOrderUseCase` (flujo POS y WhatsApp)
+- Unit: Verificar que POS orders van directo a `paid`
+- Unit: Verificar que WhatsApp con delivery requiere address
+- Unit: `OpenCashRegisterUseCase` / `CloseCashRegisterUseCase`
+- Unit: `CancelPosOrderUseCase` y `RefundPosOrderUseCase`
+- E2E: `POST /admin/pos/orders` con cash → status paid
+- E2E: Open cash register → create POS order → close cash register → verify report
+
+---
+
+## Phase 19: Invoicing (SUNAT)
+
+**Dependencias**: Phase 18 (POS), Phase 10 (Orders)
+**Spec**: `docs/modules/invoicing.md`
+
+### 19.1 Domain
+```
+src/modules/invoicing/
+  domain/
+    entities/
+      invoice.entity.ts
+    enums/
+      invoice-type.enum.ts        # BOLETA = 'boleta', FACTURA = 'factura'
+      sunat-status.enum.ts        # PENDING = 'pending', ACCEPTED = 'accepted', REJECTED = 'rejected', CANCELLED = 'cancelled'
+    interfaces/
+      invoice-provider.interface.ts   # IInvoiceProvider + INVOICE_PROVIDER token
+      invoice-repository.interface.ts # IInvoiceRepository + INVOICE_REPOSITORY token
+```
+
+### 19.2 Infrastructure
+```
+  infrastructure/
+    orm-entities/
+      invoice.orm-entity.ts
+    repositories/
+      typeorm-invoice.repository.ts
+    mappers/
+      invoice.mapper.ts
+    services/
+      nubefact-invoice.provider.ts    # Implementa IInvoiceProvider
+```
+
+### 19.3 Application
+```
+  application/
+    use-cases/
+      create-invoice.use-case.ts
+      get-invoice.use-case.ts
+      cancel-invoice.use-case.ts
+      list-invoices.use-case.ts
+    dtos/
+      create-invoice.dto.ts
+      invoice-response.dto.ts
+      invoice-filters.dto.ts
+```
+
+### 19.4 Presentation
+```
+  presentation/
+    invoice.controller.ts     # /admin/orders/:id/invoice, /admin/invoices
+```
+
+### 19.5 Module
+```typescript
+// invoicing.module.ts — @Global para que POS pueda inyectar IInvoiceProvider
+@Global()
+@Module({
+  imports: [TypeOrmModule.forFeature([InvoiceOrmEntity])],
+  providers: [
+    { provide: INVOICE_REPOSITORY, useClass: TypeOrmInvoiceRepository },
+    { provide: INVOICE_PROVIDER, useClass: NubefactInvoiceProvider },
+    CreateInvoiceUseCase,
+    GetInvoiceUseCase,
+    CancelInvoiceUseCase,
+    ListInvoicesUseCase,
+  ],
+  controllers: [InvoiceController],
+  exports: [INVOICE_PROVIDER, INVOICE_REPOSITORY],
+})
+```
+
+### 19.6 Migration
+```bash
+pnpm migration:generate src/migrations/AddInvoices
+# Crea tabla invoices con todos los campos
+# Agrega: UNIQUE (order_id), FK index, CHECK constraints
+```
+
+### 19.7 app.module.ts
+```typescript
+InvoicingModule,  // @Global, agregar despues de NotificationsModule
+```
+
+### 19.8 Env vars
+```env
+NUBEFACT_API_TOKEN=your-api-token
+NUBEFACT_API_URL=https://api.nubefact.com/api/v1
+NUBEFACT_RUC=your-ruc
+NUBEFACT_BUSINESS_NAME=your-business-name
+```
+
+### 19.9 Tests
+- Unit: `CreateInvoiceUseCase` (boleta con DNI, factura con RUC)
+- Unit: Validar que factura requiere RUC
+- Unit: Validar que no se puede facturar orden no pagada
+- Unit: IGV calculation (18%)
+- E2E: `POST /admin/orders/:id/invoice` → genera boleta
+
+---
+
+## Phase 20: Final (Updated)
+
+Misma estructura que Phase 17 original pero incluye los nuevos modulos:
+
+### 20.1 Update app.module.ts final
+```typescript
+@Module({
+  imports: [
+    // ... (misma config que Phase 17.2)
+    PosModule,
+    InvoicingModule,       // @Global
+  ],
+  // ... (mismos providers)
+})
+```
+
+### 20.2 Update seed data
+- Seed admin user (existente)
+- Seed categories (existente)
+- Seed sample products (existente)
+
+### 20.3 Update E2E tests
+Agregar flujo POS:
+- Admin: create POS order (cash) → verify status paid → generate boleta
+- Admin: create WhatsApp order con delivery → verify address snapshot
+- Admin: create factura con RUC → verify SUNAT status
+
+### 20.4 Build check final
+```bash
+docker compose up -d
+pnpm run build
+pnpm run test
+pnpm run test:e2e
+```
+
+---
+
 ## Execution Strategy
 
 Cada fase se ejecuta asi:
@@ -920,6 +1206,6 @@ Cada fase se ejecuta asi:
 5. `pnpm run build` para verificar compilacion
 6. Commit por fase
 
-**Estimacion**: ~85-100 archivos de codigo, ~13-15 migraciones, ~19 modulos.
+**Estimacion**: ~110-135 archivos de codigo, ~17-20 migraciones, ~22 modulos.
 
 **Infraestructura local**: PostgreSQL + Elasticsearch + Kibana via Docker Compose.

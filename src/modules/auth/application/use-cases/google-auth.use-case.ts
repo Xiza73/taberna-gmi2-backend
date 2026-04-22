@@ -72,7 +72,7 @@ export class GoogleAuthUseCase {
 
     if (customer) {
       if (!customer.isActive) {
-        throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+        throw new DomainUnauthorizedException(ErrorMessages.CUSTOMER_SUSPENDED);
       }
       return this.generateTokens(customer);
     }
@@ -81,7 +81,7 @@ export class GoogleAuthUseCase {
 
     if (existingByEmail) {
       if (!existingByEmail.isActive) {
-        throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+        throw new DomainUnauthorizedException(ErrorMessages.CUSTOMER_SUSPENDED);
       }
       if (existingByEmail.googleId) {
         throw new DomainUnauthorizedException(

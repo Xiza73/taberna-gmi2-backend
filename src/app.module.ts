@@ -28,6 +28,7 @@ import { HealthModule } from './health/health.module.js';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter.js';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard.js';
 import { SubjectTypeGuard } from './shared/presentation/guards/subject-type.guard.js';
+import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard.js';
 
 @Module({
   imports: [
@@ -82,11 +83,14 @@ import { SubjectTypeGuard } from './shared/presentation/guards/subject-type.guar
   providers: [
     // Global Exception Filter (via DI)
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
-    // Guard chain: Throttle → Auth → SubjectType
+    // Guard chain: Throttle → Auth → SubjectType → StaffRole (R21)
     JwtAuthGuard,
+    SubjectTypeGuard,
+    StaffRoleGuard,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useExisting: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: SubjectTypeGuard },
+    { provide: APP_GUARD, useExisting: SubjectTypeGuard },
+    { provide: APP_GUARD, useExisting: StaffRoleGuard },
   ],
 })
 export class AppModule {}

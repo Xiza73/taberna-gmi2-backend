@@ -37,7 +37,7 @@ export class StaffLoginUseCase {
       throw new DomainUnauthorizedException(ErrorMessages.INVALID_CREDENTIALS);
 
     if (!staff.isActive)
-      throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+      throw new DomainUnauthorizedException(ErrorMessages.STAFF_SUSPENDED);
 
     const valid = await compare(dto.password, staff.password);
     if (!valid)

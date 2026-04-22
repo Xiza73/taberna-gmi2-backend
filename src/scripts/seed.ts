@@ -73,14 +73,14 @@ async function seed() {
     const staffManager = uuid();
 
     const staffMembers = [
-      [staffAdmin, 'Admin Principal', 'admin@tienda.com', passwordHash, true],
-      [staffManager, 'Gerente', 'gerente@tienda.com', passwordHash, true],
+      [staffAdmin, 'Admin Principal', 'admin@tienda.com', passwordHash, 'super_admin', true],
+      [staffManager, 'Gerente', 'gerente@tienda.com', passwordHash, 'admin', true],
     ];
 
     for (const s of staffMembers) {
       await qr.query(
-        `INSERT INTO staff_members (id, name, email, password, is_active, created_at, updated_at)
-         VALUES ($1,$2,$3,$4,$5, NOW(), NOW()) ON CONFLICT (email) DO NOTHING`,
+        `INSERT INTO staff_members (id, name, email, password, role, is_active, created_at, updated_at)
+         VALUES ($1,$2,$3,$4,$5,$6, NOW(), NOW()) ON CONFLICT (email) DO NOTHING`,
         s,
       );
     }
@@ -859,8 +859,8 @@ async function seed() {
     console.log('  - carlos@example.com (active)');
     console.log('  - lucia@example.com  (suspended)');
     console.log('  Staff:');
-    console.log('  - admin@tienda.com   (admin)');
-    console.log('  - gerente@tienda.com (manager)');
+    console.log('  - admin@tienda.com   (super_admin)');
+    console.log('  - gerente@tienda.com (admin)');
   } catch (error) {
     await qr.rollbackTransaction();
     console.error('\n✗ Seed failed:', (error as Error).message);

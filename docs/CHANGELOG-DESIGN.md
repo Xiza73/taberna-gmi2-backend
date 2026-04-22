@@ -133,14 +133,76 @@ Este archivo documenta TODOS los cambios realizados a los archivos de diseño/re
 - **Archivos afectados**: CONTEXT.md (líneas 900-909 simplificadas)
 - **Error anterior**: Texto mencionaba "NullProductSearchSync", "ProductSearchSyncModule condicional" junto al patrón correcto
 
+### R15: POS reutiliza Order entity con campo `channel`
+- **Por qué**: Crear una entidad `Sale` separada duplicaría lógica de stock, cupones y reportes. Una sola tabla `orders` con `channel` enum unifica todo
+- **Archivos afectados**: orders.md (nuevos campos), pos.md (nuevo módulo), CONTEXT-GLOBAL.md (constraints)
+- **Regla**: Ventas POS/WhatsApp son Orders con `channel != 'online'` y `paymentMethod != 'mercadopago'`. Status va directo a `paid` (excepto si paymentMethod es mercadopago)
+
+### R16: shippingAddressSnapshot nullable para POS
+- **Por qué**: Ventas presenciales no tienen dirección de envío. Pero ventas online SIEMPRE requieren dirección
+- **Archivos afectados**: orders.md, CONTEXT-GLOBAL.md (CHECK constraint `chk_orders_online_address`)
+- **Regla**: `CHECK (channel != 'online' OR shipping_address_snapshot IS NOT NULL)` — online siempre requiere address, POS/WhatsApp es opcional
+
+### R17: Invoicing usa proveedor tercero (Nubefact), NO integración directa SUNAT
+- **Por qué**: Integración directa con SUNAT requiere certificados digitales, firmar XML, manejar CDR, etc. Un proveedor tercero expone API REST simple
+- **Archivos afectados**: invoicing.md (nuevo módulo), CONTEXT-GLOBAL.md (env vars)
+- **Regla**: `IInvoiceProvider` interface con implementación `NubefactInvoiceProvider`. Si se cambia de proveedor, solo se cambia la implementación
+
+### R18: Dos módulos separados — CustomersModule + StaffModule (NO UsersModule unificado)
+- **Por qué**: El ecommerce (storefront) y el backoffice son dos productos distintos con diferentes flujos de auth, permisos y datos. Customers tienen Google OAuth, wishlist, carrito. Staff tiene roles, invitaciones, POS. Unificarlos en una tabla `users` complicaría guards, queries y permisos
+- **Archivos afectados**: customers.md (nuevo), staff.md (nuevo), users.md (eliminado), auth.md, shared.md, CONTEXT-GLOBAL.md, IMPLEMENTATION-PLAN.md
+- **Tablas DB**: `customers` (ecommerce), `staff_members` (backoffice), `staff_invitations` (sistema de invitación)
+- **JWT payload**: `subjectType: 'customer' | 'staff'` determina contra qué repo se valida
+
+### R19: Staff tiene 3 roles — SuperAdminStaff, AdminStaff, UserStaff
+- **Por qué**: Un negocio pequeño necesita jerarquía: el dueño (SuperAdmin) invita a sus empleados con distintos niveles de acceso. El cajero (Admin) puede vender pero no cambiar roles. El operador (User) solo gestiona envíos
+- **Archivos afectados**: staff.md, shared.md (StaffRole enum), CONTEXT-GLOBAL.md
+- **Enum StaffRole**: `SUPER_ADMIN = 'super_admin'`, `ADMIN = 'admin'`, `USER = 'user'`
+- **Jerarquía de invitación**: SuperAdmin → Admin, User. Admin → User. User → nadie
+
+### R20: Sistema de invitación para staff (no registro público)
+- **Por qué**: En un negocio real, solo el dueño o admin decide quién tiene acceso al backoffice. Un endpoint de registro público sería un riesgo de seguridad
+- **Archivos afectados**: staff.md, auth.md, IMPLEMENTATION-PLAN.md
+- **Flujo**: SuperAdmin/Admin crea invitación → email con token → invitado se registra con ese token → staff creado con rol asignado
+- **Entidad**: StaffInvitation con tokenHash (bcrypt), expiresAt (72h), role, invitedBy
+
+### R21: Guard chain = ThrottlerGuard → JwtAuthGuard → SubjectTypeGuard → StaffRoleGuard
+- **Por qué**: Extensión de R1. SubjectTypeGuard reemplaza a RolesGuard (que asumía modelo unificado). StaffRoleGuard agrega granularidad dentro de staff. Ambos usan `useExisting` como JwtAuthGuard (R12)
+- **Archivos afectados**: shared.md, CLAUDE.md, IMPLEMENTATION-PLAN.md (Phase 1, Phase 17.2)
+- **Decorators**: `@RequireSubjectType(STAFF)` y `@RequireStaffRole(SUPER_ADMIN, ADMIN)`
+- **Nota**: SubjectTypeGuard y StaffRoleGuard son permisivos si no hay decorator (permite paso)
+
+### R22: POS accesible solo para AdminStaff y SuperAdminStaff
+- **Por qué**: El punto de venta maneja dinero real. Solo personal autorizado debe poder registrar ventas y gestionar caja
+- **Archivos afectados**: pos.md, IMPLEMENTATION-PLAN.md
+- **Decorator en controller**: `@RequireStaffRole(StaffRole.SUPER_ADMIN, StaffRole.ADMIN)`
+
+### R23: POS es Full DDD con entidades CashRegister y CashMovement
+- **Por qué**: Un POS completo necesita gestión de caja (apertura, cierre, arqueo, movimientos). Estas son entidades propias del módulo POS, no del módulo Orders
+- **Archivos afectados**: pos.md, CONTEXT-GLOBAL.md, IMPLEMENTATION-PLAN.md
+- **Tablas DB**: `cash_registers`, `cash_movements`
+- **Regla**: Solo una caja abierta por staff a la vez
+
+### R24: Seed inicial crea SuperAdminStaff en tabla staff_members (NO users)
+- **Por qué**: El primer usuario del sistema es el dueño del negocio. Se crea via seed migration en la tabla `staff_members` con role `super_admin`. NO existe tabla `users`
+- **Archivos afectados**: SeedAdminUser migration (renombrar a SeedSuperAdminStaff), IMPLEMENTATION-PLAN.md
+- **Datos**: email `admin@tienda.com`, password `Admin123!`, role `super_admin`
+
 ---
 
 ## Notas para Revisores Futuros
 
-1. **NO revertir ninguna regla R1-R14** sin entender el "Por qué"
+1. **NO revertir ninguna regla R1-R24** sin entender el "Por qué"
 2. **Si un agente sugiere @Global para SearchModule** → está mal, ver R3
 3. **Si un agente sugiere @SkipThrottle para webhooks** → está mal, ver R4
-4. **Si un agente sugiere @UseGuards(RolesGuard) en admin** → está mal, ver R6
-5. **Si un agente sugiere useClass para JwtAuthGuard** → está mal, ver R12
+4. **Si un agente sugiere @UseGuards(RolesGuard) en admin** → está mal, ver R6 y R21
+5. **Si un agente sugiere useClass para JwtAuthGuard/SubjectTypeGuard/StaffRoleGuard** → está mal, ver R12 y R21
 6. **Si un agente sugiere NullProductSearchSync** → está mal, ver R14
 7. **ErrorMessages wording**: siempre tomar de IMPLEMENTATION-PLAN.md, ver R13
+8. **Si un agente sugiere entidad Sale separada para POS** → está mal, ver R15
+9. **Si un agente sugiere integración directa con SUNAT** → está mal, ver R17
+10. **Si un agente sugiere unificar Customer + Staff en una tabla users** → está mal, ver R18
+11. **Si un agente sugiere RolesGuard en lugar de SubjectTypeGuard + StaffRoleGuard** → está mal, ver R21
+12. **Si un agente sugiere registro público para staff** → está mal, ver R20
+13. **Si un agente sugiere POS como Orchestration sin entidades** → está mal, ver R23
+14. **Si un agente sugiere seed en tabla users** → está mal, ver R24

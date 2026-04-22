@@ -1,11 +1,15 @@
 import { BaseEntity } from '@shared/domain/entities/base.entity.js';
 import { DomainException } from '@shared/domain/exceptions/index.js';
+import { StaffRole } from '@shared/domain/enums/staff-role.enum.js';
 
 export class StaffMember extends BaseEntity {
   private _name: string;
   private _email: string;
   private _password: string;
+  private _role: StaffRole;
   private _isActive: boolean;
+  private _invitedBy: string | null;
+  private _googleId: string | null;
   private _resetPasswordToken: string | null;
   private _resetPasswordExpires: Date | null;
 
@@ -14,7 +18,10 @@ export class StaffMember extends BaseEntity {
     name: string,
     email: string,
     password: string,
+    role: StaffRole,
     isActive: boolean,
+    invitedBy: string | null,
+    googleId: string | null,
     resetPasswordToken: string | null,
     resetPasswordExpires: Date | null,
     createdAt: Date,
@@ -24,7 +31,10 @@ export class StaffMember extends BaseEntity {
     this._name = name;
     this._email = email;
     this._password = password;
+    this._role = role;
     this._isActive = isActive;
+    this._invitedBy = invitedBy;
+    this._googleId = googleId;
     this._resetPasswordToken = resetPasswordToken;
     this._resetPasswordExpires = resetPasswordExpires;
   }
@@ -33,6 +43,8 @@ export class StaffMember extends BaseEntity {
     name: string;
     email: string;
     password: string;
+    role?: StaffRole;
+    invitedBy?: string;
   }): StaffMember {
     if (!props.name || !props.email || !props.password) {
       throw new DomainException(
@@ -44,7 +56,10 @@ export class StaffMember extends BaseEntity {
       props.name,
       props.email.toLowerCase().trim(),
       props.password,
+      props.role ?? StaffRole.USER,
       true,
+      props.invitedBy ?? null,
+      null,
       null,
       null,
       new Date(),
@@ -57,7 +72,10 @@ export class StaffMember extends BaseEntity {
     name: string;
     email: string;
     password: string;
+    role: StaffRole;
     isActive: boolean;
+    invitedBy: string | null;
+    googleId: string | null;
     resetPasswordToken: string | null;
     resetPasswordExpires: Date | null;
     createdAt: Date;
@@ -68,7 +86,10 @@ export class StaffMember extends BaseEntity {
       props.name,
       props.email,
       props.password,
+      props.role,
       props.isActive,
+      props.invitedBy,
+      props.googleId,
       props.resetPasswordToken,
       props.resetPasswordExpires,
       props.createdAt,
@@ -85,8 +106,17 @@ export class StaffMember extends BaseEntity {
   get password(): string {
     return this._password;
   }
+  get role(): StaffRole {
+    return this._role;
+  }
   get isActive(): boolean {
     return this._isActive;
+  }
+  get invitedBy(): string | null {
+    return this._invitedBy;
+  }
+  get googleId(): string | null {
+    return this._googleId;
   }
   get resetPasswordToken(): string | null {
     return this._resetPasswordToken;
@@ -100,8 +130,18 @@ export class StaffMember extends BaseEntity {
     this.markUpdated();
   }
 
+  changeRole(newRole: StaffRole): void {
+    this._role = newRole;
+    this.markUpdated();
+  }
+
   changePassword(hashedPassword: string): void {
     this._password = hashedPassword;
+    this.markUpdated();
+  }
+
+  linkGoogle(googleId: string): void {
+    this._googleId = googleId;
     this.markUpdated();
   }
 

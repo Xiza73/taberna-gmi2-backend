@@ -179,7 +179,7 @@ export class CreateOrderUseCase {
         // 6-7. Calculate totals
         const customer = await this.customerRepository.findById(userId);
         if (!customer) {
-          throw new DomainNotFoundException(ErrorMessages.USER_NOT_FOUND);
+          throw new DomainNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND);
         }
 
         const shippingCost = this.configService.get<number>(

@@ -108,10 +108,25 @@ export const ErrorMessages = {
   INVALID_REFRESH_TOKEN: 'Invalid or expired refresh token',
   REFRESH_TOKEN_REUSED: 'Refresh token reuse detected, all sessions revoked',
   INVALID_RESET_TOKEN: 'Invalid or expired password reset token',
-  // Users
-  USER_NOT_FOUND: 'User not found',
-  USER_SUSPENDED: 'Account is suspended',
+  // Customers
+  CUSTOMER_NOT_FOUND: 'Customer not found',
+  CUSTOMER_SUSPENDED: 'Customer account is suspended',
   WRONG_PASSWORD: 'Current password is incorrect',
+  // Staff
+  STAFF_NOT_FOUND: 'Staff member not found',
+  STAFF_SUSPENDED: 'Staff account is suspended',
+  STAFF_EMAIL_ALREADY_EXISTS: 'A staff member with this email already exists',
+  STAFF_CANNOT_CHANGE_OWN_ROLE: 'Cannot change your own role',
+  STAFF_CANNOT_SUSPEND_SELF: 'Cannot suspend yourself',
+  STAFF_LAST_SUPER_ADMIN: 'Cannot remove the last active super admin',
+  STAFF_INSUFFICIENT_ROLE: 'Insufficient role to perform this action',
+  // Invitations
+  INVITATION_NOT_FOUND: 'Invitation not found',
+  INVITATION_EXPIRED: 'Invitation has expired',
+  INVITATION_ALREADY_ACCEPTED: 'Invitation has already been accepted',
+  INVITATION_REVOKED: 'Invitation has been revoked',
+  INVITATION_EMAIL_EXISTS: 'A staff member with this email already exists',
+  INVITATION_CANNOT_INVITE_ROLE: 'You cannot invite staff with this role',
   // Categories
   CATEGORY_NOT_FOUND: 'Category not found',
   CATEGORY_HAS_PRODUCTS: 'Cannot delete category with products',
@@ -139,6 +154,7 @@ export const ErrorMessages = {
   ORDER_CANNOT_CANCEL: 'Order can only be cancelled while pending',
   ORDER_EXPIRED: 'Order expired due to unpaid status',
   ORDER_INVALID_TRANSITION: 'Invalid order status transition',
+  ORDER_STATUS_CONFLICT: 'Order status was modified concurrently, please retry',
   // Payments
   PAYMENT_ALREADY_PROCESSED: 'Payment has already been processed',
   PAYMENT_VERIFICATION_FAILED: 'Could not verify payment status',
@@ -161,11 +177,31 @@ export const ErrorMessages = {
   SLUG_ALREADY_EXISTS: 'Slug already exists',
   SKU_ALREADY_EXISTS: 'SKU already exists',
   COUPON_CODE_ALREADY_EXISTS: 'Coupon code already exists',
+  // Uploads
+  UPLOAD_FAILED: 'Image upload failed',
+  UPLOAD_INVALID_FORMAT: 'Invalid image format. Allowed: jpg, png, webp',
+  UPLOAD_TOO_LARGE: 'Image exceeds maximum size of 5MB',
+  // Invoicing
+  INVOICE_ALREADY_EXISTS: 'Invoice already exists for this order',
+  INVOICE_ORDER_NOT_PAID: 'Cannot generate invoice for unpaid order',
+  INVOICE_FACTURA_REQUIRES_RUC: 'Factura requires RUC document',
+  INVOICE_CANCEL_EXPIRED: 'Invoice can only be cancelled within 72 hours',
+  INVOICE_NOT_FOUND: 'Invoice not found',
+  // POS
+  POS_ITEMS_EMPTY: 'At least one item is required',
+  POS_INVALID_DOC_NUMBER: 'Invalid document number for the specified type',
+  POS_CASH_REGISTER_ALREADY_OPEN: 'You already have an open cash register',
+  POS_CASH_REGISTER_NOT_OPEN: 'No open cash register found',
+  POS_CASH_REGISTER_NOT_FOUND: 'Cash register not found',
+  POS_ORDER_NOT_POS: 'This order is not a POS/WhatsApp order',
+  POS_ORDER_CANNOT_CANCEL: 'Only paid POS orders can be cancelled',
+  POS_ORDER_CANNOT_REFUND: 'Only paid or processing POS orders can be refunded',
+  POS_REFUND_QUANTITY_EXCEEDED: 'Refund quantity exceeds purchased quantity',
 } as const;
 ```
 
-Usage: `throw new DomainForbiddenException(ErrorMessages.USER_SUSPENDED);`
-Tests: `await expect(fn).rejects.toThrow(ErrorMessages.USER_SUSPENDED);`
+Usage: `throw new DomainForbiddenException(ErrorMessages.CUSTOMER_SUSPENDED);`
+Tests: `await expect(fn).rejects.toThrow(ErrorMessages.CUSTOMER_SUSPENDED);`
 
 ---
 

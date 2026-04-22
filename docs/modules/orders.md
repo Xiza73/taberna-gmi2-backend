@@ -9,8 +9,10 @@ Ordenes de compra. Historial preciso y verificable con snapshot de datos al mome
 |-------|------|-------|
 | id | uuid | PK |
 | orderNumber | string | unique, auto-generado via table-based counter (e.g. "ORD-20260414-001") — ver seccion OrderNumber |
-| userId | uuid | FK → users |
+| userId | uuid | FK → customers (online) o staff_members (POS) — ver nota |
+| channel | enum | `online` / `pos` / `whatsapp` — default `online` |
 | status | enum | `pending` / `paid` / `processing` / `shipped` / `delivered` / `cancelled` / `refunded` |
+| paymentMethod | enum | `mercadopago` / `cash` / `yape_plin` / `bank_transfer` — default `mercadopago` |
 | subtotal | integer | suma de items (centavos) |
 | discount | integer | descuento aplicado (centavos), default 0 |
 | shippingCost | integer | costo de envio (centavos), calculado via SHIPPING_FLAT_RATE env var (default 0) |
@@ -18,10 +20,12 @@ Ordenes de compra. Historial preciso y verificable con snapshot de datos al mome
 | couponId | uuid? | FK → coupons (referencia) |
 | couponCode | string? | snapshot del codigo aplicado |
 | couponDiscount | integer? | snapshot del descuento calculado |
-| shippingAddressSnapshot | jsonb | copia completa de la direccion al momento del pedido |
+| shippingAddressSnapshot | jsonb? | copia completa de la direccion — nullable para ventas POS en tienda |
 | customerName | string | snapshot nombre del cliente |
 | customerEmail | string | snapshot email del cliente |
 | customerPhone | string? | snapshot telefono |
+| customerDocType | enum? | `dni` / `ruc` — para facturacion SUNAT |
+| customerDocNumber | string? | numero de documento (8 digitos DNI, 11 digitos RUC) |
 | notes | text? | notas del cliente |
 | adminNotes | text? | notas internas del admin |
 

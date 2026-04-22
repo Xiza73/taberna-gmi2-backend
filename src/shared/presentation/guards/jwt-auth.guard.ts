@@ -65,20 +65,22 @@ export class JwtAuthGuard implements CanActivate {
         const staff = await this.staffRepository.findById(payload.sub);
         if (!staff) throw new DomainUnauthorizedException();
         if (!staff.isActive)
-          throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+          throw new DomainUnauthorizedException(ErrorMessages.STAFF_SUSPENDED);
 
         request['user'] = {
           id: staff.id,
           email: staff.email,
           name: staff.name,
-          role: 'staff',
+          role: staff.role,
           subjectType: 'staff',
         };
       } else if (this.customerRepository) {
         const customer = await this.customerRepository.findById(payload.sub);
         if (!customer) throw new DomainUnauthorizedException();
         if (!customer.isActive)
-          throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+          throw new DomainUnauthorizedException(
+            ErrorMessages.CUSTOMER_SUSPENDED,
+          );
 
         request['user'] = {
           id: customer.id,

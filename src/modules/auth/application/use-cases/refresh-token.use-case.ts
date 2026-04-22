@@ -92,7 +92,11 @@ export class RefreshTokenUseCase {
     }
 
     if (!subject || !subject.isActive) {
-      throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+      const msg =
+        subjectType === 'staff'
+          ? ErrorMessages.STAFF_SUSPENDED
+          : ErrorMessages.CUSTOMER_SUSPENDED;
+      throw new DomainUnauthorizedException(msg);
     }
 
     // Generate new tokens (same family)

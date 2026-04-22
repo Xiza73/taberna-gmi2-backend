@@ -1,5 +1,6 @@
 import { StaffMember } from '../../domain/entities/staff-member.entity.js';
 import { StaffMemberOrmEntity } from '../orm-entities/staff-member.orm-entity.js';
+import { StaffRole } from '@shared/domain/enums/staff-role.enum.js';
 
 export class StaffMemberMapper {
   static toDomain(orm: StaffMemberOrmEntity): StaffMember {
@@ -8,7 +9,10 @@ export class StaffMemberMapper {
       name: orm.name,
       email: orm.email,
       password: orm.password,
+      role: orm.role as StaffRole,
       isActive: orm.isActive,
+      invitedBy: orm.invitedBy,
+      googleId: orm.googleId,
       resetPasswordToken: orm.resetPasswordToken,
       resetPasswordExpires: orm.resetPasswordExpires,
       createdAt: orm.createdAt,
@@ -22,7 +26,10 @@ export class StaffMemberMapper {
     orm.name = domain.name;
     orm.email = domain.email;
     orm.password = domain.password;
+    orm.role = domain.role;
     orm.isActive = domain.isActive;
+    orm.invitedBy = domain.invitedBy;
+    orm.googleId = domain.googleId;
     orm.resetPasswordToken = domain.resetPasswordToken;
     orm.resetPasswordExpires = domain.resetPasswordExpires;
     return orm;

@@ -55,15 +55,14 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       END $$
     `);
 
-    // ─── 1. users (no FK dependencies) ────────────────────────────
+    // ─── 1. customers (no FK dependencies) ──────────────────────
     await queryRunner.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS customers (
         id UUID PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         phone VARCHAR(50),
-        role VARCHAR(20) NOT NULL DEFAULT 'customer',
         is_active BOOLEAN NOT NULL DEFAULT true,
         reset_password_token VARCHAR(255),
         reset_password_expires TIMESTAMPTZ,
@@ -73,7 +72,26 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 2. categories (self-referencing FK) ──────────────────────
+    // ─── 2. staff_members (no FK dependencies) ─────────────────
+    await queryRunner.query(`
+      CREATE TABLE IF NOT EXISTS staff_members (
+        id UUID PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) NOT NULL DEFAULT 'user',
+        is_active BOOLEAN NOT NULL DEFAULT true,
+        invited_by UUID,
+        google_id VARCHAR(255) UNIQUE,
+        reset_password_token VARCHAR(255),
+        reset_password_expires TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_staff_members_invited_by FOREIGN KEY (invited_by) REFERENCES staff_members(id) ON DELETE SET NULL
+      )
+    `);
+
+    // ─── 3. categories (self-referencing FK) ────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS categories (
         id UUID PRIMARY KEY,
@@ -89,7 +107,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 3. products (FK → categories) ───────────────────────────
+    // ─── 4. products (FK → categories) ─────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS products (
         id UUID PRIMARY KEY,
@@ -111,7 +129,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 4. banners (standalone) ─────────────────────────────────
+    // ─── 5. banners (standalone) ───────────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS banners (
         id UUID PRIMARY KEY,
@@ -128,7 +146,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 5. coupons (standalone) ─────────────────────────────────
+    // ─── 6. coupons (standalone) ───────────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS coupons (
         id UUID PRIMARY KEY,
@@ -148,7 +166,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 6. refresh_tokens (FK → users) ──────────────────────────
+    // ─── 7. refresh_tokens (polymorphic — no FK, enforced in app layer) ──
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
         id UUID PRIMARY KEY,
@@ -157,13 +175,13 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         family_id UUID NOT NULL,
         expires_at TIMESTAMPTZ NOT NULL,
         is_revoked BOOLEAN NOT NULL DEFAULT false,
+        subject_type VARCHAR(20) NOT NULL DEFAULT 'customer',
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_refresh_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `);
 
-    // ─── 7. addresses (FK → users) ──────────────────────────────
+    // ─── 8. addresses (FK → customers) ────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS addresses (
         id UUID PRIMARY KEY,
@@ -180,22 +198,22 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         is_default BOOLEAN NOT NULL DEFAULT false,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_addresses_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        CONSTRAINT fk_addresses_user FOREIGN KEY (user_id) REFERENCES customers(id) ON DELETE CASCADE
       )
     `);
 
-    // ─── 8. carts (FK → users) ──────────────────────────────────
+    // ─── 9. carts (FK → customers) ────────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS carts (
         id UUID PRIMARY KEY,
         user_id UUID NOT NULL UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_carts_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        CONSTRAINT fk_carts_user FOREIGN KEY (user_id) REFERENCES customers(id) ON DELETE CASCADE
       )
     `);
 
-    // ─── 9. cart_items (FK → carts, products) ────────────────────
+    // ─── 10. cart_items (FK → carts, products) ─────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS cart_items (
         id UUID PRIMARY KEY,
@@ -209,7 +227,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 10. wishlist_items (FK → users, products) ──────────────
+    // ─── 11. wishlist_items (FK → customers, products) ────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS wishlist_items (
         id UUID PRIMARY KEY,
@@ -217,12 +235,12 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         product_id UUID NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_wishlist_items_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        CONSTRAINT fk_wishlist_items_user FOREIGN KEY (user_id) REFERENCES customers(id) ON DELETE CASCADE,
         CONSTRAINT fk_wishlist_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
       )
     `);
 
-    // ─── 11. orders (FK → users, coupons optional) ──────────────
+    // ─── 12. orders (FK → customers, coupons) ─────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY,
@@ -244,12 +262,12 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         admin_notes TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
+        CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES customers(id) ON DELETE RESTRICT,
         CONSTRAINT fk_orders_coupon FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL
       )
     `);
 
-    // ─── 12. order_items (FK → orders, products) ────────────────
+    // ─── 13. order_items (FK → orders, products) ──────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS order_items (
         id UUID PRIMARY KEY,
@@ -268,7 +286,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 13. order_events (FK → orders) ─────────────────────────
+    // ─── 14. order_events (FK → orders, performed_by → staff_members) ──
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS order_events (
         id UUID PRIMARY KEY,
@@ -280,11 +298,11 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         CONSTRAINT fk_order_events_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-        CONSTRAINT fk_order_events_performed_by FOREIGN KEY (performed_by) REFERENCES users(id) ON DELETE SET NULL
+        CONSTRAINT fk_order_events_performed_by FOREIGN KEY (performed_by) REFERENCES staff_members(id) ON DELETE SET NULL
       )
     `);
 
-    // ─── 14. payments (FK → orders) ─────────────────────────────
+    // ─── 15. payments (FK → orders) ───────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS payments (
         id UUID PRIMARY KEY,
@@ -302,7 +320,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 15. shipments (FK → orders) ────────────────────────────
+    // ─── 16. shipments (FK → orders) ──────────────────────────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS shipments (
         id UUID PRIMARY KEY,
@@ -320,7 +338,7 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       )
     `);
 
-    // ─── 16. reviews (FK → users, products, orders) ─────────────
+    // ─── 17. reviews (FK → customers, products, orders) ──────
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS reviews (
         id UUID PRIMARY KEY,
@@ -332,13 +350,13 @@ export class InitialSchema1713100000000 implements MigrationInterface {
         is_approved BOOLEAN NOT NULL DEFAULT false,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
+        CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES customers(id) ON DELETE RESTRICT,
         CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
         CONSTRAINT fk_reviews_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE RESTRICT
       )
     `);
 
-    // ─── 17. order_number_counters (standalone utility table) ────
+    // ─── 18. order_number_counters (standalone utility table) ──
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS order_number_counters (
         date DATE PRIMARY KEY,
@@ -451,11 +469,16 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       `ALTER TABLE banners ADD CONSTRAINT chk_banners_dates CHECK (start_date IS NULL OR end_date IS NULL OR start_date < end_date)`,
     );
 
+    // staff_members
+    await queryRunner.query(
+      `ALTER TABLE staff_members ADD CONSTRAINT chk_staff_members_role CHECK (role IN ('super_admin', 'admin', 'user'))`,
+    );
+
     // ═══════════════════════════════════════════════════════════════
     // FK INDEXES
     // ═══════════════════════════════════════════════════════════════
     await queryRunner.query(
-      `CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id)`,
+      `CREATE INDEX idx_refresh_tokens_subject_id ON refresh_tokens(user_id)`,
     );
     await queryRunner.query(
       `CREATE INDEX idx_order_items_order_id ON order_items(order_id)`,
@@ -502,6 +525,9 @@ export class InitialSchema1713100000000 implements MigrationInterface {
     await queryRunner.query(
       `CREATE INDEX idx_reviews_product_id_fk ON reviews(product_id)`,
     );
+    await queryRunner.query(
+      `CREATE INDEX idx_staff_members_invited_by ON staff_members(invited_by)`,
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // BUSINESS INDEXES
@@ -519,7 +545,16 @@ export class InitialSchema1713100000000 implements MigrationInterface {
       `CREATE INDEX idx_banners_active ON banners(position, sort_order) WHERE is_active = true`,
     );
     await queryRunner.query(
-      `CREATE INDEX idx_refresh_tokens_active ON refresh_tokens(user_id) WHERE is_revoked = false`,
+      `CREATE INDEX idx_refresh_tokens_subject_active ON refresh_tokens(user_id) WHERE is_revoked = false`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_staff_members_role_active ON staff_members(role) WHERE is_active = true`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_customers_google_id ON customers(google_id) WHERE google_id IS NOT NULL`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX idx_staff_members_google_id ON staff_members(google_id) WHERE google_id IS NOT NULL`,
     );
   }
 
@@ -543,7 +578,8 @@ export class InitialSchema1713100000000 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE IF EXISTS coupons CASCADE`);
     await queryRunner.query(`DROP TABLE IF EXISTS products CASCADE`);
     await queryRunner.query(`DROP TABLE IF EXISTS categories CASCADE`);
-    await queryRunner.query(`DROP TABLE IF EXISTS users CASCADE`);
+    await queryRunner.query(`DROP TABLE IF EXISTS staff_members CASCADE`);
+    await queryRunner.query(`DROP TABLE IF EXISTS customers CASCADE`);
 
     // Drop ENUM types
     await queryRunner.query(`DROP TYPE IF EXISTS shipment_status_enum`);

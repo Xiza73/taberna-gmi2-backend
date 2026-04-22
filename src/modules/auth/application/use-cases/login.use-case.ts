@@ -37,7 +37,7 @@ export class LoginUseCase {
       throw new DomainUnauthorizedException(ErrorMessages.INVALID_CREDENTIALS);
 
     if (!customer.isActive)
-      throw new DomainUnauthorizedException(ErrorMessages.USER_SUSPENDED);
+      throw new DomainUnauthorizedException(ErrorMessages.CUSTOMER_SUSPENDED);
 
     const valid = await compare(dto.password, customer.password);
     if (!valid)

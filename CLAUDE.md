@@ -54,7 +54,7 @@ domain        → shared/domain ONLY (BaseEntity, value objects, exceptions)
 2. **Symbol-based DI tokens** — co-located with repository interfaces in domain layer
 3. **One use case per operation** — `@Injectable` class with single `execute()` method
 4. **BaseResponse envelope** — `{ success, data?, message? }` on all JSON responses
-5. **Global guard chain** — Throttler → JwtAuth → Roles via APP_GUARD
+5. **Global guard chain** — Throttler → JwtAuth → SubjectType → StaffRole via APP_GUARD
 
 ## Naming Conventions
 
@@ -162,7 +162,7 @@ Use `/ecommerce-api-generator [module-name]` to generate new modules following t
 
 Before implementing any phase or module, ALWAYS read these files first:
 
-1. **`docs/CHANGELOG-DESIGN.md`** — 14 validated rules (R1-R14). NEVER revert these decisions.
+1. **`docs/CHANGELOG-DESIGN.md`** — 24 validated rules (R1-R24). NEVER revert these decisions.
 2. **`docs/IMPLEMENTATION-PLAN.md`** — Read ONLY the section for the current phase.
 3. **`docs/modules/{module}.md`** — Read ONLY the module(s) being implemented in that phase.
 4. **`docs/CONTEXT-GLOBAL.md`** — Read ONLY when working on DB constraints, env vars, or cross-module flows.

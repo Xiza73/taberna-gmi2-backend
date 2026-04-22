@@ -20,8 +20,17 @@ export class StaffMemberOrmEntity {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
+  @Column({ type: 'varchar', length: 50, default: 'user' })
+  role: string;
+
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive: boolean;
+
+  @Column({ type: 'uuid', name: 'invited_by', nullable: true })
+  invitedBy: string | null;
+
+  @Column({ type: 'varchar', length: 255, name: 'google_id', nullable: true, unique: true })
+  googleId: string | null;
 
   @Column({
     type: 'varchar',

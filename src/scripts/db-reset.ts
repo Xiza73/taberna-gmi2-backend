@@ -51,12 +51,12 @@ async function reset() {
 
     // Drop custom ENUM types
     const enums = [
-      'orders_status_enum',
-      'payments_status_enum',
-      'shipments_status_enum',
-      'shipments_carrier_enum',
-      'banners_position_enum',
-      'coupons_type_enum',
+      'order_status_enum',
+      'payment_status_enum',
+      'shipment_status_enum',
+      'carrier_enum',
+      'banner_position_enum',
+      'coupon_type_enum',
     ];
 
     for (const e of enums) {
