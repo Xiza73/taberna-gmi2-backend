@@ -27,7 +27,11 @@ async function bootstrap() {
   // Security
   app.use(helmet());
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL', 'http://localhost:3000'),
+    origin: [
+      configService.get<string>('ECOMMERCE_URL', 'http://localhost:5173'),
+      configService.get<string>('BACKOFFICE_URL', 'http://localhost:5174'),
+      configService.get<string>('POS_URL', 'http://localhost:5175'),
+    ],
     credentials: true,
   });
 

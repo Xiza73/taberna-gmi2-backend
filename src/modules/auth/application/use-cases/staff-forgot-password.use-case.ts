@@ -36,11 +36,11 @@ export class StaffForgotPasswordUseCase {
     staff.setResetPasswordToken(tokenHash, expires);
     await this.staffRepository.save(staff);
 
-    const frontendUrl = this.configService.get<string>(
-      'FRONTEND_URL',
-      'http://localhost:3000',
+    const backofficeUrl = this.configService.get<string>(
+      'BACKOFFICE_URL',
+      'http://localhost:5174',
     );
-    const resetUrl = `${frontendUrl}/staff/reset-password?token=${staff.id}.${rawToken}`;
+    const resetUrl = `${backofficeUrl}/reset-password?token=${staff.id}.${rawToken}`;
     this.emailSender
       .sendPasswordReset({
         name: staff.name,

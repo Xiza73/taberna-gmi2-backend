@@ -38,11 +38,11 @@ export class ForgotPasswordUseCase {
     customer.setResetPasswordToken(tokenHash, expires);
     await this.customerRepository.save(customer);
 
-    const frontendUrl = this.configService.get<string>(
-      'FRONTEND_URL',
-      'http://localhost:3000',
+    const ecommerceUrl = this.configService.get<string>(
+      'ECOMMERCE_URL',
+      'http://localhost:5173',
     );
-    const resetUrl = `${frontendUrl}/reset-password?token=${customer.id}.${rawToken}`;
+    const resetUrl = `${ecommerceUrl}/reset-password?token=${customer.id}.${rawToken}`;
     this.emailSender
       .sendPasswordReset({
         name: customer.name,
