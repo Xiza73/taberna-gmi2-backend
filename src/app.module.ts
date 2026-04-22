@@ -55,7 +55,15 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: config.get<number>('JWT_EXPIRATION', 300) },
+        signOptions: {
+          // ConfigService returns env vars as strings; jsonwebtoken's `expiresIn`
+          // interprets bare numeric strings as milliseconds (so "300" → 300ms → 0s),
+          // making tokens expire instantly. parseInt forces seconds.
+          expiresIn: parseInt(
+            config.get<string>('JWT_EXPIRATION', '300') ?? '300',
+            10,
+          ),
+        },
       }),
       global: true,
     }),
