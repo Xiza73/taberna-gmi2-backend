@@ -29,6 +29,8 @@ export class CustomerMapper {
     orm.resetPasswordToken = domain.resetPasswordToken;
     orm.resetPasswordExpires = domain.resetPasswordExpires;
     orm.googleId = domain.googleId;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

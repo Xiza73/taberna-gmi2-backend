@@ -35,6 +35,8 @@ export class AddressMapper {
     orm.zipCode = domain.zipCode;
     orm.reference = domain.reference;
     orm.isDefault = domain.isDefault;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

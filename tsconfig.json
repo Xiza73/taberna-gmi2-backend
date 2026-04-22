@@ -4,7 +4,8 @@
   },
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "node10",
+    "ignoreDeprecations": "5.0",
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,

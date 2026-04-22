@@ -29,6 +29,8 @@ export class BannerMapper {
     orm.sortOrder = domain.sortOrder;
     orm.startDate = domain.startDate;
     orm.endDate = domain.endDate;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

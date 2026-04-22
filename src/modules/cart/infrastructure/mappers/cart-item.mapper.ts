@@ -19,6 +19,8 @@ export class CartItemMapper {
     orm.cartId = domain.cartId;
     orm.productId = domain.productId;
     orm.quantity = domain.quantity;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

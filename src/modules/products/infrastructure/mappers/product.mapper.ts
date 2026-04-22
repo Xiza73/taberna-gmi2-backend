@@ -38,6 +38,8 @@ export class ProductMapper {
     orm.isActive = domain.isActive;
     orm.averageRating = domain.averageRating;
     orm.totalReviews = domain.totalReviews;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

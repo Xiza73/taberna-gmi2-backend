@@ -25,6 +25,8 @@ export class RefreshTokenMapper {
     orm.expiresAt = domain.expiresAt;
     orm.isRevoked = domain.isRevoked;
     orm.subjectType = domain.subjectType;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

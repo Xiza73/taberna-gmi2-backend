@@ -25,6 +25,8 @@ export class CategoryMapper {
     orm.parentId = domain.parentId;
     orm.isActive = domain.isActive;
     orm.sortOrder = domain.sortOrder;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

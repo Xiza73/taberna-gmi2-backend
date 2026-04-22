@@ -15,6 +15,8 @@ export class CartMapper {
     const orm = new CartOrmEntity();
     orm.id = domain.id;
     orm.userId = domain.userId;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

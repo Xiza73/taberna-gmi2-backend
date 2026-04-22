@@ -25,6 +25,8 @@ export class ReviewMapper {
     orm.rating = domain.rating;
     orm.comment = domain.comment;
     orm.isApproved = domain.isApproved;
+    orm.createdAt = domain.createdAt;
+    orm.updatedAt = domain.updatedAt;
     return orm;
   }
 }

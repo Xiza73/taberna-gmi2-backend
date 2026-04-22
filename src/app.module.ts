@@ -55,7 +55,7 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: config.get<number>('JWT_EXPIRATION', 300) },
+        signOptions: { expiresIn: Number(config.get('JWT_EXPIRATION', 300)) },
       }),
       global: true,
     }),
