@@ -11,6 +11,7 @@ import {
   TRACKING_URL_GENERATOR,
 } from './domain/services/tracking-url-generator';
 import { GetShipmentUseCase } from './application/use-cases/get-shipment.use-case';
+import { AdminGetShipmentUseCase } from './application/use-cases/admin-get-shipment.use-case';
 import { CreateShipmentUseCase } from './application/use-cases/create-shipment.use-case';
 import { UpdateShipmentUseCase } from './application/use-cases/update-shipment.use-case';
 import { ShipmentsController } from './presentation/shipments.controller';
@@ -23,6 +24,7 @@ import { AdminShipmentsController } from './presentation/admin-shipments.control
     { provide: SHIPMENT_REPOSITORY, useClass: ShipmentRepository },
     { provide: TRACKING_URL_GENERATOR, useValue: new TrackingUrlGenerator() },
     GetShipmentUseCase,
+    AdminGetShipmentUseCase,
     CreateShipmentUseCase,
     UpdateShipmentUseCase,
   ],
