@@ -25,6 +25,6 @@ import { LoggingMiddleware } from './presentation/middleware/logging.middleware'
 })
 export class SharedModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggingMiddleware).forRoutes('*');
+    consumer.apply(LoggingMiddleware).forRoutes('*path');
   }
 }
