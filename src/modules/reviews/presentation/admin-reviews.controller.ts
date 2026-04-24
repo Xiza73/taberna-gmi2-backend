@@ -1,10 +1,8 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Query,
@@ -14,28 +12,23 @@ import { BaseResponse } from '@shared/application/dtos/base-response.dto';
 import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
 import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
-import { AdminListPendingReviewsUseCase } from '../application/use-cases/admin-list-pending-reviews.use-case';
+import { AdminListReviewsUseCase } from '../application/use-cases/admin-list-reviews.use-case';
 import { ApproveReviewUseCase } from '../application/use-cases/approve-review.use-case';
 import { DeleteReviewUseCase } from '../application/use-cases/delete-review.use-case';
+import { AdminReviewQueryDto } from '../application/dtos/admin-review-query.dto';
 
 @Controller('admin/reviews')
 @RequireSubjectType(SubjectType.STAFF)
 export class AdminReviewsController {
   constructor(
-    private readonly adminListPendingReviewsUseCase: AdminListPendingReviewsUseCase,
+    private readonly adminListReviewsUseCase: AdminListReviewsUseCase,
     private readonly approveReviewUseCase: ApproveReviewUseCase,
     private readonly deleteReviewUseCase: DeleteReviewUseCase,
   ) {}
 
   @Get()
-  async listPending(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  ) {
-    const result = await this.adminListPendingReviewsUseCase.execute(
-      page,
-      limit,
-    );
+  async list(@Query() query: AdminReviewQueryDto) {
+    const result = await this.adminListReviewsUseCase.execute(query);
     return BaseResponse.ok(result);
   }
 

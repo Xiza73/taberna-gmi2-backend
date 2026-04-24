@@ -52,16 +52,34 @@ export class ReviewRepository implements IReviewRepository {
     return { items: orms.map((orm) => ReviewMapper.toDomain(orm)), total };
   }
 
-  async findPending(params: {
+  async findAllAdmin(params: {
     page: number;
     limit: number;
+    isApproved?: boolean;
+    productId?: string;
+    rating?: number;
   }): Promise<{ items: Review[]; total: number }> {
-    const [orms, total] = await this.repo.findAndCount({
-      where: { isApproved: false },
-      order: { createdAt: 'ASC' },
-      skip: (params.page - 1) * params.limit,
-      take: params.limit,
-    });
+    const qb = this.repo.createQueryBuilder('r');
+
+    // Default to pending-only when isApproved is not specified, preserving the
+    // historic AdminListPendingReviewsUseCase behavior. Front can opt in to
+    // seeing approved reviews by passing ?isApproved=true.
+    const isApprovedFilter =
+      params.isApproved === undefined ? false : params.isApproved;
+    qb.where('r.is_approved = :isApproved', { isApproved: isApprovedFilter });
+
+    if (params.productId) {
+      qb.andWhere('r.product_id = :productId', { productId: params.productId });
+    }
+    if (params.rating !== undefined) {
+      qb.andWhere('r.rating = :rating', { rating: params.rating });
+    }
+
+    qb.orderBy('r.created_at', isApprovedFilter ? 'DESC' : 'ASC');
+    qb.skip((params.page - 1) * params.limit);
+    qb.take(params.limit);
+
+    const [orms, total] = await qb.getManyAndCount();
     return { items: orms.map((orm) => ReviewMapper.toDomain(orm)), total };
   }
 
