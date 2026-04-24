@@ -10,5 +10,6 @@ export interface IStaffInvitationRepository
   findAll(params: {
     page: number;
     limit: number;
+    status?: 'pending' | 'accepted' | 'expired' | 'revoked';
   }): Promise<{ items: StaffInvitation[]; total: number }>;
 }
