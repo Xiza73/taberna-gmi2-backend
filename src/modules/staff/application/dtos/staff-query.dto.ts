@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -7,6 +8,8 @@ import {
   Min,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
+
+import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
 export class StaffQueryDto {
   @IsOptional()
@@ -30,4 +33,8 @@ export class StaffQueryDto {
   @Transform(({ value }) => value === 'true')
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsEnum(StaffRole)
+  role?: StaffRole;
 }

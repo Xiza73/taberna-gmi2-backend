@@ -31,6 +31,7 @@ export class CreateStaffMemberUseCase {
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
+      role: dto.role,
     });
 
     const saved = await this.staffMemberRepository.save(staff);

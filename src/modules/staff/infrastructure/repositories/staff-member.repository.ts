@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, type Repository } from 'typeorm';
 
 import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
+import { type StaffRole } from '@shared/domain/enums/staff-role.enum';
 
 import { type StaffMember } from '../../domain/entities/staff-member.entity';
 import { type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface';
@@ -43,6 +44,7 @@ export class StaffMemberRepository implements IStaffMemberRepository {
     limit: number;
     search?: string;
     isActive?: boolean;
+    role?: StaffRole;
   }): Promise<{ items: StaffMember[]; total: number }> {
     const qb = this.repo.createQueryBuilder('s');
 
@@ -54,6 +56,9 @@ export class StaffMemberRepository implements IStaffMemberRepository {
     if (params.isActive !== undefined) {
       qb.andWhere('s.is_active = :isActive', { isActive: params.isActive });
     }
+    if (params.role) {
+      qb.andWhere('s.role = :role', { role: params.role });
+    }
 
     qb.orderBy('s.created_at', 'DESC');
     qb.skip((params.page - 1) * params.limit);
@@ -61,6 +66,10 @@ export class StaffMemberRepository implements IStaffMemberRepository {
 
     const [orms, total] = await qb.getManyAndCount();
     return { items: orms.map((orm) => StaffMemberMapper.toDomain(orm)), total };
+  }
+
+  async countByRole(role: StaffRole, isActive: boolean): Promise<number> {
+    return this.repo.count({ where: { role, isActive } });
   }
 
   withTransaction(ctx: TransactionContext): this {

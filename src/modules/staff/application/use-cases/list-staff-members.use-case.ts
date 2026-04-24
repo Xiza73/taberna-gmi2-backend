@@ -22,6 +22,7 @@ export class ListStaffMembersUseCase {
       limit: query.limit ?? 20,
       search: query.search,
       isActive: query.isActive,
+      role: query.role,
     });
 
     return {

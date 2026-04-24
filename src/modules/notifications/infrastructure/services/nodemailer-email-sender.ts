@@ -10,6 +10,7 @@ import {
   type SendOrderShippedProps,
   type SendOrderDeliveredProps,
   type SendPasswordResetProps,
+  type SendStaffInvitationProps,
 } from '../../domain/interfaces/email-sender.interface';
 import { welcomeTemplate } from '../templates/welcome.template';
 import { orderConfirmationTemplate } from '../templates/order-confirmation.template';
@@ -17,6 +18,7 @@ import { paymentConfirmedTemplate } from '../templates/payment-confirmed.templat
 import { orderShippedTemplate } from '../templates/order-shipped.template';
 import { orderDeliveredTemplate } from '../templates/order-delivered.template';
 import { passwordResetTemplate } from '../templates/password-reset.template';
+import { staffInvitationTemplate } from '../templates/staff-invitation.template';
 
 @Injectable()
 export class NodemailerEmailSender implements IEmailSender {
@@ -89,6 +91,16 @@ export class NodemailerEmailSender implements IEmailSender {
     const { subject, html } = passwordResetTemplate({
       name: props.name,
       resetUrl: props.resetUrl,
+    });
+    await this.send(props.email, subject, html);
+  }
+
+  async sendStaffInvitation(props: SendStaffInvitationProps): Promise<void> {
+    const { subject, html } = staffInvitationTemplate({
+      email: props.email,
+      role: props.role,
+      invitedByName: props.invitedByName,
+      invitationUrl: props.invitationUrl,
     });
     await this.send(props.email, subject, html);
   }

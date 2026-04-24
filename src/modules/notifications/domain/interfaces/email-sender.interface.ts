@@ -41,6 +41,13 @@ export interface SendPasswordResetProps {
   resetUrl: string;
 }
 
+export interface SendStaffInvitationProps {
+  email: string;
+  role: string;
+  invitedByName: string;
+  invitationUrl: string;
+}
+
 export interface IEmailSender {
   sendWelcome(props: SendWelcomeProps): Promise<void>;
   sendOrderConfirmation(props: SendOrderConfirmationProps): Promise<void>;
@@ -48,4 +55,5 @@ export interface IEmailSender {
   sendOrderShipped(props: SendOrderShippedProps): Promise<void>;
   sendOrderDelivered(props: SendOrderDeliveredProps): Promise<void>;
   sendPasswordReset(props: SendPasswordResetProps): Promise<void>;
+  sendStaffInvitation(props: SendStaffInvitationProps): Promise<void>;
 }
