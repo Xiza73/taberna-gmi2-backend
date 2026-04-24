@@ -1,14 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  PaginatedResponseDto,
-  PaginationDto,
-} from '@shared/application/dtos/pagination.dto';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   BANNER_REPOSITORY,
   type IBannerRepository,
 } from '../../domain/interfaces/banner-repository.interface';
+import { type BannerQueryDto } from '../dtos/banner-query.dto';
 import { BannerResponseDto } from '../dtos/banner-response.dto';
 
 @Injectable()
@@ -19,7 +17,7 @@ export class AdminListBannersUseCase {
   ) {}
 
   async execute(
-    query: PaginationDto,
+    query: BannerQueryDto,
   ): Promise<PaginatedResponseDto<BannerResponseDto>> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -27,7 +25,9 @@ export class AdminListBannersUseCase {
     const { items, total } = await this.bannerRepository.findAll({
       page,
       limit,
-      includeInactive: true,
+      search: query.search,
+      isActive: query.isActive,
+      position: query.position,
     });
 
     return new PaginatedResponseDto(

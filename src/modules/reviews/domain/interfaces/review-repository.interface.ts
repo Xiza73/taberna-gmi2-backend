@@ -13,9 +13,12 @@ export interface IReviewRepository extends IBaseRepository<Review> {
     productId: string,
     params: { page: number; limit: number },
   ): Promise<{ items: Review[]; total: number }>;
-  findPending(params: {
+  findAllAdmin(params: {
     page: number;
     limit: number;
+    isApproved?: boolean;
+    productId?: string;
+    rating?: number;
   }): Promise<{ items: Review[]; total: number }>;
   countApprovedByProductId(productId: string): Promise<number>;
   averageRatingByProductId(productId: string): Promise<number | null>;

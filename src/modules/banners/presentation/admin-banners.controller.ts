@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
-import { PaginationDto } from '@shared/application/dtos/pagination.dto';
 import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
 import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
@@ -20,6 +19,7 @@ import { AdminGetBannerUseCase } from '../application/use-cases/admin-get-banner
 import { CreateBannerUseCase } from '../application/use-cases/create-banner.use-case';
 import { UpdateBannerUseCase } from '../application/use-cases/update-banner.use-case';
 import { DeleteBannerUseCase } from '../application/use-cases/delete-banner.use-case';
+import { BannerQueryDto } from '../application/dtos/banner-query.dto';
 import { CreateBannerDto } from '../application/dtos/create-banner.dto';
 import { UpdateBannerDto } from '../application/dtos/update-banner.dto';
 
@@ -35,7 +35,7 @@ export class AdminBannersController {
   ) {}
 
   @Get()
-  async list(@Query() query: PaginationDto) {
+  async list(@Query() query: BannerQueryDto) {
     const result = await this.adminListBannersUseCase.execute(query);
     return BaseResponse.ok(result);
   }

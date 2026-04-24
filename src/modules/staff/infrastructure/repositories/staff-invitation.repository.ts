@@ -1,6 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, IsNull, MoreThan, type Repository } from 'typeorm';
+import {
+  EntityManager,
+  IsNull,
+  LessThan,
+  MoreThan,
+  Not,
+  type FindOptionsWhere,
+  type Repository,
+} from 'typeorm';
 
 import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 
@@ -46,13 +54,38 @@ export class StaffInvitationRepository implements IStaffInvitationRepository {
   async findAll(params: {
     page: number;
     limit: number;
+    status?: 'pending' | 'accepted' | 'expired' | 'revoked';
   }): Promise<{ items: StaffInvitation[]; total: number }> {
+    const now = new Date();
+    const status = params.status ?? 'pending';
+
+    let where: FindOptionsWhere<StaffInvitationOrmEntity>;
+    switch (status) {
+      case 'accepted':
+        where = { acceptedAt: Not(IsNull()) };
+        break;
+      case 'expired':
+        where = {
+          isRevoked: false,
+          acceptedAt: IsNull(),
+          expiresAt: LessThan(now),
+        };
+        break;
+      case 'revoked':
+        where = { isRevoked: true };
+        break;
+      case 'pending':
+      default:
+        where = {
+          isRevoked: false,
+          acceptedAt: IsNull(),
+          expiresAt: MoreThan(now),
+        };
+        break;
+    }
+
     const [orms, total] = await this.repo.findAndCount({
-      where: {
-        isRevoked: false,
-        acceptedAt: IsNull(),
-        expiresAt: MoreThan(new Date()),
-      },
+      where,
       order: { createdAt: 'DESC' },
       skip: (params.page - 1) * params.limit,
       take: params.limit,

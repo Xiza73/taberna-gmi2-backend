@@ -25,6 +25,7 @@ import { ValidateInvitationUseCase } from '../application/use-cases/validate-inv
 import { AcceptInvitationUseCase } from '../application/use-cases/accept-invitation.use-case';
 import { InviteStaffDto } from '../application/dtos/invite-staff.dto';
 import { AcceptInvitationDto } from '../application/dtos/accept-invitation.dto';
+import { StaffInvitationQueryDto } from '../application/dtos/staff-invitation-query.dto';
 
 @Controller('admin/staff/invitations')
 @RequireSubjectType(SubjectType.STAFF)
@@ -51,14 +52,8 @@ export class AdminInvitationsController {
   }
 
   @Get()
-  async list(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-  ) {
-    const result = await this.listInvitationsUseCase.execute({
-      page: page ? parseInt(page, 10) : undefined,
-      limit: limit ? parseInt(limit, 10) : undefined,
-    });
+  async list(@Query() query: StaffInvitationQueryDto) {
+    const result = await this.listInvitationsUseCase.execute(query);
     return BaseResponse.ok(result);
   }
 

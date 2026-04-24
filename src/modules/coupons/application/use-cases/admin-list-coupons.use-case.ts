@@ -1,14 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  PaginatedResponseDto,
-  PaginationDto,
-} from '@shared/application/dtos/pagination.dto';
+import { PaginatedResponseDto } from '@shared/application/dtos/pagination.dto';
 
 import {
   COUPON_REPOSITORY,
   type ICouponRepository,
 } from '../../domain/interfaces/coupon-repository.interface';
+import { type CouponQueryDto } from '../dtos/coupon-query.dto';
 import { CouponResponseDto } from '../dtos/coupon-response.dto';
 
 @Injectable()
@@ -19,7 +17,7 @@ export class AdminListCouponsUseCase {
   ) {}
 
   async execute(
-    query: PaginationDto,
+    query: CouponQueryDto,
   ): Promise<PaginatedResponseDto<CouponResponseDto>> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -27,6 +25,9 @@ export class AdminListCouponsUseCase {
     const { items, total } = await this.couponRepository.findAll({
       page,
       limit,
+      search: query.search,
+      isActive: query.isActive,
+      type: query.type,
     });
 
     return new PaginatedResponseDto(

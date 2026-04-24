@@ -9,6 +9,8 @@ export interface IBannerRepository extends IBaseRepository<Banner> {
   findAll(params: {
     page: number;
     limit: number;
-    includeInactive?: boolean;
+    search?: string;
+    isActive?: boolean;
+    position?: string;
   }): Promise<{ items: Banner[]; total: number }>;
 }

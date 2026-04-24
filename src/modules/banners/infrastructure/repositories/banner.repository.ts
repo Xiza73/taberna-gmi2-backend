@@ -43,12 +43,22 @@ export class BannerRepository implements IBannerRepository {
   async findAll(params: {
     page: number;
     limit: number;
-    includeInactive?: boolean;
+    search?: string;
+    isActive?: boolean;
+    position?: string;
   }): Promise<{ items: Banner[]; total: number }> {
     const qb = this.repo.createQueryBuilder('b');
 
-    if (!params.includeInactive) {
-      qb.andWhere('b.is_active = true');
+    if (params.search && params.search.trim() !== '') {
+      qb.andWhere('b.title ILIKE :search', {
+        search: `%${params.search.trim()}%`,
+      });
+    }
+    if (params.isActive !== undefined) {
+      qb.andWhere('b.is_active = :isActive', { isActive: params.isActive });
+    }
+    if (params.position) {
+      qb.andWhere('b.position = :position', { position: params.position });
     }
 
     qb.orderBy('b.sort_order', 'ASC');

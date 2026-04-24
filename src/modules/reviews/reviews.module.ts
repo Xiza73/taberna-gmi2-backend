@@ -11,7 +11,7 @@ import { CreateReviewUseCase } from './application/use-cases/create-review.use-c
 import { ListProductReviewsUseCase } from './application/use-cases/list-product-reviews.use-case';
 import { UpdateReviewUseCase } from './application/use-cases/update-review.use-case';
 import { DeleteOwnReviewUseCase } from './application/use-cases/delete-own-review.use-case';
-import { AdminListPendingReviewsUseCase } from './application/use-cases/admin-list-pending-reviews.use-case';
+import { AdminListReviewsUseCase } from './application/use-cases/admin-list-reviews.use-case';
 import { ApproveReviewUseCase } from './application/use-cases/approve-review.use-case';
 import { DeleteReviewUseCase } from './application/use-cases/delete-review.use-case';
 import { ReviewsController } from './presentation/reviews.controller';
@@ -30,7 +30,7 @@ import { AdminReviewsController } from './presentation/admin-reviews.controller'
     ListProductReviewsUseCase,
     UpdateReviewUseCase,
     DeleteOwnReviewUseCase,
-    AdminListPendingReviewsUseCase,
+    AdminListReviewsUseCase,
     ApproveReviewUseCase,
     DeleteReviewUseCase,
   ],
