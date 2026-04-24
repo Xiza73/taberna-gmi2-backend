@@ -32,9 +32,14 @@ import { AuthModule } from '../auth/auth.module';
     forwardRef(() => AuthModule),
   ],
   controllers: [
-    AdminStaffController,
+    // AdminInvitationsController must come BEFORE AdminStaffController:
+    // both share the /admin/staff prefix and NestJS matches routes in
+    // registration order. AdminStaffController has @Get(':id') which would
+    // otherwise catch /admin/staff/invitations as id="invitations" and fail
+    // ParseUUIDPipe with 400.
     AdminInvitationsController,
     PublicInvitationsController,
+    AdminStaffController,
   ],
   providers: [
     { provide: STAFF_MEMBER_REPOSITORY, useClass: StaffMemberRepository },
