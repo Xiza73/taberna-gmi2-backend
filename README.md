@@ -104,6 +104,15 @@ pnpm run migration:run   # Run migrations
 pnpm run migration:gen   # Generate migration
 ```
 
+## Ports
+
+| Service | URL | Description |
+|---|---|---|
+| API (NestJS) | `http://localhost:3000` | Backend REST API |
+| PostgreSQL | `localhost:5432` | Base de datos |
+| Elasticsearch | `http://localhost:9200` | Motor de búsqueda |
+| Kibana | `http://localhost:5601` | UI para visualizar logs y datos de Elasticsearch |
+
 ## API
 
 Base URL: `http://localhost:3000/api/v1`
