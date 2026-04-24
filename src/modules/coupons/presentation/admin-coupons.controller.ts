@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
-import { PaginationDto } from '@shared/application/dtos/pagination.dto';
 import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
 import { SubjectType } from '@shared/domain/enums/subject-type.enum';
 
@@ -20,6 +19,7 @@ import { AdminGetCouponUseCase } from '../application/use-cases/admin-get-coupon
 import { CreateCouponUseCase } from '../application/use-cases/create-coupon.use-case';
 import { UpdateCouponUseCase } from '../application/use-cases/update-coupon.use-case';
 import { DeleteCouponUseCase } from '../application/use-cases/delete-coupon.use-case';
+import { CouponQueryDto } from '../application/dtos/coupon-query.dto';
 import { CreateCouponDto } from '../application/dtos/create-coupon.dto';
 import { UpdateCouponDto } from '../application/dtos/update-coupon.dto';
 
@@ -35,7 +35,7 @@ export class AdminCouponsController {
   ) {}
 
   @Get()
-  async list(@Query() query: PaginationDto) {
+  async list(@Query() query: CouponQueryDto) {
     const result = await this.adminListCouponsUseCase.execute(query);
     return BaseResponse.ok(result);
   }

@@ -10,6 +10,9 @@ export interface ICouponRepository extends IBaseRepository<Coupon> {
   findAll(params: {
     page: number;
     limit: number;
+    search?: string;
+    isActive?: boolean;
+    type?: string;
   }): Promise<{ items: Coupon[]; total: number }>;
   findActive(params: {
     page: number;

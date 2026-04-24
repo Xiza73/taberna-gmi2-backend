@@ -49,8 +49,23 @@ export class CouponRepository implements ICouponRepository {
   async findAll(params: {
     page: number;
     limit: number;
+    search?: string;
+    isActive?: boolean;
+    type?: string;
   }): Promise<{ items: Coupon[]; total: number }> {
     const qb = this.repo.createQueryBuilder('c');
+
+    if (params.search && params.search.trim() !== '') {
+      qb.andWhere('c.code ILIKE :search', {
+        search: `%${params.search.trim()}%`,
+      });
+    }
+    if (params.isActive !== undefined) {
+      qb.andWhere('c.is_active = :isActive', { isActive: params.isActive });
+    }
+    if (params.type) {
+      qb.andWhere('c.type = :type', { type: params.type });
+    }
 
     qb.orderBy('c.created_at', 'DESC');
     qb.skip((params.page - 1) * params.limit);
