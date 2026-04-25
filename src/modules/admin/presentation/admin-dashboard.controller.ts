@@ -8,7 +8,9 @@ import {
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
 import { RequireSubjectType } from '@shared/presentation/decorators/subject-type.decorator';
+import { RequireStaffRole } from '@shared/presentation/decorators/staff-role.decorator';
 import { SubjectType } from '@shared/domain/enums/subject-type.enum';
+import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
 import { GetDashboardUseCase } from '../application/use-cases/get-dashboard.use-case';
 import { GetSalesReportUseCase } from '../application/use-cases/get-sales-report.use-case';
@@ -31,12 +33,14 @@ export class AdminDashboardController {
   }
 
   @Get('sales')
+  @RequireStaffRole(StaffRole.SUPER_ADMIN, StaffRole.ADMIN)
   async getSalesReport(@Query() dto: SalesReportQueryDto) {
     const result = await this.getSalesReportUseCase.execute(dto);
     return BaseResponse.ok(result);
   }
 
   @Get('top-products')
+  @RequireStaffRole(StaffRole.SUPER_ADMIN, StaffRole.ADMIN)
   async getTopProducts(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {

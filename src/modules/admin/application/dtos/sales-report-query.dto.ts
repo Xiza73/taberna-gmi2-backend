@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional } from 'class-validator';
+import { IsDateString } from 'class-validator';
 
 export class SalesReportQueryDto {
   @IsDateString()
@@ -6,8 +6,4 @@ export class SalesReportQueryDto {
 
   @IsDateString()
   dateTo: string;
-
-  @IsOptional()
-  @IsDateString()
-  groupBy?: string;
 }
