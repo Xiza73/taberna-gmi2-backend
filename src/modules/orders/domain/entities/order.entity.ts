@@ -3,6 +3,10 @@ import { DomainException } from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
 import { OrderStatus } from '../enums/order-status.enum';
+import { OrderChannel } from '../enums/order-channel.enum';
+import { PaymentMethod } from '../enums/payment-method.enum';
+import { CustomerDocType } from '../enums/customer-doc-type.enum';
+import { ShippingMethod } from '../enums/shipping-method.enum';
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.PAID, OrderStatus.CANCELLED],
@@ -21,7 +25,10 @@ const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 export class Order extends BaseEntity {
   private _orderNumber: string;
   private _userId: string;
+  private _channel: OrderChannel;
   private _status: OrderStatus;
+  private _paymentMethod: PaymentMethod;
+  private _shippingMethod: ShippingMethod;
   private _subtotal: number;
   private _discount: number;
   private _shippingCost: number;
@@ -29,10 +36,12 @@ export class Order extends BaseEntity {
   private _couponId: string | null;
   private _couponCode: string | null;
   private _couponDiscount: number | null;
-  private _shippingAddressSnapshot: Record<string, unknown>;
+  private _shippingAddressSnapshot: Record<string, unknown> | null;
   private _customerName: string;
   private _customerEmail: string;
   private _customerPhone: string | null;
+  private _customerDocType: CustomerDocType | null;
+  private _customerDocNumber: string | null;
   private _notes: string | null;
   private _adminNotes: string | null;
 
@@ -40,7 +49,10 @@ export class Order extends BaseEntity {
     id: string,
     orderNumber: string,
     userId: string,
+    channel: OrderChannel,
     status: OrderStatus,
+    paymentMethod: PaymentMethod,
+    shippingMethod: ShippingMethod,
     subtotal: number,
     discount: number,
     shippingCost: number,
@@ -48,10 +60,12 @@ export class Order extends BaseEntity {
     couponId: string | null,
     couponCode: string | null,
     couponDiscount: number | null,
-    shippingAddressSnapshot: Record<string, unknown>,
+    shippingAddressSnapshot: Record<string, unknown> | null,
     customerName: string,
     customerEmail: string,
     customerPhone: string | null,
+    customerDocType: CustomerDocType | null,
+    customerDocNumber: string | null,
     notes: string | null,
     adminNotes: string | null,
     createdAt: Date,
@@ -60,7 +74,10 @@ export class Order extends BaseEntity {
     super(id, createdAt, updatedAt);
     this._orderNumber = orderNumber;
     this._userId = userId;
+    this._channel = channel;
     this._status = status;
+    this._paymentMethod = paymentMethod;
+    this._shippingMethod = shippingMethod;
     this._subtotal = subtotal;
     this._discount = discount;
     this._shippingCost = shippingCost;
@@ -72,6 +89,8 @@ export class Order extends BaseEntity {
     this._customerName = customerName;
     this._customerEmail = customerEmail;
     this._customerPhone = customerPhone;
+    this._customerDocType = customerDocType;
+    this._customerDocNumber = customerDocNumber;
     this._notes = notes;
     this._adminNotes = adminNotes;
   }
@@ -79,6 +98,9 @@ export class Order extends BaseEntity {
   static create(props: {
     orderNumber: string;
     userId: string;
+    channel?: OrderChannel;
+    paymentMethod: PaymentMethod;
+    shippingMethod: ShippingMethod;
     subtotal: number;
     discount: number;
     shippingCost: number;
@@ -86,17 +108,45 @@ export class Order extends BaseEntity {
     couponId?: string | null;
     couponCode?: string | null;
     couponDiscount?: number | null;
-    shippingAddressSnapshot: Record<string, unknown>;
+    shippingAddressSnapshot: Record<string, unknown> | null;
     customerName: string;
     customerEmail: string;
     customerPhone?: string | null;
+    customerDocType?: CustomerDocType | null;
+    customerDocNumber?: string | null;
     notes?: string | null;
   }): Order {
+    const channel = props.channel ?? OrderChannel.ONLINE;
+
+    if (channel === OrderChannel.ONLINE && !props.shippingAddressSnapshot) {
+      throw new DomainException(ErrorMessages.ADDRESS_NOT_FOUND);
+    }
+
+    if (props.customerDocType && !props.customerDocNumber) {
+      throw new DomainException(ErrorMessages.POS_INVALID_DOC_NUMBER);
+    }
+    if (props.customerDocNumber && !props.customerDocType) {
+      throw new DomainException(ErrorMessages.POS_INVALID_DOC_NUMBER);
+    }
+    if (props.customerDocType && props.customerDocNumber) {
+      const expectedLength =
+        props.customerDocType === CustomerDocType.DNI ? 8 : 11;
+      if (
+        props.customerDocNumber.length !== expectedLength ||
+        !/^\d+$/.test(props.customerDocNumber)
+      ) {
+        throw new DomainException(ErrorMessages.POS_INVALID_DOC_NUMBER);
+      }
+    }
+
     return new Order(
       undefined!,
       props.orderNumber,
       props.userId,
+      channel,
       OrderStatus.PENDING,
+      props.paymentMethod,
+      props.shippingMethod,
       props.subtotal,
       props.discount,
       props.shippingCost,
@@ -108,6 +158,8 @@ export class Order extends BaseEntity {
       props.customerName,
       props.customerEmail,
       props.customerPhone ?? null,
+      props.customerDocType ?? null,
+      props.customerDocNumber ?? null,
       props.notes ?? null,
       null,
       new Date(),
@@ -119,7 +171,10 @@ export class Order extends BaseEntity {
     id: string;
     orderNumber: string;
     userId: string;
+    channel: OrderChannel;
     status: OrderStatus;
+    paymentMethod: PaymentMethod;
+    shippingMethod: ShippingMethod;
     subtotal: number;
     discount: number;
     shippingCost: number;
@@ -127,10 +182,12 @@ export class Order extends BaseEntity {
     couponId: string | null;
     couponCode: string | null;
     couponDiscount: number | null;
-    shippingAddressSnapshot: Record<string, unknown>;
+    shippingAddressSnapshot: Record<string, unknown> | null;
     customerName: string;
     customerEmail: string;
     customerPhone: string | null;
+    customerDocType: CustomerDocType | null;
+    customerDocNumber: string | null;
     notes: string | null;
     adminNotes: string | null;
     createdAt: Date;
@@ -140,7 +197,10 @@ export class Order extends BaseEntity {
       props.id,
       props.orderNumber,
       props.userId,
+      props.channel,
       props.status,
+      props.paymentMethod,
+      props.shippingMethod,
       props.subtotal,
       props.discount,
       props.shippingCost,
@@ -152,6 +212,8 @@ export class Order extends BaseEntity {
       props.customerName,
       props.customerEmail,
       props.customerPhone,
+      props.customerDocType,
+      props.customerDocNumber,
       props.notes,
       props.adminNotes,
       props.createdAt,
@@ -165,8 +227,17 @@ export class Order extends BaseEntity {
   get userId(): string {
     return this._userId;
   }
+  get channel(): OrderChannel {
+    return this._channel;
+  }
   get status(): OrderStatus {
     return this._status;
+  }
+  get paymentMethod(): PaymentMethod {
+    return this._paymentMethod;
+  }
+  get shippingMethod(): ShippingMethod {
+    return this._shippingMethod;
   }
   get subtotal(): number {
     return this._subtotal;
@@ -189,7 +260,7 @@ export class Order extends BaseEntity {
   get couponDiscount(): number | null {
     return this._couponDiscount;
   }
-  get shippingAddressSnapshot(): Record<string, unknown> {
+  get shippingAddressSnapshot(): Record<string, unknown> | null {
     return this._shippingAddressSnapshot;
   }
   get customerName(): string {
@@ -200,6 +271,12 @@ export class Order extends BaseEntity {
   }
   get customerPhone(): string | null {
     return this._customerPhone;
+  }
+  get customerDocType(): CustomerDocType | null {
+    return this._customerDocType;
+  }
+  get customerDocNumber(): string | null {
+    return this._customerDocNumber;
   }
   get notes(): string | null {
     return this._notes;

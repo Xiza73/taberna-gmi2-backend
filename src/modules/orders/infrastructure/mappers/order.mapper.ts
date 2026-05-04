@@ -7,7 +7,10 @@ export class OrderMapper {
       id: orm.id,
       orderNumber: orm.orderNumber,
       userId: orm.userId,
+      channel: orm.channel,
       status: orm.status,
+      paymentMethod: orm.paymentMethod,
+      shippingMethod: orm.shippingMethod,
       subtotal: orm.subtotal,
       discount: orm.discount,
       shippingCost: orm.shippingCost,
@@ -19,6 +22,8 @@ export class OrderMapper {
       customerName: orm.customerName,
       customerEmail: orm.customerEmail,
       customerPhone: orm.customerPhone,
+      customerDocType: orm.customerDocType,
+      customerDocNumber: orm.customerDocNumber,
       notes: orm.notes,
       adminNotes: orm.adminNotes,
       createdAt: orm.createdAt,
@@ -31,7 +36,10 @@ export class OrderMapper {
     orm.id = domain.id;
     orm.orderNumber = domain.orderNumber;
     orm.userId = domain.userId;
+    orm.channel = domain.channel;
     orm.status = domain.status;
+    orm.paymentMethod = domain.paymentMethod;
+    orm.shippingMethod = domain.shippingMethod;
     orm.subtotal = domain.subtotal;
     orm.discount = domain.discount;
     orm.shippingCost = domain.shippingCost;
@@ -43,6 +51,8 @@ export class OrderMapper {
     orm.customerName = domain.customerName;
     orm.customerEmail = domain.customerEmail;
     orm.customerPhone = domain.customerPhone;
+    orm.customerDocType = domain.customerDocType;
+    orm.customerDocNumber = domain.customerDocNumber;
     orm.notes = domain.notes;
     orm.adminNotes = domain.adminNotes;
     orm.createdAt = domain.createdAt;

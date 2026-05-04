@@ -46,7 +46,10 @@ export class OrderResponseDto {
   id: string;
   orderNumber: string;
   userId: string;
+  channel: string;
   status: string;
+  paymentMethod: string;
+  shippingMethod: string;
   subtotal: number;
   discount: number;
   shippingCost: number;
@@ -54,10 +57,12 @@ export class OrderResponseDto {
   couponId: string | null;
   couponCode: string | null;
   couponDiscount: number | null;
-  shippingAddressSnapshot: Record<string, unknown>;
+  shippingAddressSnapshot: Record<string, unknown> | null;
   customerName: string;
   customerEmail: string;
   customerPhone: string | null;
+  customerDocType: string | null;
+  customerDocNumber: string | null;
   notes: string | null;
   adminNotes: string | null;
   createdAt: string;
@@ -77,7 +82,10 @@ export class OrderResponseDto {
     this.id = order.id;
     this.orderNumber = order.orderNumber;
     this.userId = order.userId;
+    this.channel = order.channel;
     this.status = order.status;
+    this.paymentMethod = order.paymentMethod;
+    this.shippingMethod = order.shippingMethod;
     this.subtotal = order.subtotal;
     this.discount = order.discount;
     this.shippingCost = order.shippingCost;
@@ -89,6 +97,8 @@ export class OrderResponseDto {
     this.customerName = order.customerName;
     this.customerEmail = order.customerEmail;
     this.customerPhone = order.customerPhone;
+    this.customerDocType = order.customerDocType;
+    this.customerDocNumber = order.customerDocNumber;
     this.notes = order.notes;
     this.adminNotes = order.adminNotes;
     this.createdAt = order.createdAt.toISOString();

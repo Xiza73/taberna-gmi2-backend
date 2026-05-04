@@ -50,6 +50,8 @@ import { Order } from '../../domain/entities/order.entity';
 import { OrderItem } from '../../domain/entities/order-item.entity';
 import { OrderEvent } from '../../domain/entities/order-event.entity';
 import { OrderStatus } from '../../domain/enums/order-status.enum';
+import { PaymentMethod } from '../../domain/enums/payment-method.enum';
+import { ShippingMethod } from '../../domain/enums/shipping-method.enum';
 import {
   ORDER_REPOSITORY,
   type IOrderRepository,
@@ -182,10 +184,7 @@ export class CreateOrderUseCase {
           throw new DomainNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND);
         }
 
-        const shippingCost = this.configService.get<number>(
-          'SHIPPING_FLAT_RATE',
-          0,
-        );
+        const shippingCost = this.resolveShippingCost(dto.shippingMethod);
         const total = subtotal - couponDiscountAmount + shippingCost;
 
         // 6. Address snapshot
@@ -208,6 +207,8 @@ export class CreateOrderUseCase {
         const order = Order.create({
           orderNumber,
           userId,
+          paymentMethod: dto.paymentMethod,
+          shippingMethod: dto.shippingMethod,
           subtotal,
           discount: couponDiscountAmount,
           shippingCost,
@@ -220,6 +221,8 @@ export class CreateOrderUseCase {
           customerName: customer.name,
           customerEmail: customer.email,
           customerPhone: customer.phone ?? null,
+          customerDocType: dto.customerDocType ?? null,
+          customerDocNumber: dto.customerDocNumber ?? null,
           notes: dto.notes,
         });
 
@@ -279,22 +282,26 @@ export class CreateOrderUseCase {
     );
 
     // 13. Create MercadoPago preference (outside transaction)
+    // Only for paymentMethod = mercadopago. Other methods (cash / yape_plin / bank_transfer)
+    // are verified manually by admin and stay pending until then.
     let paymentUrl: string | null = null;
-    try {
-      const preference = await this.paymentProvider.createPreference({
-        id: result.order.id,
-        orderNumber: result.order.orderNumber,
-        items: result.items.map((i) => ({
-          title: i.productName,
-          quantity: i.quantity,
-          unitPrice: i.unitPrice,
-        })),
-        total: result.order.total,
-        payerEmail: result.order.customerEmail,
-      });
-      paymentUrl = preference.paymentUrl;
-    } catch {
-      // Order stays pending without paymentUrl — retry via /orders/:id/retry-payment
+    if (dto.paymentMethod === PaymentMethod.MERCADOPAGO) {
+      try {
+        const preference = await this.paymentProvider.createPreference({
+          id: result.order.id,
+          orderNumber: result.order.orderNumber,
+          items: result.items.map((i) => ({
+            title: i.productName,
+            quantity: i.quantity,
+            unitPrice: i.unitPrice,
+          })),
+          total: result.order.total,
+          payerEmail: result.order.customerEmail,
+        });
+        paymentUrl = preference.paymentUrl;
+      } catch {
+        // Order stays pending without paymentUrl — retry via /orders/:id/retry-payment
+      }
     }
 
     this.emailSender
@@ -315,5 +322,19 @@ export class CreateOrderUseCase {
       items: result.items,
       paymentUrl,
     });
+  }
+
+  private resolveShippingCost(method: ShippingMethod): number {
+    const envKey: Record<ShippingMethod, string> = {
+      [ShippingMethod.STANDARD]: 'SHIPPING_STANDARD_COST',
+      [ShippingMethod.EXPRESS]: 'SHIPPING_EXPRESS_COST',
+      [ShippingMethod.PICKUP]: 'SHIPPING_PICKUP_COST',
+    };
+    const fallback: Record<ShippingMethod, number> = {
+      [ShippingMethod.STANDARD]: 1500,
+      [ShippingMethod.EXPRESS]: 3000,
+      [ShippingMethod.PICKUP]: 0,
+    };
+    return this.configService.get<number>(envKey[method], fallback[method]);
   }
 }
