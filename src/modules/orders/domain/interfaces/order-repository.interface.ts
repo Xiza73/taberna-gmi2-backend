@@ -49,4 +49,40 @@ export interface IOrderRepository extends IBaseRepository<Order> {
     from: Date,
     to: Date,
   ): Promise<number>;
+  getPosDailySummary(
+    from: Date,
+    to: Date,
+  ): Promise<{
+    totalOrders: number;
+    totalSales: number;
+    byPaymentMethod: Array<{
+      paymentMethod: string;
+      count: number;
+      total: number;
+    }>;
+    byStatus: Array<{ status: string; count: number }>;
+    topProducts: Array<{
+      productId: string;
+      productName: string;
+      quantity: number;
+      total: number;
+    }>;
+  }>;
+  getPosSalesByPaymentMethod(
+    from: Date,
+    to: Date,
+  ): Promise<
+    Array<{ paymentMethod: string; count: number; totalAmount: number }>
+  >;
+  getPosSalesByStaff(
+    from: Date,
+    to: Date,
+  ): Promise<
+    Array<{
+      staffId: string;
+      staffName: string;
+      count: number;
+      totalAmount: number;
+    }>
+  >;
 }
