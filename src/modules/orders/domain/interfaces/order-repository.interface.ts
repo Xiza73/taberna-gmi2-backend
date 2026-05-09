@@ -44,4 +44,9 @@ export interface IOrderRepository extends IBaseRepository<Order> {
   atomicStockRestore(productId: string, quantity: number): Promise<void>;
   findPendingExpired(thresholdDate: Date, limit: number): Promise<Order[]>;
   countUserOrdersWithCoupon(userId: string, couponId: string): Promise<number>;
+  sumCashSalesByStaffBetween(
+    staffId: string,
+    from: Date,
+    to: Date,
+  ): Promise<number>;
 }

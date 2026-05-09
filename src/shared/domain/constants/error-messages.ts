@@ -91,6 +91,10 @@ export const ErrorMessages = {
   POS_CASH_REGISTER_ALREADY_OPEN: 'You already have an open cash register',
   POS_CASH_REGISTER_NOT_OPEN: 'No open cash register found',
   POS_CASH_REGISTER_NOT_FOUND: 'Cash register not found',
+  POS_CASH_REGISTER_ALREADY_CLOSED: 'Cash register is already closed',
+  POS_CASH_REGISTER_INVALID_AMOUNT: 'Cash register amount must be a non-negative integer',
+  POS_CASH_MOVEMENT_INVALID_AMOUNT: 'Cash movement amount must be a positive integer',
+  POS_CASH_MOVEMENT_INVALID_REASON: 'Cash movement reason is required',
   POS_ORDER_NOT_POS: 'This order is not a POS/WhatsApp order',
   POS_ORDER_CANNOT_CANCEL: 'Only paid POS orders can be cancelled',
   POS_ORDER_CANNOT_REFUND:
