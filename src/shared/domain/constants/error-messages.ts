@@ -100,4 +100,6 @@ export const ErrorMessages = {
   POS_ORDER_CANNOT_REFUND:
     'Only paid or processing POS orders can be refunded',
   POS_REFUND_QUANTITY_EXCEEDED: 'Refund quantity exceeds purchased quantity',
+  POS_REPORTS_INVALID_DATE_RANGE:
+    'dateFrom must be before or equal to dateTo',
 } as const;

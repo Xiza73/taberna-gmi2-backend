@@ -10,7 +10,11 @@ import { ListPosOrdersUseCase } from './application/use-cases/list-pos-orders.us
 import { GetPosOrderUseCase } from './application/use-cases/get-pos-order.use-case';
 import { CancelPosOrderUseCase } from './application/use-cases/cancel-pos-order.use-case';
 import { RefundPosOrderUseCase } from './application/use-cases/refund-pos-order.use-case';
+import { GetDailyPosReportUseCase } from './application/use-cases/get-daily-pos-report.use-case';
+import { GetPaymentMethodReportUseCase } from './application/use-cases/get-payment-method-report.use-case';
+import { GetStaffSalesReportUseCase } from './application/use-cases/get-staff-sales-report.use-case';
 import { AdminPosOrdersController } from './presentation/admin-pos-orders.controller';
+import { AdminPosReportsController } from './presentation/admin-pos-reports.controller';
 
 /**
  * POS module — Orchestration variant (sin domain/infrastructure propios).
@@ -22,13 +26,16 @@ import { AdminPosOrdersController } from './presentation/admin-pos-orders.contro
  */
 @Module({
   imports: [OrdersModule, ProductsModule, AddressesModule, CouponsModule],
-  controllers: [AdminPosOrdersController],
+  controllers: [AdminPosOrdersController, AdminPosReportsController],
   providers: [
     CreatePosOrderUseCase,
     ListPosOrdersUseCase,
     GetPosOrderUseCase,
     CancelPosOrderUseCase,
     RefundPosOrderUseCase,
+    GetDailyPosReportUseCase,
+    GetPaymentMethodReportUseCase,
+    GetStaffSalesReportUseCase,
   ],
 })
 export class PosModule {}

@@ -261,6 +261,179 @@ export class OrderRepository implements IOrderRepository {
     return Number(result?.sum ?? 0);
   }
 
+  async getPosDailySummary(
+    from: Date,
+    to: Date,
+  ): Promise<{
+    totalOrders: number;
+    totalSales: number;
+    byPaymentMethod: Array<{
+      paymentMethod: string;
+      count: number;
+      total: number;
+    }>;
+    byStatus: Array<{ status: string; count: number }>;
+    topProducts: Array<{
+      productId: string;
+      productName: string;
+      quantity: number;
+      total: number;
+    }>;
+  }> {
+    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+
+    const totalsPromise = this.orderRepo
+      .createQueryBuilder('o')
+      .select('COUNT(*)', 'count')
+      .addSelect('COALESCE(SUM(o.total), 0)', 'sum')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
+      .getRawOne<{ count: string; sum: string }>();
+
+    const byPaymentMethodPromise = this.orderRepo
+      .createQueryBuilder('o')
+      .select('o.payment_method', 'paymentMethod')
+      .addSelect('COUNT(*)', 'count')
+      .addSelect('COALESCE(SUM(o.total), 0)', 'total')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
+      .groupBy('o.payment_method')
+      .getRawMany<{ paymentMethod: string; count: string; total: string }>();
+
+    const byStatusPromise = this.orderRepo
+      .createQueryBuilder('o')
+      .select('o.status', 'status')
+      .addSelect('COUNT(*)', 'count')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .groupBy('o.status')
+      .getRawMany<{ status: string; count: string }>();
+
+    const topProductsPromise = this.orderRepo
+      .createQueryBuilder('o')
+      .innerJoin('order_items', 'oi', 'oi.order_id = o.id')
+      .select('oi.product_id', 'productId')
+      .addSelect('oi.product_name', 'productName')
+      .addSelect('COALESCE(SUM(oi.quantity), 0)', 'quantity')
+      .addSelect('COALESCE(SUM(oi.subtotal), 0)', 'total')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
+      .groupBy('oi.product_id')
+      .addGroupBy('oi.product_name')
+      .orderBy('SUM(oi.quantity)', 'DESC')
+      .addOrderBy('SUM(oi.subtotal)', 'DESC')
+      .limit(10)
+      .getRawMany<{
+        productId: string;
+        productName: string;
+        quantity: string;
+        total: string;
+      }>();
+
+    const [totals, byPaymentMethodRows, byStatusRows, topProductsRows] =
+      await Promise.all([
+        totalsPromise,
+        byPaymentMethodPromise,
+        byStatusPromise,
+        topProductsPromise,
+      ]);
+
+    return {
+      totalOrders: Number(totals?.count ?? 0),
+      totalSales: Number(totals?.sum ?? 0),
+      byPaymentMethod: byPaymentMethodRows.map((r) => ({
+        paymentMethod: r.paymentMethod,
+        count: Number(r.count),
+        total: Number(r.total),
+      })),
+      byStatus: byStatusRows.map((r) => ({
+        status: r.status,
+        count: Number(r.count),
+      })),
+      topProducts: topProductsRows.map((r) => ({
+        productId: r.productId,
+        productName: r.productName,
+        quantity: Number(r.quantity),
+        total: Number(r.total),
+      })),
+    };
+  }
+
+  async getPosSalesByPaymentMethod(
+    from: Date,
+    to: Date,
+  ): Promise<
+    Array<{ paymentMethod: string; count: number; totalAmount: number }>
+  > {
+    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+
+    const rows = await this.orderRepo
+      .createQueryBuilder('o')
+      .select('o.payment_method', 'paymentMethod')
+      .addSelect('COUNT(*)', 'count')
+      .addSelect('COALESCE(SUM(o.total), 0)', 'totalAmount')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
+      .groupBy('o.payment_method')
+      .orderBy('SUM(o.total)', 'DESC')
+      .getRawMany<{
+        paymentMethod: string;
+        count: string;
+        totalAmount: string;
+      }>();
+
+    return rows.map((r) => ({
+      paymentMethod: r.paymentMethod,
+      count: Number(r.count),
+      totalAmount: Number(r.totalAmount),
+    }));
+  }
+
+  async getPosSalesByStaff(
+    from: Date,
+    to: Date,
+  ): Promise<
+    Array<{
+      staffId: string;
+      staffName: string;
+      count: number;
+      totalAmount: number;
+    }>
+  > {
+    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+
+    const rows = await this.orderRepo
+      .createQueryBuilder('o')
+      .innerJoin('staff_members', 'sm', 'sm.id = o.user_id')
+      .select('o.user_id', 'staffId')
+      .addSelect('sm.name', 'staffName')
+      .addSelect('COUNT(*)', 'count')
+      .addSelect('COALESCE(SUM(o.total), 0)', 'totalAmount')
+      .where('o.channel != :online', { online: 'online' })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
+      .groupBy('o.user_id')
+      .addGroupBy('sm.name')
+      .orderBy('SUM(o.total)', 'DESC')
+      .getRawMany<{
+        staffId: string;
+        staffName: string;
+        count: string;
+        totalAmount: string;
+      }>();
+
+    return rows.map((r) => ({
+      staffId: r.staffId,
+      staffName: r.staffName,
+      count: Number(r.count),
+      totalAmount: Number(r.totalAmount),
+    }));
+  }
+
   async delete(id: string): Promise<void> {
     await this.orderRepo.delete(id);
   }
