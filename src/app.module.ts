@@ -19,6 +19,7 @@ import { CouponsModule } from './modules/coupons/coupons.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PosModule } from './modules/pos/pos.module';
+import { CashRegisterModule } from './modules/cash-register/cash-register.module';
 import { ShippingModule } from './modules/shipping/shipping.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
@@ -74,6 +75,7 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
     PaymentsModule,
     OrdersModule,
     PosModule,
+    CashRegisterModule,
     ShippingModule,
     NotificationsModule,
     ReviewsModule,

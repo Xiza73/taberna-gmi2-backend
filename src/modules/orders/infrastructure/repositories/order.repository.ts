@@ -242,6 +242,25 @@ export class OrderRepository implements IOrderRepository {
       .getCount();
   }
 
+  async sumCashSalesByStaffBetween(
+    staffId: string,
+    from: Date,
+    to: Date,
+  ): Promise<number> {
+    const result = await this.orderRepo
+      .createQueryBuilder('o')
+      .select('COALESCE(SUM(o.total), 0)', 'sum')
+      .where('o.user_id = :staffId', { staffId })
+      .andWhere('o.payment_method = :pm', { pm: 'cash' })
+      .andWhere('o.channel != :online', { online: 'online' })
+      .andWhere('o.status IN (:...statuses)', {
+        statuses: ['paid', 'processing', 'delivered', 'completed'],
+      })
+      .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
+      .getRawOne<{ sum: string }>();
+    return Number(result?.sum ?? 0);
+  }
+
   async delete(id: string): Promise<void> {
     await this.orderRepo.delete(id);
   }
