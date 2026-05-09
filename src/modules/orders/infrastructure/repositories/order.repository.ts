@@ -91,6 +91,10 @@ export class OrderRepository implements IOrderRepository {
     limit: number;
     status?: string;
     userId?: string;
+    channel?: string;
+    channelIn?: string[];
+    paymentMethod?: string;
+    staffId?: string;
     dateFrom?: string;
     dateTo?: string;
     search?: string;
@@ -103,6 +107,22 @@ export class OrderRepository implements IOrderRepository {
     }
     if (params.userId) {
       qb.andWhere('o.user_id = :userId', { userId: params.userId });
+    }
+    if (params.channel) {
+      qb.andWhere('o.channel = :channel', { channel: params.channel });
+    }
+    if (params.channelIn && params.channelIn.length > 0) {
+      qb.andWhere('o.channel IN (:...channelIn)', {
+        channelIn: params.channelIn,
+      });
+    }
+    if (params.paymentMethod) {
+      qb.andWhere('o.payment_method = :paymentMethod', {
+        paymentMethod: params.paymentMethod,
+      });
+    }
+    if (params.staffId) {
+      qb.andWhere('o.user_id = :staffId', { staffId: params.staffId });
     }
     if (params.dateFrom) {
       qb.andWhere('o.created_at >= :dateFrom', { dateFrom: params.dateFrom });
