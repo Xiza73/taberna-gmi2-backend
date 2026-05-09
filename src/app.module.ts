@@ -18,6 +18,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { CouponsModule } from './modules/coupons/coupons.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { PosModule } from './modules/pos/pos.module';
 import { ShippingModule } from './modules/shipping/shipping.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
@@ -72,6 +73,7 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
     CouponsModule,
     PaymentsModule,
     OrdersModule,
+    PosModule,
     ShippingModule,
     NotificationsModule,
     ReviewsModule,

@@ -22,6 +22,10 @@ export interface IOrderRepository extends IBaseRepository<Order> {
     limit: number;
     status?: string;
     userId?: string;
+    channel?: string;
+    channelIn?: string[];
+    paymentMethod?: string;
+    staffId?: string;
     dateFrom?: string;
     dateTo?: string;
     search?: string;
