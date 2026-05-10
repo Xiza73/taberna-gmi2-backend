@@ -64,6 +64,6 @@ import { WebhooksController } from './presentation/webhooks.controller';
     UpdateOrderNotesUseCase,
     OrderExpirationCron,
   ],
-  exports: [ORDER_REPOSITORY],
+  exports: [ORDER_REPOSITORY, ORDER_NUMBER_GENERATOR],
 })
 export class OrdersModule {}
