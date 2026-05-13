@@ -7,6 +7,7 @@ export class OrderMapper {
       id: orm.id,
       orderNumber: orm.orderNumber,
       userId: orm.userId,
+      staffId: orm.staffId,
       channel: orm.channel,
       status: orm.status,
       paymentMethod: orm.paymentMethod,
@@ -36,6 +37,7 @@ export class OrderMapper {
     orm.id = domain.id;
     orm.orderNumber = domain.orderNumber;
     orm.userId = domain.userId;
+    orm.staffId = domain.staffId;
     orm.channel = domain.channel;
     orm.status = domain.status;
     orm.paymentMethod = domain.paymentMethod;

@@ -45,7 +45,8 @@ export class OrderEventResponseDto {
 export class OrderResponseDto {
   id: string;
   orderNumber: string;
-  userId: string;
+  userId: string | null;
+  staffId: string | null;
   channel: string;
   status: string;
   paymentMethod: string;
@@ -82,6 +83,7 @@ export class OrderResponseDto {
     this.id = order.id;
     this.orderNumber = order.orderNumber;
     this.userId = order.userId;
+    this.staffId = order.staffId;
     this.channel = order.channel;
     this.status = order.status;
     this.paymentMethod = order.paymentMethod;

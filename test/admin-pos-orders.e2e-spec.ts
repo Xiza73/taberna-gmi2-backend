@@ -63,7 +63,8 @@ function createFakeOrderResponse(overrides: FakeOrderResponseOverrides = {}) {
   return {
     id: overrides.id ?? '11111111-1111-1111-1111-111111111111',
     orderNumber: overrides.orderNumber ?? 'ORD-20260101-001',
-    userId: SUPER_ADMIN.id,
+    userId: null,
+    staffId: SUPER_ADMIN.id,
     channel: overrides.channel ?? 'pos',
     status: overrides.status ?? 'paid',
     paymentMethod: 'cash',

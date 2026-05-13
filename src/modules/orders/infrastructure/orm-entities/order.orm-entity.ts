@@ -15,6 +15,7 @@ import { ShippingMethod } from '../../domain/enums/shipping-method.enum';
 
 @Entity('orders')
 @Index('idx_orders_user_id', ['userId'])
+@Index('idx_orders_staff_id', ['staffId'])
 @Index('idx_orders_user_coupon', ['userId', 'couponId'], {
   where: 'coupon_id IS NOT NULL',
 })
@@ -28,8 +29,11 @@ export class OrderOrmEntity {
   @Column({ type: 'varchar', name: 'order_number', unique: true })
   orderNumber: string;
 
-  @Column({ type: 'uuid', name: 'user_id' })
-  userId: string;
+  @Column({ type: 'uuid', name: 'user_id', nullable: true })
+  userId: string | null;
+
+  @Column({ type: 'uuid', name: 'staff_id', nullable: true })
+  staffId: string | null;
 
   @Column({
     type: 'enum',

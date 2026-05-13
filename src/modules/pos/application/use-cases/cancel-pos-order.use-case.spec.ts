@@ -75,7 +75,8 @@ function createTestOrder(
   return Order.reconstitute({
     id: overrides.id ?? '11111111-1111-1111-1111-111111111111',
     orderNumber: 'POS-0001',
-    userId: 'staff-id-1',
+    userId: null,
+    staffId: 'staff-id-1',
     channel: overrides.channel ?? OrderChannel.POS,
     status: overrides.status ?? OrderStatus.PAID,
     paymentMethod: PaymentMethod.CASH,

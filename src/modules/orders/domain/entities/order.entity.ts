@@ -24,7 +24,8 @@ const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 
 export class Order extends BaseEntity {
   private _orderNumber: string;
-  private _userId: string;
+  private _userId: string | null;
+  private _staffId: string | null;
   private _channel: OrderChannel;
   private _status: OrderStatus;
   private _paymentMethod: PaymentMethod;
@@ -48,7 +49,8 @@ export class Order extends BaseEntity {
   private constructor(
     id: string,
     orderNumber: string,
-    userId: string,
+    userId: string | null,
+    staffId: string | null,
     channel: OrderChannel,
     status: OrderStatus,
     paymentMethod: PaymentMethod,
@@ -74,6 +76,7 @@ export class Order extends BaseEntity {
     super(id, createdAt, updatedAt);
     this._orderNumber = orderNumber;
     this._userId = userId;
+    this._staffId = staffId;
     this._channel = channel;
     this._status = status;
     this._paymentMethod = paymentMethod;
@@ -97,7 +100,8 @@ export class Order extends BaseEntity {
 
   static create(props: {
     orderNumber: string;
-    userId: string;
+    userId?: string | null;
+    staffId?: string | null;
     channel?: OrderChannel;
     paymentMethod: PaymentMethod;
     shippingMethod: ShippingMethod;
@@ -117,6 +121,14 @@ export class Order extends BaseEntity {
     notes?: string | null;
   }): Order {
     const channel = props.channel ?? OrderChannel.ONLINE;
+
+    const userId = props.userId ?? null;
+    const staffId = props.staffId ?? null;
+    const hasUser = userId !== null && userId !== '';
+    const hasStaff = staffId !== null && staffId !== '';
+    if (hasUser === hasStaff) {
+      throw new DomainException(ErrorMessages.ORDER_USER_OR_STAFF_REQUIRED);
+    }
 
     if (channel === OrderChannel.ONLINE && !props.shippingAddressSnapshot) {
       throw new DomainException(ErrorMessages.ADDRESS_NOT_FOUND);
@@ -142,7 +154,8 @@ export class Order extends BaseEntity {
     return new Order(
       undefined!,
       props.orderNumber,
-      props.userId,
+      hasUser ? userId : null,
+      hasStaff ? staffId : null,
       channel,
       OrderStatus.PENDING,
       props.paymentMethod,
@@ -170,7 +183,8 @@ export class Order extends BaseEntity {
   static reconstitute(props: {
     id: string;
     orderNumber: string;
-    userId: string;
+    userId: string | null;
+    staffId: string | null;
     channel: OrderChannel;
     status: OrderStatus;
     paymentMethod: PaymentMethod;
@@ -197,6 +211,7 @@ export class Order extends BaseEntity {
       props.id,
       props.orderNumber,
       props.userId,
+      props.staffId,
       props.channel,
       props.status,
       props.paymentMethod,
@@ -224,8 +239,11 @@ export class Order extends BaseEntity {
   get orderNumber(): string {
     return this._orderNumber;
   }
-  get userId(): string {
+  get userId(): string | null {
     return this._userId;
+  }
+  get staffId(): string | null {
+    return this._staffId;
   }
   get channel(): OrderChannel {
     return this._channel;
