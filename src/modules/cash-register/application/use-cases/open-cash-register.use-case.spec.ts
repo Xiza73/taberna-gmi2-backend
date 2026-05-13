@@ -68,6 +68,9 @@ describe('OpenCashRegisterUseCase', () => {
     expect(result.initialAmount).toBe(50000);
     expect(result.status).toBe(CashRegisterStatus.OPEN);
     expect(result.closedAt).toBeNull();
+    expect(result.cashSalesAmount).toBe(0);
+    expect(result.cashInAmount).toBe(0);
+    expect(result.cashOutAmount).toBe(0);
   });
 
   it('should throw DomainConflictException when staff already has an open register', async () => {

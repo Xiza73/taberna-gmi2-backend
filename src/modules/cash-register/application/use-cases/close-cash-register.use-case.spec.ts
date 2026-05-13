@@ -123,6 +123,9 @@ describe('CloseCashRegisterUseCase', () => {
     expect(result.closingAmount).toBe(65000);
     expect(result.status).toBe(CashRegisterStatus.CLOSED);
     expect(result.closedAt).not.toBeNull();
+    expect(result.cashSalesAmount).toBe(50000);
+    expect(result.cashInAmount).toBe(7500);
+    expect(result.cashOutAmount).toBe(1500);
   });
 
   it('should compute expected when no sales or movements (only initialAmount)', async () => {
@@ -138,6 +141,9 @@ describe('CloseCashRegisterUseCase', () => {
 
     expect(result.expectedAmount).toBe(20000);
     expect(result.difference).toBe(0);
+    expect(result.cashSalesAmount).toBe(0);
+    expect(result.cashInAmount).toBe(0);
+    expect(result.cashOutAmount).toBe(0);
   });
 
   it('should pass notes through when provided', async () => {

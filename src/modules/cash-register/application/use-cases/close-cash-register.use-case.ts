@@ -8,7 +8,6 @@ import {
   type IOrderRepository,
 } from '@modules/orders/domain/interfaces/order-repository.interface';
 
-import { CashMovementType } from '../../domain/enums/cash-movement-type.enum';
 import {
   CASH_MOVEMENT_REPOSITORY,
   type ICashMovementRepository,
@@ -20,6 +19,7 @@ import {
 
 import { CashRegisterResponseDto } from '../dtos/cash-register-response.dto';
 import { type CloseCashRegisterDto } from '../dtos/close-cash-register.dto';
+import { computeCashFlowBreakdown } from '../services/cash-flow-calculator';
 
 @Injectable()
 export class CloseCashRegisterUseCase {
@@ -44,25 +44,20 @@ export class CloseCashRegisterUseCase {
       );
     }
 
-    const now = new Date();
-    const cashSales = await this.orderRepository.sumCashSalesByStaffBetween(
-      staffId,
-      cashRegister.openedAt,
-      now,
-    );
-
     const movements = await this.cashMovementRepository.findByCashRegister(
       cashRegister.id,
     );
-    const cashIn = movements
-      .filter((m) => m.type === CashMovementType.CASH_IN)
-      .reduce((sum, m) => sum + m.amount, 0);
-    const cashOut = movements
-      .filter((m) => m.type === CashMovementType.CASH_OUT)
-      .reduce((sum, m) => sum + m.amount, 0);
+    const breakdown = await computeCashFlowBreakdown(
+      cashRegister,
+      movements,
+      this.orderRepository,
+    );
 
     const expectedAmount =
-      cashRegister.initialAmount + cashSales + cashIn - cashOut;
+      cashRegister.initialAmount +
+      breakdown.cashSalesAmount +
+      breakdown.cashInAmount -
+      breakdown.cashOutAmount;
     const difference = dto.closingAmount - expectedAmount;
 
     cashRegister.close({
@@ -73,6 +68,6 @@ export class CloseCashRegisterUseCase {
     });
 
     const saved = await this.cashRegisterRepository.save(cashRegister);
-    return new CashRegisterResponseDto(saved);
+    return new CashRegisterResponseDto(saved, { breakdown });
   }
 }
