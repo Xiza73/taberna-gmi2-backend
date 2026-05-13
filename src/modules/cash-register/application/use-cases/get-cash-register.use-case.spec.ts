@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DomainNotFoundException } from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
+import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-repository.interface';
+
 import { CashMovement } from '../../domain/entities/cash-movement.entity';
 import { CashRegister } from '../../domain/entities/cash-register.entity';
 import { CashMovementType } from '../../domain/enums/cash-movement-type.enum';
@@ -25,6 +27,10 @@ const mockCashMovementRepo = {
   save: jest.fn(),
 };
 
+const mockOrderRepo = {
+  sumCashSalesByStaffBetween: jest.fn(),
+};
+
 function buildClosedRegister(): CashRegister {
   return CashRegister.reconstitute({
     id: REGISTER_ID,
@@ -42,13 +48,17 @@ function buildClosedRegister(): CashRegister {
   });
 }
 
-function buildMovement(): CashMovement {
+function buildMovement(
+  type: CashMovementType = CashMovementType.CASH_IN,
+  amount = 5000,
+  id = 'mv-1',
+): CashMovement {
   return CashMovement.reconstitute({
-    id: 'mv-1',
+    id,
     cashRegisterId: REGISTER_ID,
     staffId: 'staff-1',
-    type: CashMovementType.CASH_IN,
-    amount: 5000,
+    type,
+    amount,
     reason: 'aporte',
     createdAt: new Date('2026-01-01T12:00:00Z'),
     updatedAt: new Date('2026-01-01T12:00:00Z'),
@@ -64,6 +74,7 @@ describe('GetCashRegisterUseCase', () => {
         GetCashRegisterUseCase,
         { provide: CASH_REGISTER_REPOSITORY, useValue: mockCashRegisterRepo },
         { provide: CASH_MOVEMENT_REPOSITORY, useValue: mockCashMovementRepo },
+        { provide: ORDER_REPOSITORY, useValue: mockOrderRepo },
       ],
     }).compile();
 
@@ -74,9 +85,14 @@ describe('GetCashRegisterUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('should return the cash register with its movements', async () => {
-    mockCashRegisterRepo.findById.mockResolvedValue(buildClosedRegister());
-    mockCashMovementRepo.findByCashRegister.mockResolvedValue([buildMovement()]);
+  it('should return the cash register with its movements and breakdown', async () => {
+    const closed = buildClosedRegister();
+    mockCashRegisterRepo.findById.mockResolvedValue(closed);
+    mockCashMovementRepo.findByCashRegister.mockResolvedValue([
+      buildMovement(CashMovementType.CASH_IN, 5000, 'mv-1'),
+      buildMovement(CashMovementType.CASH_OUT, 1500, 'mv-2'),
+    ]);
+    mockOrderRepo.sumCashSalesByStaffBetween.mockResolvedValue(50000);
 
     const result = await useCase.execute(REGISTER_ID);
 
@@ -84,9 +100,16 @@ describe('GetCashRegisterUseCase', () => {
     expect(mockCashMovementRepo.findByCashRegister).toHaveBeenCalledWith(
       REGISTER_ID,
     );
+    expect(mockOrderRepo.sumCashSalesByStaffBetween).toHaveBeenCalledWith(
+      'staff-1',
+      closed.openedAt,
+      closed.closedAt,
+    );
     expect(result.id).toBe(REGISTER_ID);
-    expect(result.movements).toHaveLength(1);
-    expect(result.movements?.[0].id).toBe('mv-1');
+    expect(result.movements).toHaveLength(2);
+    expect(result.cashSalesAmount).toBe(50000);
+    expect(result.cashInAmount).toBe(5000);
+    expect(result.cashOutAmount).toBe(1500);
   });
 
   it('should throw NotFound when the cash register does not exist', async () => {
@@ -99,5 +122,6 @@ describe('GetCashRegisterUseCase', () => {
       ErrorMessages.POS_CASH_REGISTER_NOT_FOUND,
     );
     expect(mockCashMovementRepo.findByCashRegister).not.toHaveBeenCalled();
+    expect(mockOrderRepo.sumCashSalesByStaffBetween).not.toHaveBeenCalled();
   });
 });
