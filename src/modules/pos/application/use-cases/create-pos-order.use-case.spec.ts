@@ -285,6 +285,8 @@ describe('CreatePosOrderUseCase', () => {
     expect(savedOrder.discount).toBe(0);
     expect(savedOrder.customerName).toBe('Walk-in Customer');
     expect(savedOrder.customerEmail).toBe('');
+    expect(savedOrder.staffId).toBe('staff-id-1');
+    expect(savedOrder.userId).toBeNull();
 
     expect(mockOrderRepo.saveItem).toHaveBeenCalledTimes(1);
     expect(mockOrderRepo.atomicStockDecrement).toHaveBeenCalledWith(

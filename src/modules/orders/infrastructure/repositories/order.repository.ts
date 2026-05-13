@@ -122,7 +122,7 @@ export class OrderRepository implements IOrderRepository {
       });
     }
     if (params.staffId) {
-      qb.andWhere('o.user_id = :staffId', { staffId: params.staffId });
+      qb.andWhere('o.staff_id = :staffId', { staffId: params.staffId });
     }
     if (params.dateFrom) {
       qb.andWhere('o.created_at >= :dateFrom', { dateFrom: params.dateFrom });
@@ -250,11 +250,11 @@ export class OrderRepository implements IOrderRepository {
     const result = await this.orderRepo
       .createQueryBuilder('o')
       .select('COALESCE(SUM(o.total), 0)', 'sum')
-      .where('o.user_id = :staffId', { staffId })
+      .where('o.staff_id = :staffId', { staffId })
       .andWhere('o.payment_method = :pm', { pm: 'cash' })
       .andWhere('o.channel != :online', { online: 'online' })
       .andWhere('o.status IN (:...statuses)', {
-        statuses: ['paid', 'processing', 'delivered', 'completed'],
+        statuses: ['paid', 'processing', 'shipped', 'delivered'],
       })
       .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
       .getRawOne<{ sum: string }>();
@@ -280,7 +280,7 @@ export class OrderRepository implements IOrderRepository {
       total: number;
     }>;
   }> {
-    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+    const moneyStatuses = ['paid', 'processing', 'shipped', 'delivered'];
 
     const totalsPromise = this.orderRepo
       .createQueryBuilder('o')
@@ -368,7 +368,7 @@ export class OrderRepository implements IOrderRepository {
   ): Promise<
     Array<{ paymentMethod: string; count: number; totalAmount: number }>
   > {
-    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+    const moneyStatuses = ['paid', 'processing', 'shipped', 'delivered'];
 
     const rows = await this.orderRepo
       .createQueryBuilder('o')
@@ -404,19 +404,19 @@ export class OrderRepository implements IOrderRepository {
       totalAmount: number;
     }>
   > {
-    const moneyStatuses = ['paid', 'processing', 'delivered', 'completed'];
+    const moneyStatuses = ['paid', 'processing', 'shipped', 'delivered'];
 
     const rows = await this.orderRepo
       .createQueryBuilder('o')
-      .innerJoin('staff_members', 'sm', 'sm.id = o.user_id')
-      .select('o.user_id', 'staffId')
+      .innerJoin('staff_members', 'sm', 'sm.id = o.staff_id')
+      .select('o.staff_id', 'staffId')
       .addSelect('sm.name', 'staffName')
       .addSelect('COUNT(*)', 'count')
       .addSelect('COALESCE(SUM(o.total), 0)', 'totalAmount')
       .where('o.channel != :online', { online: 'online' })
       .andWhere('o.created_at BETWEEN :from AND :to', { from, to })
       .andWhere('o.status IN (:...statuses)', { statuses: moneyStatuses })
-      .groupBy('o.user_id')
+      .groupBy('o.staff_id')
       .addGroupBy('sm.name')
       .orderBy('SUM(o.total)', 'DESC')
       .getRawMany<{

@@ -53,6 +53,8 @@ export const ErrorMessages = {
   ORDER_INVALID_TRANSITION: 'Invalid order status transition',
   ORDER_STATUS_CONFLICT:
     'Order status was modified concurrently, please retry',
+  ORDER_USER_OR_STAFF_REQUIRED:
+    'Order must have exactly one of userId or staffId',
   // Payments
   PAYMENT_ALREADY_PROCESSED: 'Payment has already been processed',
   PAYMENT_VERIFICATION_FAILED: 'Could not verify payment status',

@@ -41,7 +41,7 @@ function createTestOrder(
   overrides: Partial<{
     id: string;
     orderNumber: string;
-    userId: string;
+    staffId: string;
     channel: OrderChannel;
     status: OrderStatus;
     paymentMethod: PaymentMethod;
@@ -50,7 +50,8 @@ function createTestOrder(
   return Order.reconstitute({
     id: overrides.id ?? '11111111-1111-1111-1111-111111111111',
     orderNumber: overrides.orderNumber ?? 'POS-0001',
-    userId: overrides.userId ?? 'staff-id',
+    userId: null,
+    staffId: overrides.staffId ?? 'staff-id',
     channel: overrides.channel ?? OrderChannel.POS,
     status: overrides.status ?? OrderStatus.PAID,
     paymentMethod: overrides.paymentMethod ?? PaymentMethod.CASH,

@@ -185,7 +185,7 @@ export class CreatePosOrderUseCase {
         //    a PAID después si el método es manual (cash/yape/transfer).
         const order = Order.create({
           orderNumber,
-          userId: staff.id,
+          staffId: staff.id,
           channel,
           paymentMethod: dto.paymentMethod,
           shippingMethod: ShippingMethod.PICKUP,
