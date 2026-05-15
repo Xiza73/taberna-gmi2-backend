@@ -43,32 +43,47 @@ export class GetDashboardUseCase {
     });
   }
 
+  private toInt(value: unknown): number {
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? Math.trunc(value) : 0;
+    }
+    if (typeof value === 'string') {
+      const parsed = parseInt(value, 10);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+    if (value === null || value === undefined) {
+      return 0;
+    }
+    const parsed = parseInt(String(value), 10);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+
   private async countOrders(): Promise<number> {
     const result = await this.dataSource.query<[{ count: string }]>(
       `SELECT COUNT(*)::int AS count FROM orders WHERE status NOT IN ('cancelled')`,
     );
-    return result[0].count as unknown as number;
+    return this.toInt(result[0].count);
   }
 
   private async sumRevenue(): Promise<number> {
     const result = await this.dataSource.query<[{ sum: string | null }]>(
       `SELECT COALESCE(SUM(total), 0)::int AS sum FROM orders WHERE status IN ('paid', 'processing', 'shipped', 'delivered')`,
     );
-    return result[0].sum as unknown as number;
+    return this.toInt(result[0].sum);
   }
 
   private async countCustomers(): Promise<number> {
     const result = await this.dataSource.query<[{ count: string }]>(
       `SELECT COUNT(*)::int AS count FROM customers`,
     );
-    return result[0].count as unknown as number;
+    return this.toInt(result[0].count);
   }
 
   private async countProducts(): Promise<number> {
     const result = await this.dataSource.query<[{ count: string }]>(
       `SELECT COUNT(*)::int AS count FROM products WHERE is_active = true`,
     );
-    return result[0].count as unknown as number;
+    return this.toInt(result[0].count);
   }
 
   private async countOrdersSince(since: Date): Promise<number> {
@@ -76,7 +91,7 @@ export class GetDashboardUseCase {
       `SELECT COUNT(*)::int AS count FROM orders WHERE created_at >= $1 AND status NOT IN ('cancelled')`,
       [since],
     );
-    return result[0].count as unknown as number;
+    return this.toInt(result[0].count);
   }
 
   private async sumRevenueSince(since: Date): Promise<number> {
@@ -84,7 +99,7 @@ export class GetDashboardUseCase {
       `SELECT COALESCE(SUM(total), 0)::int AS sum FROM orders WHERE created_at >= $1 AND status IN ('paid', 'processing', 'shipped', 'delivered')`,
       [since],
     );
-    return result[0].sum as unknown as number;
+    return this.toInt(result[0].sum);
   }
 
   private async getOrdersByStatus(): Promise<Record<string, number>> {
@@ -93,7 +108,7 @@ export class GetDashboardUseCase {
     >(`SELECT status, COUNT(*)::int AS count FROM orders GROUP BY status`);
     const result: Record<string, number> = {};
     for (const row of rows) {
-      result[row.status] = row.count as unknown as number;
+      result[row.status] = this.toInt(row.count);
     }
     return result;
   }
