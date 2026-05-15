@@ -48,6 +48,40 @@ export class LoggingMiddleware implements NestMiddleware, OnModuleInit {
     }
   }
 
+  private static readonly SENSITIVE_QUERY_KEYS = new Set([
+    'token',
+    'refresh_token',
+    'code',
+    'password',
+  ]);
+
+  private sanitizeUrl(originalUrl: string): string {
+    const queryIdx = originalUrl.indexOf('?');
+    if (queryIdx === -1) {
+      return originalUrl;
+    }
+    const pathPart = originalUrl.slice(0, queryIdx);
+    const queryPart = originalUrl.slice(queryIdx + 1);
+    if (!queryPart) {
+      return originalUrl;
+    }
+    const sanitizedPairs = queryPart.split('&').map((pair) => {
+      const eqIdx = pair.indexOf('=');
+      const rawKey = eqIdx === -1 ? pair : pair.slice(0, eqIdx);
+      let decodedKey = rawKey;
+      try {
+        decodedKey = decodeURIComponent(rawKey);
+      } catch {
+        decodedKey = rawKey;
+      }
+      if (LoggingMiddleware.SENSITIVE_QUERY_KEYS.has(decodedKey.toLowerCase())) {
+        return `${rawKey}=[REDACTED]`;
+      }
+      return pair;
+    });
+    return `${pathPart}?${sanitizedPairs.join('&')}`;
+  }
+
   use(req: Request, res: Response, next: NextFunction): void {
     const start = Date.now();
 
@@ -58,7 +92,7 @@ export class LoggingMiddleware implements NestMiddleware, OnModuleInit {
       const logEntry: Record<string, unknown> = {
         timestamp: new Date().toISOString(),
         method: req.method,
-        path: req.originalUrl,
+        path: this.sanitizeUrl(req.originalUrl),
         statusCode: res.statusCode,
         duration,
         userId: user?.id ?? null,
