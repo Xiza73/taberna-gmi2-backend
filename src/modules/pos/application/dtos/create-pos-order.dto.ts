@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -83,8 +82,4 @@ export class CreatePosOrderDto {
   @IsOptional()
   @MaxLength(2000)
   notes?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  generateInvoice?: boolean;
 }
