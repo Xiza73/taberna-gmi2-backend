@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, type Repository } from 'typeorm';
+import { EntityManager, In, type Repository } from 'typeorm';
 
 import { type TransactionContext } from '@shared/domain/interfaces/unit-of-work.interface';
 import { type StaffRole } from '@shared/domain/enums/staff-role.enum';
@@ -33,6 +33,12 @@ export class StaffMemberRepository implements IStaffMemberRepository {
       where: { email: email.toLowerCase() },
     });
     return orm ? StaffMemberMapper.toDomain(orm) : null;
+  }
+
+  async findByIds(ids: string[]): Promise<StaffMember[]> {
+    if (ids.length === 0) return [];
+    const orms = await this.repo.find({ where: { id: In(ids) } });
+    return orms.map((orm) => StaffMemberMapper.toDomain(orm));
   }
 
   async delete(id: string): Promise<void> {
