@@ -47,6 +47,12 @@ export class OrderResponseDto {
   orderNumber: string;
   userId: string | null;
   staffId: string | null;
+  /**
+   * Nombre del staff que registró la venta (POS/WhatsApp). Null para
+   * órdenes online o cuando el use case no resolvió el lookup.
+   * Se rellena vía `extras.staffName` desde el use case.
+   */
+  staffName: string | null;
   channel: string;
   status: string;
   paymentMethod: string;
@@ -78,12 +84,14 @@ export class OrderResponseDto {
       items?: OrderItem[];
       events?: OrderEvent[];
       paymentUrl?: string | null;
+      staffName?: string | null;
     },
   ) {
     this.id = order.id;
     this.orderNumber = order.orderNumber;
     this.userId = order.userId;
     this.staffId = order.staffId;
+    this.staffName = extras?.staffName ?? null;
     this.channel = order.channel;
     this.status = order.status;
     this.paymentMethod = order.paymentMethod;
