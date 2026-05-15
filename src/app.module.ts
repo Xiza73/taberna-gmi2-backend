@@ -26,6 +26,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { SearchModule } from './modules/search/search.module';
+import { SettingsModule } from './modules/settings/settings.module';
 import { HealthModule } from './health/health.module';
 import { GlobalExceptionFilter } from './shared/presentation/filters/global-exception.filter';
 import { JwtAuthGuard } from './shared/presentation/guards/jwt-auth.guard';
@@ -82,6 +83,7 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
     AdminModule,
     StaffModule,
     SearchModule,
+    SettingsModule,
     HealthModule,
   ],
   providers: [
