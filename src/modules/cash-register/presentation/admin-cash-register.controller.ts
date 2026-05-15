@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
@@ -19,7 +20,9 @@ import { CreateCashMovementUseCase } from '../application/use-cases/create-cash-
 import { GetCashRegisterUseCase } from '../application/use-cases/get-cash-register.use-case';
 import { GetCurrentCashRegisterUseCase } from '../application/use-cases/get-current-cash-register.use-case';
 import { ListCashMovementsUseCase } from '../application/use-cases/list-cash-movements.use-case';
+import { ListCashRegistersUseCase } from '../application/use-cases/list-cash-registers.use-case';
 import { OpenCashRegisterUseCase } from '../application/use-cases/open-cash-register.use-case';
+import { CashRegisterFiltersDto } from '../application/dtos/cash-register-filters.dto';
 import { CloseCashRegisterDto } from '../application/dtos/close-cash-register.dto';
 import { CreateCashMovementDto } from '../application/dtos/create-cash-movement.dto';
 import { OpenCashRegisterDto } from '../application/dtos/open-cash-register.dto';
@@ -38,9 +41,16 @@ export class AdminCashRegisterController {
     private readonly closeCashRegisterUseCase: CloseCashRegisterUseCase,
     private readonly getCurrentCashRegisterUseCase: GetCurrentCashRegisterUseCase,
     private readonly getCashRegisterUseCase: GetCashRegisterUseCase,
+    private readonly listCashRegistersUseCase: ListCashRegistersUseCase,
     private readonly createCashMovementUseCase: CreateCashMovementUseCase,
     private readonly listCashMovementsUseCase: ListCashMovementsUseCase,
   ) {}
+
+  @Get()
+  async list(@Query() filters: CashRegisterFiltersDto) {
+    const result = await this.listCashRegistersUseCase.execute(filters);
+    return BaseResponse.ok(result);
+  }
 
   @Post('open')
   async open(

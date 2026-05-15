@@ -7,6 +7,12 @@ import { CashMovementResponseDto } from './cash-movement-response.dto';
 export class CashRegisterResponseDto {
   id: string;
   staffId: string;
+  /**
+   * Nombre del staff que abrió la caja. Null cuando el use case no
+   * resolvió el lookup (e.g. detalle puntual de una caja).
+   * Se rellena vía `extras.staffName` desde el use case.
+   */
+  staffName: string | null;
   openedAt: string;
   closedAt: string | null;
   initialAmount: number;
@@ -24,10 +30,15 @@ export class CashRegisterResponseDto {
 
   constructor(
     entity: CashRegister,
-    extras?: { movements?: CashMovement[]; breakdown?: CashFlowBreakdown },
+    extras?: {
+      movements?: CashMovement[];
+      breakdown?: CashFlowBreakdown;
+      staffName?: string | null;
+    },
   ) {
     this.id = entity.id;
     this.staffId = entity.staffId;
+    this.staffName = extras?.staffName ?? null;
     this.openedAt = entity.openedAt.toISOString();
     this.closedAt = entity.closedAt ? entity.closedAt.toISOString() : null;
     this.initialAmount = entity.initialAmount;
