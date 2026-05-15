@@ -91,7 +91,8 @@ describe('ListInvitationsUseCase', () => {
 
     expect(mockInvitationRepo.findAll).toHaveBeenCalledWith({
       page: 1,
-      limit: 10,
+      limit: 20,
+      status: undefined,
     });
     expect(result.total).toBe(0);
     expect(result.items).toHaveLength(0);
