@@ -84,8 +84,22 @@ async function seed() {
     const staffManager = uuid();
 
     const staffMembers = [
-      [staffAdmin, 'Admin Principal', 'admin@tienda.com', passwordHash, 'super_admin', true],
-      [staffManager, 'Gerente', 'gerente@tienda.com', passwordHash, 'admin', true],
+      [
+        staffAdmin,
+        'Admin Principal',
+        'admin@tienda.com',
+        passwordHash,
+        'super_admin',
+        true,
+      ],
+      [
+        staffManager,
+        'Gerente',
+        'gerente@tienda.com',
+        passwordHash,
+        'admin',
+        true,
+      ],
     ];
 
     for (const s of staffMembers) {
