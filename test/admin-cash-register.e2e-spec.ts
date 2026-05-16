@@ -18,6 +18,7 @@ import { CreateCashMovementUseCase } from '@modules/cash-register/application/us
 import { GetCashRegisterUseCase } from '@modules/cash-register/application/use-cases/get-cash-register.use-case';
 import { GetCurrentCashRegisterUseCase } from '@modules/cash-register/application/use-cases/get-current-cash-register.use-case';
 import { ListCashMovementsUseCase } from '@modules/cash-register/application/use-cases/list-cash-movements.use-case';
+import { ListCashRegistersUseCase } from '@modules/cash-register/application/use-cases/list-cash-registers.use-case';
 import { OpenCashRegisterUseCase } from '@modules/cash-register/application/use-cases/open-cash-register.use-case';
 
 const SUPER_ADMIN = {
@@ -42,6 +43,7 @@ const mockOpen = { execute: jest.fn() };
 const mockClose = { execute: jest.fn() };
 const mockCurrent = { execute: jest.fn() };
 const mockGet = { execute: jest.fn() };
+const mockList = { execute: jest.fn() };
 const mockCreateMovement = { execute: jest.fn() };
 const mockListMovements = { execute: jest.fn() };
 
@@ -103,6 +105,10 @@ describe('AdminCashRegisterController (e2e)', () => {
         {
           provide: GetCashRegisterUseCase,
           useValue: mockGet as unknown as GetCashRegisterUseCase,
+        },
+        {
+          provide: ListCashRegistersUseCase,
+          useValue: mockList as unknown as ListCashRegistersUseCase,
         },
         {
           provide: CreateCashMovementUseCase,
@@ -364,6 +370,101 @@ describe('AdminCashRegisterController (e2e)', () => {
         .expect(200);
 
       expect(res.body.data).toEqual([]);
+    });
+  });
+
+  // ── GET /api/v1/admin/pos/cash-register ──────────────────────────────
+
+  describe('GET /api/v1/admin/pos/cash-register', () => {
+    function fakePaginated(items: ReturnType<typeof fakeRegister>[]) {
+      return {
+        items: items.map((it) => ({ ...it, staffName: 'Super Admin' })),
+        total: items.length,
+        page: 1,
+        limit: 20,
+        totalPages: 1,
+      };
+    }
+
+    it('should return paginated list with staffName-enriched items', async () => {
+      mockList.execute.mockResolvedValue(
+        fakePaginated([
+          fakeRegister({ closed: true, id: REGISTER_ID }),
+          fakeRegister({ id: '33333333-3333-4333-8333-333333333333' }),
+        ]),
+      );
+
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .expect(200);
+
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.items).toHaveLength(2);
+      expect(res.body.data.items[0].staffName).toBe('Super Admin');
+      expect(res.body.data.total).toBe(2);
+      expect(res.body.data.page).toBe(1);
+      expect(res.body.data.limit).toBe(20);
+      expect(mockList.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should parse filters and forward them to the use case', async () => {
+      mockList.execute.mockResolvedValue(fakePaginated([]));
+      const validStaffId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+
+      await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .query({
+          page: '2',
+          limit: '10',
+          staffId: validStaffId,
+          status: 'closed',
+          dateFrom: '2026-01-01',
+          dateTo: '2026-01-31',
+        })
+        .expect(200);
+
+      expect(mockList.execute).toHaveBeenCalledWith(
+        expect.objectContaining({
+          page: 2,
+          limit: 10,
+          staffId: validStaffId,
+          status: 'closed',
+          dateFrom: '2026-01-01',
+          dateTo: '2026-01-31',
+        }),
+      );
+    });
+
+    it('should reject invalid staffId (not a uuid)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .query({ staffId: 'not-a-uuid' })
+        .expect(400);
+      expect(mockList.execute).not.toHaveBeenCalled();
+    });
+
+    it('should reject invalid status enum', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .query({ status: 'invalid' })
+        .expect(400);
+      expect(mockList.execute).not.toHaveBeenCalled();
+    });
+
+    it('should reject invalid date format', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .query({ dateFrom: 'not-a-date' })
+        .expect(400);
+      expect(mockList.execute).not.toHaveBeenCalled();
+    });
+
+    it('should reject limit greater than max (50)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/admin/pos/cash-register')
+        .query({ limit: '999' })
+        .expect(400);
+      expect(mockList.execute).not.toHaveBeenCalled();
     });
   });
 

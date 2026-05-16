@@ -7,6 +7,7 @@ import { ProductsModule } from '@modules/products/products.module';
 import { CustomersModule } from '@modules/customers/customers.module';
 import { CouponsModule } from '@modules/coupons/coupons.module';
 import { PaymentsModule } from '@modules/payments/payments.module';
+import { StaffModule } from '@modules/staff/staff.module';
 
 import { OrderOrmEntity } from './infrastructure/orm-entities/order.orm-entity';
 import { OrderItemOrmEntity } from './infrastructure/orm-entities/order-item.orm-entity';
@@ -45,6 +46,7 @@ import { WebhooksController } from './presentation/webhooks.controller';
     CustomersModule,
     CouponsModule,
     PaymentsModule,
+    StaffModule,
   ],
   controllers: [OrdersController, AdminOrdersController, WebhooksController],
   providers: [

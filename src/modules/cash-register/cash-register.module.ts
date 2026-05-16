@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OrdersModule } from '@modules/orders/orders.module';
+import { StaffModule } from '@modules/staff/staff.module';
 
 import { CASH_MOVEMENT_REPOSITORY } from './domain/interfaces/cash-movement-repository.interface';
 import { CASH_REGISTER_REPOSITORY } from './domain/interfaces/cash-register-repository.interface';
@@ -10,6 +11,7 @@ import { CreateCashMovementUseCase } from './application/use-cases/create-cash-m
 import { GetCashRegisterUseCase } from './application/use-cases/get-cash-register.use-case';
 import { GetCurrentCashRegisterUseCase } from './application/use-cases/get-current-cash-register.use-case';
 import { ListCashMovementsUseCase } from './application/use-cases/list-cash-movements.use-case';
+import { ListCashRegistersUseCase } from './application/use-cases/list-cash-registers.use-case';
 import { OpenCashRegisterUseCase } from './application/use-cases/open-cash-register.use-case';
 import { CashMovementOrmEntity } from './infrastructure/orm-entities/cash-movement.orm-entity';
 import { CashRegisterOrmEntity } from './infrastructure/orm-entities/cash-register.orm-entity';
@@ -21,6 +23,7 @@ import { AdminCashRegisterController } from './presentation/admin-cash-register.
   imports: [
     TypeOrmModule.forFeature([CashRegisterOrmEntity, CashMovementOrmEntity]),
     OrdersModule,
+    StaffModule,
   ],
   controllers: [AdminCashRegisterController],
   providers: [
@@ -28,6 +31,7 @@ import { AdminCashRegisterController } from './presentation/admin-cash-register.
     CloseCashRegisterUseCase,
     GetCurrentCashRegisterUseCase,
     GetCashRegisterUseCase,
+    ListCashRegistersUseCase,
     CreateCashMovementUseCase,
     ListCashMovementsUseCase,
     { provide: CASH_REGISTER_REPOSITORY, useClass: CashRegisterRepository },
