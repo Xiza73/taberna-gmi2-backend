@@ -54,23 +54,75 @@ export class ProcessPaymentNotificationUseCase {
     return !!secret;
   }
 
-  verifySignature(rawBody: Buffer, signature: string): boolean {
+  /**
+   * Verifica firma HMAC del webhook de MercadoPago según la spec real:
+   *
+   * MP manda dos headers:
+   *   x-signature:  ts=<unix_ts>,v1=<hex_hmac>
+   *   x-request-id: <uuid>
+   *
+   * El HMAC se calcula sobre el "manifest string":
+   *   id:<data.id>;request-id:<x-request-id>;ts:<ts>;
+   *
+   * Algoritmo: HMAC-SHA256(webhook_secret, manifest), comparar con v1.
+   *
+   * Docs: https://www.mercadopago.com.pe/developers/es/docs/your-integrations/notifications/webhooks#editor_4
+   */
+  verifySignature(
+    dataId: string,
+    requestId: string | undefined,
+    signatureHeader: string | undefined,
+  ): boolean {
     const secret = this.configService.get<string>(
       'MERCADOPAGO_WEBHOOK_SECRET',
       '',
     );
     if (!secret) return false;
+    if (!signatureHeader || !dataId) return false;
 
     try {
+      // Parse "ts=...,v1=..." (orden arbitrario entre pares)
+      const parts = signatureHeader.split(',').map((p) => p.trim());
+      let ts: string | undefined;
+      let v1: string | undefined;
+      for (const part of parts) {
+        const [key, value] = part.split('=');
+        if (key === 'ts') ts = value;
+        else if (key === 'v1') v1 = value;
+      }
+      if (!ts || !v1) {
+        this.logger.warn(
+          'x-signature header malformed (missing ts or v1)',
+        );
+        return false;
+      }
+
+      // Ventana de validez ±5min para mitigar replay attacks
+      const tsNumber = Number(ts);
+      if (!Number.isFinite(tsNumber)) return false;
+      const nowMs = Date.now();
+      const tsMs = tsNumber * 1000;
+      if (Math.abs(nowMs - tsMs) > 5 * 60 * 1000) {
+        this.logger.warn(
+          `Webhook timestamp out of ±5min window (ts=${ts})`,
+        );
+        return false;
+      }
+
+      // Manifest según spec MP. Notar el ';' al final.
+      const manifest = `id:${dataId};request-id:${requestId ?? ''};ts:${ts};`;
       const expected = createHmac('sha256', secret)
-        .update(rawBody)
+        .update(manifest)
         .digest('hex');
-      const signatureHex = signature.replace('sha256=', '');
-      return timingSafeEqual(
-        Buffer.from(expected, 'hex'),
-        Buffer.from(signatureHex, 'hex'),
+
+      const expectedBuf = Buffer.from(expected, 'hex');
+      const actualBuf = Buffer.from(v1, 'hex');
+      if (expectedBuf.length !== actualBuf.length) return false;
+      return timingSafeEqual(expectedBuf, actualBuf);
+    } catch (err) {
+      this.logger.warn(
+        `Signature verification threw: ${err instanceof Error ? err.message : String(err)}`,
       );
-    } catch {
       return false;
     }
   }

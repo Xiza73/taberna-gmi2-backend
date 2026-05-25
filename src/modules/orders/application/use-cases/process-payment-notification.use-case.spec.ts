@@ -239,28 +239,40 @@ describe('ProcessPaymentNotificationUseCase', () => {
   });
 
   describe('verifySignature', () => {
-    it('returns true for a valid HMAC-SHA256 signature', () => {
-      const body = Buffer.from(JSON.stringify({ id: 'mp-payment-1' }));
-      const expected = createHmac('sha256', SECRET).update(body).digest('hex');
-      expect(useCase.verifySignature(body, `sha256=${expected}`)).toBe(true);
+    function buildSig(dataId: string, requestId: string, ts: number) {
+      const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+      const v1 = createHmac('sha256', SECRET).update(manifest).digest('hex');
+      return `ts=${ts},v1=${v1}`;
+    }
+
+    it('returns true for a valid HMAC-SHA256 signature with the MP manifest format', () => {
+      const ts = Math.floor(Date.now() / 1000);
+      const sig = buildSig('payment-1', 'req-1', ts);
+      expect(useCase.verifySignature('payment-1', 'req-1', sig)).toBe(true);
     });
 
     it('returns false for a tampered signature', () => {
-      const body = Buffer.from('original');
-      const tampered = Buffer.from('tampered');
-      const wrong = createHmac('sha256', SECRET).update(tampered).digest('hex');
-      expect(useCase.verifySignature(body, `sha256=${wrong}`)).toBe(false);
+      const ts = Math.floor(Date.now() / 1000);
+      const sig = buildSig('payment-1', 'req-1', ts);
+      // tampered payment id — manifest no matchea
+      expect(useCase.verifySignature('payment-2', 'req-1', sig)).toBe(false);
     });
 
-    it('returns false for a malformed signature', () => {
-      const body = Buffer.from('any');
-      expect(useCase.verifySignature(body, 'not-a-hex-string')).toBe(false);
+    it('returns false for a malformed signature header', () => {
+      expect(useCase.verifySignature('payment-1', 'req-1', 'not-a-valid-sig')).toBe(false);
     });
 
-    it('accepts signature without "sha256=" prefix', () => {
-      const body = Buffer.from('payload');
-      const expected = createHmac('sha256', SECRET).update(body).digest('hex');
-      expect(useCase.verifySignature(body, expected)).toBe(true);
+    it('returns false when ts is outside the ±5min window', () => {
+      const oldTs = Math.floor(Date.now() / 1000) - 60 * 60; // 1h atrás
+      const sig = buildSig('payment-1', 'req-1', oldTs);
+      expect(useCase.verifySignature('payment-1', 'req-1', sig)).toBe(false);
+    });
+
+    it('returns false when dataId, requestId or signature is missing', () => {
+      const ts = Math.floor(Date.now() / 1000);
+      const sig = buildSig('payment-1', 'req-1', ts);
+      expect(useCase.verifySignature('', 'req-1', sig)).toBe(false);
+      expect(useCase.verifySignature('payment-1', 'req-1', undefined)).toBe(false);
     });
   });
 });
