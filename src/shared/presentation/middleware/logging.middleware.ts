@@ -15,9 +15,12 @@ export class LoggingMiddleware implements NestMiddleware, OnModuleInit {
     private readonly configService: ConfigService,
   ) {}
 
-  async onModuleInit(): Promise<void> {
-    try {
-      await this.elasticsearchService.indices.putIndexTemplate({
+  onModuleInit(): void {
+    // Disparamos la creación del template SIN await para no bloquear el
+    // startup si ES tarda o no está disponible. Si ES viene online más
+    // tarde, podemos re-correr este setup vía un endpoint admin (TODO).
+    void this.elasticsearchService.indices
+      .putIndexTemplate({
         name: 'ecommerce-logs-template',
         index_patterns: ['ecommerce-logs-*'],
         template: {
@@ -39,13 +42,15 @@ export class LoggingMiddleware implements NestMiddleware, OnModuleInit {
             },
           },
         },
+      })
+      .then(() => {
+        this.logger.log('Elasticsearch index template created');
+      })
+      .catch((err: unknown) => {
+        this.logger.warn(
+          `Failed to create index template: ${err instanceof Error ? err.message : String(err)}`,
+        );
       });
-      this.logger.log('Elasticsearch index template created');
-    } catch (err: unknown) {
-      this.logger.warn(
-        `Failed to create index template: ${err instanceof Error ? err.message : String(err)}`,
-      );
-    }
   }
 
   private static readonly SENSITIVE_QUERY_KEYS = new Set([

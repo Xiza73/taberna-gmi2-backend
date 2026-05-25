@@ -14,6 +14,12 @@ import { LoggingMiddleware } from './presentation/middleware/logging.middleware'
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         node: config.get<string>('ELASTICSEARCH_NODE', 'http://localhost:9200'),
+        // Timeouts cortos para evitar que el startup quede colgado si ES no
+        // está disponible. El back tolera ES caído — solo pierde indexado de
+        // logs y búsqueda full-text, pero el resto funciona.
+        requestTimeout: 3000,
+        pingTimeout: 3000,
+        maxRetries: 1,
       }),
     }),
   ],
