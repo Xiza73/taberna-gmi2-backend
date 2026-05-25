@@ -62,6 +62,7 @@ export class CreateProductUseCase {
       stock: dto.stock,
       images: dto.images,
       categoryId: dto.categoryId,
+      isActive: dto.isActive,
     });
 
     const saved = await this.productRepository.save(product);

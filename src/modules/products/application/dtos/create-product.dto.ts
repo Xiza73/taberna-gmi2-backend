@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -46,4 +47,8 @@ export class CreateProductDto {
 
   @IsUUID()
   categoryId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }

@@ -57,6 +57,7 @@ export class Product extends BaseEntity {
     stock?: number;
     images?: string[];
     categoryId: string;
+    isActive?: boolean;
   }): Product {
     if (!props.name || !props.slug) {
       throw new DomainException('Product requires name and slug');
@@ -82,7 +83,7 @@ export class Product extends BaseEntity {
       props.stock ?? 0,
       props.images ?? [],
       props.categoryId,
-      true,
+      props.isActive ?? true,
       null,
       0,
       new Date(),
