@@ -24,6 +24,10 @@ export const ErrorMessages = {
   INVITATION_REVOKED: 'Invitation has been revoked',
   INVITATION_EMAIL_EXISTS: 'A staff member with this email already exists',
   INVITATION_CANNOT_INVITE_ROLE: 'You cannot invite staff with this role',
+  STAFF_REGISTRATION_REQUIRES_INVITATION:
+    'Staff registration requires a valid invitation token',
+  STAFF_REGISTRATION_EMAIL_MISMATCH:
+    'Email does not match the invited email',
   // Categories
   CATEGORY_NOT_FOUND: 'Category not found',
   CATEGORY_HAS_PRODUCTS: 'Cannot delete category with products',

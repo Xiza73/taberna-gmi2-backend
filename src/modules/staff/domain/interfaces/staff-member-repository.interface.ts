@@ -21,4 +21,12 @@ export interface IStaffMemberRepository extends IBaseRepository<StaffMember> {
     role?: StaffRole;
   }): Promise<{ items: StaffMember[]; total: number }>;
   countByRole(role: StaffRole, isActive: boolean): Promise<number>;
+  /**
+   * Total de staff (cualquier rol, activos o no). Se usa en el flujo
+   * de registro público para detectar el primer usuario del sistema:
+   * si `count() === 0`, el solicitante se promueve a SUPER_ADMIN sin
+   * necesidad de invitación. A partir del segundo usuario, la
+   * invitación pasa a ser obligatoria.
+   */
+  count(): Promise<number>;
 }

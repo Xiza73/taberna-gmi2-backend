@@ -78,6 +78,10 @@ export class StaffMemberRepository implements IStaffMemberRepository {
     return this.repo.count({ where: { role, isActive } });
   }
 
+  async count(): Promise<number> {
+    return this.repo.count();
+  }
+
   withTransaction(ctx: TransactionContext): this {
     const manager = ctx as EntityManager;
     const repo = manager.getRepository(StaffMemberOrmEntity);

@@ -19,11 +19,13 @@ import { ValidateInvitationUseCase } from './application/use-cases/validate-invi
 import { AcceptInvitationUseCase } from './application/use-cases/accept-invitation.use-case';
 import { ListInvitationsUseCase } from './application/use-cases/list-invitations.use-case';
 import { RevokeInvitationUseCase } from './application/use-cases/revoke-invitation.use-case';
+import { RegisterStaffUseCase } from './application/use-cases/register-staff.use-case';
 import { AdminStaffController } from './presentation/admin-staff.controller';
 import {
   AdminInvitationsController,
   PublicInvitationsController,
 } from './presentation/staff-invitations.controller';
+import { StaffRegisterController } from './presentation/staff-register.controller';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -39,6 +41,7 @@ import { AuthModule } from '../auth/auth.module';
     // ParseUUIDPipe with 400.
     AdminInvitationsController,
     PublicInvitationsController,
+    StaffRegisterController,
     AdminStaffController,
   ],
   providers: [
@@ -57,6 +60,7 @@ import { AuthModule } from '../auth/auth.module';
     InviteStaffUseCase,
     ValidateInvitationUseCase,
     AcceptInvitationUseCase,
+    RegisterStaffUseCase,
     ListInvitationsUseCase,
     RevokeInvitationUseCase,
   ],
