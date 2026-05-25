@@ -30,7 +30,7 @@ export class WebhooksController {
   @Throttle({ default: { ttl: 60000, limit: 100 } })
   @UsePipes(
     new ValidationPipe({
-      whitelist: true,
+      whitelist: false,
       transform: true,
       forbidNonWhitelisted: false,
     }),
@@ -40,6 +40,9 @@ export class WebhooksController {
     @Headers('x-signature') signature: string,
     @Body() dto: MercadoPagoNotificationDto,
   ) {
+    this.logger.log(
+      `Webhook MP recibido: type=${dto?.type ?? '?'} action=${dto?.action ?? '?'} dataId=${dto?.data?.id ?? '?'}`,
+    );
     try {
       // Verify HMAC signature — mandatory when secret is configured
       const rawBody = (req as Request & { rawBody?: Buffer }).rawBody;
