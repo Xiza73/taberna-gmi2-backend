@@ -13,6 +13,41 @@
 | Testing | Jest + supertest + @nestjs/testing |
 | Security | helmet + @nestjs/throttler |
 
+## Convención: copy en español neutro
+
+**TODO el copy que llegue al usuario final** va en **español neutro**
+(forma "tú"), NO en voseo rioplatense. Aplica a:
+
+- `ErrorMessages` constants (`src/shared/domain/constants/error-messages.ts`)
+- Mensajes de validación en DTOs (class-validator messages)
+- Templates de email (`src/modules/notifications/infrastructure/templates/`)
+- Seeds con texto en prosa (no nombres de productos)
+- También comentarios de código y JSDoc (para consistencia)
+
+**Por qué**: el negocio puede vender en cualquier país hispanohablante.
+El voseo se entiende solo en Río de la Plata + algunas regiones. El
+neutro funciona en LATAM + España.
+
+### Patrones a EVITAR / equivalentes
+
+| Voseo (NO usar) | Neutro (usar) |
+|---|---|
+| tenés, tené | tienes, ten |
+| ingresá, agregá, contá | ingresa, agrega, cuenta |
+| iniciá, usá, andá | inicia, usa, ve |
+| podés, dudás | puedes, dudas |
+| cerrá, abrí | cierra, abre |
+| confirmá, seleccioná | confirma, selecciona |
+| intentá, revisá, probá | intenta, revisa, prueba |
+| mirá, decí, hacé | mira, di, haz |
+| reintentá, terminá, seguí | reintenta, termina, sigue |
+| fijate (sin tilde) | fíjate (con tilde) |
+| vos (pronombre) | tú |
+
+Si una nueva PR introduce voseo, **rechazar en review** y pedir cambio.
+
+(Hecho en el commit `chore(i18n): neutralize Spanish copy` del sweep inicial.)
+
 ## Architecture
 
 4-layer Clean Architecture per module:
