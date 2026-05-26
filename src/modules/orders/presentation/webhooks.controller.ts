@@ -5,8 +5,10 @@ import {
   Logger,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { type Request } from 'express';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
 import { Public } from '@shared/presentation/decorators/public.decorator';
@@ -42,6 +44,7 @@ export class WebhooksController {
   @Public()
   @Throttle({ default: { ttl: 60000, limit: 100 } })
   async handleMercadoPago(
+    @Req() req: Request,
     @Query() query: Record<string, string | undefined>,
     @Headers('x-signature') signature: string | undefined,
     @Headers('x-request-id') requestId: string | undefined,
@@ -53,6 +56,17 @@ export class WebhooksController {
     // skipea validación y nos pasa el body crudo.
     @Body() body: Record<string, any> = {},
   ) {
+    // [DEBUG TEMPORAL] Dump TODOS los headers que MP envía para diagnosticar
+    // si Railway está manipulando x-request-id u otro header crítico para
+    // la verificación de firma. Sacar este log cuando se resuelva la firma.
+    const allHeaders = Object.fromEntries(
+      Object.entries(req.headers).filter(([k]) =>
+        k.toLowerCase().startsWith('x-') || k.toLowerCase() === 'user-agent',
+      ),
+    );
+    this.logger.log(
+      `[DEBUG] Headers entrantes: ${JSON.stringify(allHeaders)}`,
+    );
     // Normalizar: body wins, query como fallback. MP usa `type` (nuevo) o
     // `topic` (legacy) para el tipo, y `data.id` (nuevo) o `id` (legacy).
     const bodyType = typeof body?.type === 'string' ? body.type : undefined;
