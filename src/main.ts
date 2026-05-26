@@ -1,3 +1,11 @@
+import { setDefaultResultOrder } from 'dns';
+
+// Forzar IPv4 first para TODAS las DNS lookups del proceso. Railway
+// no soporta salida IPv6 hacia algunos servicios (Gmail SMTP, etc.) y
+// las conexiones a 2607:f8b0:... fallan con ENETUNREACH. Esto debe ir
+// ANTES de cualquier import que pueda inicializar conexiones.
+setDefaultResultOrder('ipv4first');
+
 import { NestFactory } from '@nestjs/core';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
