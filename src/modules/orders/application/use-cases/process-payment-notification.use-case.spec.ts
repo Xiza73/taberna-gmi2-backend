@@ -239,8 +239,18 @@ describe('ProcessPaymentNotificationUseCase', () => {
   });
 
   describe('verifySignature', () => {
-    function buildSig(dataId: string, requestId: string, ts: number) {
-      const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+    // Helper que arma firma igual que MP: lowercasea dataId, omite
+    // segments si están vacíos, joina con ';' y termina con ';'.
+    function buildSig(
+      dataId: string | undefined,
+      requestId: string | undefined,
+      ts: number,
+    ) {
+      const segments: string[] = [];
+      if (dataId) segments.push(`id:${dataId.toLowerCase()}`);
+      if (requestId) segments.push(`request-id:${requestId}`);
+      segments.push(`ts:${ts}`);
+      const manifest = segments.join(';') + ';';
       const v1 = createHmac('sha256', SECRET).update(manifest).digest('hex');
       return `ts=${ts},v1=${v1}`;
     }
@@ -249,6 +259,14 @@ describe('ProcessPaymentNotificationUseCase', () => {
       const ts = Math.floor(Date.now() / 1000);
       const sig = buildSig('payment-1', 'req-1', ts);
       expect(useCase.verifySignature('payment-1', 'req-1', sig)).toBe(true);
+    });
+
+    it('lowercasea dataId alfanumérico antes del HMAC', () => {
+      const ts = Math.floor(Date.now() / 1000);
+      // MP firma con el dataId en minúsculas; nuestro código debe matchear
+      // aunque le pasemos el dataId en mayúsculas.
+      const sig = buildSig('ORD-ABC-001', 'req-1', ts);
+      expect(useCase.verifySignature('ORD-ABC-001', 'req-1', sig)).toBe(true);
     });
 
     it('returns false for a tampered signature', () => {
@@ -262,17 +280,16 @@ describe('ProcessPaymentNotificationUseCase', () => {
       expect(useCase.verifySignature('payment-1', 'req-1', 'not-a-valid-sig')).toBe(false);
     });
 
-    it('returns false when ts is outside the ±5min window', () => {
-      const oldTs = Math.floor(Date.now() / 1000) - 60 * 60; // 1h atrás
-      const sig = buildSig('payment-1', 'req-1', oldTs);
-      expect(useCase.verifySignature('payment-1', 'req-1', sig)).toBe(false);
+    it('returns false when signature header is missing', () => {
+      expect(useCase.verifySignature('payment-1', 'req-1', undefined)).toBe(false);
     });
 
-    it('returns false when dataId, requestId or signature is missing', () => {
+    it('omits empty segments from the manifest (per official MP SDK)', () => {
       const ts = Math.floor(Date.now() / 1000);
-      const sig = buildSig('payment-1', 'req-1', ts);
-      expect(useCase.verifySignature('', 'req-1', sig)).toBe(false);
-      expect(useCase.verifySignature('payment-1', 'req-1', undefined)).toBe(false);
+      // MP a veces envía webhooks sin data.id en query; el SDK oficial
+      // arma el manifest sin el segmento `id:...`, no con `id:undefined;`.
+      const sig = buildSig(undefined, 'req-1', ts);
+      expect(useCase.verifySignature(undefined, 'req-1', sig)).toBe(true);
     });
   });
 });

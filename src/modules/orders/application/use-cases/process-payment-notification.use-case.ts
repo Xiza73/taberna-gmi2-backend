@@ -55,21 +55,34 @@ export class ProcessPaymentNotificationUseCase {
   }
 
   /**
-   * Verifica firma HMAC del webhook de MercadoPago según la spec real:
+   * Verifica firma HMAC del webhook de MercadoPago.
    *
-   * MP manda dos headers:
-   *   x-signature:  ts=<unix_ts>,v1=<hex_hmac>
+   * Implementación idéntica al SDK oficial de MercadoPago Node.js
+   * (`mercadopago/.../webhook/index.ts`). Diferencias importantes vs
+   * implementaciones naive:
+   *
+   * 1. `dataId.toLowerCase()` — la spec MP indica que el dataId va en
+   *    minúsculas (los IDs alfanuméricos como ORDxxx hay que bajarlos).
+   * 2. Manifest condicional — si `dataId` o `requestId` están vacíos,
+   *    se OMITE el segmento entero, no se pone `id:undefined;`.
+   * 3. Parseo del x-signature itera todos los pares, no asume orden.
+   * 4. Trim de keys y values al parsear (MP a veces incluye espacios).
+   * 5. timingSafeEqual para evitar timing attacks.
+   *
+   * Header recibido:
+   *   x-signature:  ts=<unix_seconds>,v1=<hex_hmac>
    *   x-request-id: <uuid>
    *
-   * El HMAC se calcula sobre el "manifest string":
-   *   id:<data.id>;request-id:<x-request-id>;ts:<ts>;
+   * Manifest (segmentos opcionales se omiten si están vacíos):
+   *   id:<data.id_lowercased>;request-id:<x-request-id>;ts:<ts>;
    *
-   * Algoritmo: HMAC-SHA256(webhook_secret, manifest), comparar con v1.
+   * HMAC-SHA256(webhook_secret_string, manifest) → comparar con v1.
    *
-   * Docs: https://www.mercadopago.com.pe/developers/es/docs/your-integrations/notifications/webhooks#editor_4
+   * Docs: https://www.mercadopago.com.pe/developers/es/docs/your-integrations/notifications/webhooks
+   * SDK ref: https://github.com/mercadopago/sdk-nodejs/blob/master/src/utils/webhook/index.ts
    */
   verifySignature(
-    dataId: string,
+    dataId: string | undefined,
     requestId: string | undefined,
     signatureHeader: string | undefined,
   ): boolean {
@@ -78,47 +91,62 @@ export class ProcessPaymentNotificationUseCase {
       '',
     );
     if (!secret) return false;
-    if (!signatureHeader || !dataId) return false;
+    if (!signatureHeader) return false;
 
     try {
-      // Parse "ts=...,v1=..." (orden arbitrario entre pares)
-      const parts = signatureHeader.split(',').map((p) => p.trim());
+      // Parsear x-signature: itera todos los pares (no asume orden),
+      // hace trim de keys y values.
+      const parts = signatureHeader.split(',');
       let ts: string | undefined;
       let v1: string | undefined;
       for (const part of parts) {
-        const [key, value] = part.split('=');
+        const eqIdx = part.indexOf('=');
+        if (eqIdx === -1) continue;
+        const key = part.slice(0, eqIdx).trim();
+        const value = part.slice(eqIdx + 1).trim();
         if (key === 'ts') ts = value;
         else if (key === 'v1') v1 = value;
       }
       if (!ts || !v1) {
-        this.logger.warn(
-          'x-signature header malformed (missing ts or v1)',
-        );
+        this.logger.warn('x-signature header malformed (missing ts or v1)');
+        return false;
+      }
+      if (!/^\d+$/.test(ts)) {
+        this.logger.warn(`x-signature ts is not numeric: ${ts}`);
         return false;
       }
 
-      // Ventana de validez ±5min para mitigar replay attacks
-      const tsNumber = Number(ts);
-      if (!Number.isFinite(tsNumber)) return false;
-      const nowMs = Date.now();
-      const tsMs = tsNumber * 1000;
-      if (Math.abs(nowMs - tsMs) > 5 * 60 * 1000) {
-        this.logger.warn(
-          `Webhook timestamp out of ±5min window (ts=${ts})`,
-        );
-        return false;
+      // Build manifest segments condicionalmente (omite si están vacíos).
+      // dataId se lowercasea (spec MP para IDs alfanuméricos).
+      const segments: string[] = [];
+      if (dataId) {
+        segments.push(`id:${String(dataId).toLowerCase()}`);
       }
+      if (requestId) {
+        segments.push(`request-id:${requestId}`);
+      }
+      segments.push(`ts:${ts}`);
+      const manifest = segments.join(';') + ';';
 
-      // Manifest según spec MP. Notar el ';' al final.
-      const manifest = `id:${dataId};request-id:${requestId ?? ''};ts:${ts};`;
       const expected = createHmac('sha256', secret)
         .update(manifest)
         .digest('hex');
 
       const expectedBuf = Buffer.from(expected, 'hex');
       const actualBuf = Buffer.from(v1, 'hex');
-      if (expectedBuf.length !== actualBuf.length) return false;
-      return timingSafeEqual(expectedBuf, actualBuf);
+      if (expectedBuf.length !== actualBuf.length) {
+        this.logger.warn(
+          `HMAC length mismatch: expected=${expectedBuf.length} actual=${actualBuf.length}`,
+        );
+        return false;
+      }
+      const matches = timingSafeEqual(expectedBuf, actualBuf);
+      if (!matches) {
+        this.logger.warn(
+          `HMAC mismatch — manifest=${manifest} expected=${expected} got=${v1}`,
+        );
+      }
+      return matches;
     } catch (err) {
       this.logger.warn(
         `Signature verification threw: ${err instanceof Error ? err.message : String(err)}`,
