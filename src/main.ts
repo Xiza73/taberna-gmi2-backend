@@ -22,7 +22,18 @@ async function bootstrap() {
       );
     }
     configService.getOrThrow('MERCADOPAGO_ACCESS_TOKEN');
-    configService.getOrThrow('MERCADOPAGO_WEBHOOK_SECRET');
+    // MERCADOPAGO_WEBHOOK_SECRET es opcional. Si no está o está vacío,
+    // el back procesa los webhooks sin verificar firma (inseguro — solo
+    // recomendable para testing). En producción real debería estar set.
+    const mpWebhookSecret = configService.get<string>(
+      'MERCADOPAGO_WEBHOOK_SECRET',
+      '',
+    );
+    if (!mpWebhookSecret) {
+      bootstrapLogger.warn(
+        'MERCADOPAGO_WEBHOOK_SECRET no configurado — webhooks de MP se procesarán SIN verificación de firma',
+      );
+    }
   }
   configService.getOrThrow('DB_PASSWORD');
 
