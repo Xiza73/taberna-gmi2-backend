@@ -27,15 +27,22 @@ export class NodemailerEmailSender implements IEmailSender {
   private readonly from: string;
 
   constructor(private readonly configService: ConfigService) {
+    const port = this.configService.get<number>('SMTP_PORT', 587);
+    // El campo `family: 4` fuerza IPv4 a nivel net.Socket. Nodemailer lo
+    // pasa por debajo aunque no esté en sus type defs, por eso el cast.
+    // Razón: Railway no soporta salida IPv6 hacia Gmail SMTP (resuelve a
+    // 2607:f8b0:... y se cae con ENETUNREACH). family=4 obliga IPv4.
     this.transporter = createTransport({
       host: this.configService.get<string>('SMTP_HOST', 'smtp.gmail.com'),
-      port: this.configService.get<number>('SMTP_PORT', 587),
-      secure: false,
+      port,
+      // 465 = SMTPS (TLS desde el inicio). 587 = STARTTLS upgrade.
+      secure: port === 465,
+      family: 4,
       auth: {
         user: this.configService.get<string>('SMTP_USER', ''),
         pass: this.configService.get<string>('SMTP_PASS', ''),
       },
-    });
+    } as Parameters<typeof createTransport>[0]);
     this.from = this.configService.get<string>(
       'EMAIL_FROM',
       'noreply@tienda.com',
