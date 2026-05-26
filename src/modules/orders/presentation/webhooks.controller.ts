@@ -95,7 +95,7 @@ export class WebhooksController {
         );
         if (!valid) {
           this.logger.error(
-            `Invalid webhook signature for payment ${dataId} (requestId=${requestId ?? '?'}) — rechazando`,
+            `Invalid webhook signature for payment ${dataId} (requestId=${requestId ?? '?'}, signature=${signature ?? 'MISSING'}) — rechazando`,
           );
           // 200 igual para que MP no haga retry infinito; el error está logueado.
           return BaseResponse.ok(null);
