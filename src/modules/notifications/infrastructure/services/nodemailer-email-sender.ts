@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createTransport, type Transporter } from 'nodemailer';
+import { resolve4 } from 'dns/promises';
 
 import {
   type IEmailSender,
@@ -23,30 +24,66 @@ import { staffInvitationTemplate } from '../templates/staff-invitation.template'
 @Injectable()
 export class NodemailerEmailSender implements IEmailSender {
   private readonly logger = new Logger(NodemailerEmailSender.name);
-  private readonly transporter: Transporter;
+  private transporter: Transporter | null = null;
+  private transporterInitPromise: Promise<Transporter> | null = null;
   private readonly from: string;
+  private readonly host: string;
+  private readonly port: number;
+  private readonly user: string;
+  private readonly pass: string;
 
   constructor(private readonly configService: ConfigService) {
-    const port = this.configService.get<number>('SMTP_PORT', 587);
-    // El campo `family: 4` fuerza IPv4 a nivel net.Socket. Nodemailer lo
-    // pasa por debajo aunque no esté en sus type defs, por eso el cast.
-    // Razón: Railway no soporta salida IPv6 hacia Gmail SMTP (resuelve a
-    // 2607:f8b0:... y se cae con ENETUNREACH). family=4 obliga IPv4.
-    this.transporter = createTransport({
-      host: this.configService.get<string>('SMTP_HOST', 'smtp.gmail.com'),
-      port,
-      // 465 = SMTPS (TLS desde el inicio). 587 = STARTTLS upgrade.
-      secure: port === 465,
-      family: 4,
-      auth: {
-        user: this.configService.get<string>('SMTP_USER', ''),
-        pass: this.configService.get<string>('SMTP_PASS', ''),
-      },
-    } as Parameters<typeof createTransport>[0]);
+    this.host = this.configService.get<string>('SMTP_HOST', 'smtp.gmail.com');
+    this.port = this.configService.get<number>('SMTP_PORT', 587);
+    this.user = this.configService.get<string>('SMTP_USER', '');
+    this.pass = this.configService.get<string>('SMTP_PASS', '');
     this.from = this.configService.get<string>(
       'EMAIL_FROM',
       'noreply@tienda.com',
     );
+  }
+
+  /**
+   * Resuelve smtp.gmail.com a IPv4 explícitamente y construye el transporter
+   * apuntando a esa IP. Railway no soporta IPv6 outbound — sin esto, el
+   * resolver elige IPv6 (2607:f8b0:...) y la conexión falla con ENETUNREACH.
+   * Usamos `tls.servername` para que la validación del certificado siga
+   * funcionando contra el hostname original.
+   *
+   * Se hace una sola vez (cache en `this.transporter`). Si la primera
+   * resolución falla, queda libre para reintentar en la próxima request.
+   */
+  private async getTransporter(): Promise<Transporter> {
+    if (this.transporter) return this.transporter;
+    if (this.transporterInitPromise) return this.transporterInitPromise;
+
+    this.transporterInitPromise = (async () => {
+      const ipv4Addresses = await resolve4(this.host);
+      if (ipv4Addresses.length === 0) {
+        throw new Error(`No IPv4 address found for ${this.host}`);
+      }
+      const ipv4 = ipv4Addresses[0];
+      this.logger.log(
+        `SMTP resolved ${this.host} → ${ipv4} (forced IPv4 for Railway compat)`,
+      );
+
+      const transporter = createTransport({
+        host: ipv4,
+        port: this.port,
+        secure: this.port === 465,
+        auth: { user: this.user, pass: this.pass },
+        // Validar TLS cert contra el hostname original (no contra la IP).
+        tls: { servername: this.host },
+      });
+      this.transporter = transporter;
+      return transporter;
+    })();
+
+    try {
+      return await this.transporterInitPromise;
+    } finally {
+      this.transporterInitPromise = null;
+    }
   }
 
   async sendWelcome(props: SendWelcomeProps): Promise<void> {
@@ -114,12 +151,16 @@ export class NodemailerEmailSender implements IEmailSender {
 
   private async send(to: string, subject: string, html: string): Promise<void> {
     try {
-      await this.transporter.sendMail({ from: this.from, to, subject, html });
+      const transporter = await this.getTransporter();
+      await transporter.sendMail({ from: this.from, to, subject, html });
       this.logger.log(`Email sent to ${to}: ${subject}`);
     } catch (error: unknown) {
       this.logger.error(
         `Failed to send email to ${to}: ${error instanceof Error ? error.message : String(error)}`,
       );
+      // Si el transporter falló al crearse, lo invalida para reintentar
+      // en la próxima request (puede ser DNS transitorio).
+      this.transporter = null;
     }
   }
 }
