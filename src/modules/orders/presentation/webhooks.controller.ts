@@ -4,6 +4,7 @@ import {
   Headers,
   Logger,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,6 +16,23 @@ import { Public } from '@shared/presentation/decorators/public.decorator';
 import { ProcessPaymentNotificationUseCase } from '../application/use-cases/process-payment-notification.use-case';
 import { MercadoPagoNotificationDto } from '../application/dtos/mercado-pago-notification.dto';
 
+/**
+ * MercadoPago envía notificaciones con DOS formatos:
+ *
+ * 1. WebHook v1.0 (User-Agent "MercadoPago WebHook v1.0"):
+ *    POST /webhooks/mercadopago?data.id=X&type=payment
+ *    Body: { type: "payment", action: "...", data: { id: "X" }, ... }
+ *
+ * 2. Feed v2.0 (User-Agent "MercadoPago Feed v2.0", legacy IPN):
+ *    POST /webhooks/mercadopago?id=X&topic=payment
+ *    Body vacío. Todos los datos en query params.
+ *    `topic` puede ser "payment" o "merchant_order".
+ *
+ * Este controller normaliza ambos: lee `dataId` y `type` priorizando
+ * el body y cayendo a query params si no están. Solo procesa
+ * notificaciones de pago (topic/type === 'payment'); las de
+ * merchant_order se ack-ean sin procesar.
+ */
 @Controller('webhooks')
 export class WebhooksController {
   private readonly logger = new Logger(WebhooksController.name);
@@ -34,24 +52,33 @@ export class WebhooksController {
     }),
   )
   async handleMercadoPago(
+    @Query() query: Record<string, string | undefined>,
     @Headers('x-signature') signature: string | undefined,
     @Headers('x-request-id') requestId: string | undefined,
     @Body() dto: MercadoPagoNotificationDto,
   ) {
+    // Normalizar: body wins, query como fallback. MP usa `type` (nuevo) o
+    // `topic` (legacy) para el tipo, y `data.id` (nuevo) o `id` (legacy).
+    const rawType = dto?.type ?? query['type'] ?? query['topic'];
+    const rawDataId =
+      dto?.data?.id ??
+      query['data.id'] ??
+      (rawType === 'payment' ? query['id'] : undefined);
+
     this.logger.log(
-      `Webhook MP recibido: type=${dto?.type ?? '?'} action=${dto?.action ?? '?'} dataId=${dto?.data?.id ?? '?'} requestId=${requestId ?? '?'}`,
+      `Webhook MP recibido: type=${rawType ?? '?'} dataId=${rawDataId ?? '?'} requestId=${requestId ?? '?'}`,
     );
+
     try {
-      // Solo procesamos notificaciones de pago — eventos de prueba
-      // (stop_delivery_op_wh, fraud alerts, etc.) se ack sin firma.
-      if (dto.type !== 'payment' || !dto.data?.id) {
+      // merchant_order y otros eventos: ack sin procesar.
+      if (rawType !== 'payment' || !rawDataId) {
         this.logger.log(
-          `Webhook ignorado: type=${dto?.type ?? '?'} — no es un pago`,
+          `Webhook ignorado: type=${rawType ?? '?'} — no es payment`,
         );
         return BaseResponse.ok(null);
       }
 
-      const dataId = String(dto.data.id);
+      const dataId = String(rawDataId);
 
       // Verificación de firma HMAC — obligatoria si hay secret configurado
       const hasSecret =
