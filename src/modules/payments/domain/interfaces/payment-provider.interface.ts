@@ -14,7 +14,10 @@ export interface IPaymentProvider {
     id: string;
     orderNumber: string;
     items: Array<{ title: string; quantity: number; unitPrice: number }>;
+    /** Total a cobrar en centavos (incluye items + shippingCost). */
     total: number;
+    /** Costo de envío en centavos. Se envía como shipments.cost. */
+    shippingCost?: number;
     payerEmail: string;
   }): Promise<{ preferenceId: string; paymentUrl: string }>;
 

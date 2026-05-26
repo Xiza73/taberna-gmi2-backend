@@ -296,6 +296,7 @@ export class CreateOrderUseCase {
             unitPrice: i.unitPrice,
           })),
           total: result.order.total,
+          shippingCost: result.order.shippingCost,
           payerEmail: result.order.customerEmail,
         });
         paymentUrl = preference.paymentUrl;

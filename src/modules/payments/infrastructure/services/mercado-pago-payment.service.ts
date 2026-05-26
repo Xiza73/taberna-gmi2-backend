@@ -27,10 +27,19 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
     orderNumber: string;
     items: Array<{ title: string; quantity: number; unitPrice: number }>;
     total: number;
+    shippingCost?: number;
     payerEmail: string;
   }): Promise<{ preferenceId: string; paymentUrl: string }> {
     try {
-      const body = {
+      // MercadoPago acepta `shipments.cost` (en la misma moneda que items)
+      // y lo suma al total mostrado al comprador. Usamos mode 'not_specified'
+      // porque no integramos con MercadoEnvíos — el envío lo manejamos nosotros.
+      const shippingCostUnits =
+        order.shippingCost && order.shippingCost > 0
+          ? order.shippingCost / 100
+          : 0;
+
+      const body: Record<string, unknown> = {
         items: order.items.map((item) => ({
           title: item.title,
           quantity: item.quantity,
@@ -59,6 +68,13 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
           '',
         ),
       };
+
+      if (shippingCostUnits > 0) {
+        body.shipments = {
+          cost: shippingCostUnits,
+          mode: 'not_specified',
+        };
+      }
 
       const response = await fetch(`${this.baseUrl}/checkout/preferences`, {
         method: 'POST',

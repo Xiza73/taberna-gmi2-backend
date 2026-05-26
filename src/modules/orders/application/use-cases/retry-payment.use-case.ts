@@ -53,6 +53,7 @@ export class RetryPaymentUseCase {
         unitPrice: i.unitPrice,
       })),
       total: result.order.total,
+      shippingCost: result.order.shippingCost,
       payerEmail: result.order.customerEmail,
     });
 

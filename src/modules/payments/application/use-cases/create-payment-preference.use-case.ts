@@ -25,6 +25,7 @@ export class CreatePaymentPreferenceUseCase {
     orderNumber: string;
     items: Array<{ title: string; quantity: number; unitPrice: number }>;
     total: number;
+    shippingCost?: number;
     payerEmail: string;
   }): Promise<{ preferenceId: string; paymentUrl: string }> {
     const { preferenceId, paymentUrl } =
