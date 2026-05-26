@@ -53,8 +53,31 @@ export class PaymentRepository implements IPaymentRepository {
       return PaymentMapper.toDomain(saved);
     }
 
-    const saved = await this.repo.save(orm);
-    return PaymentMapper.toDomain(saved);
+    // Race condition: MP envía múltiples webhooks por el mismo payment_id
+    // (uno por protocolo: WebHook v1.0 y Feed v2.0) casi simultáneamente.
+    // Si dos llegan en paralelo, ambos pasan el findOne anterior sin ver
+    // el otro, ambos intentan INSERT y el segundo crashea por unique
+    // constraint en uq_payments_external_id. Capturamos ese caso y
+    // tratamos como "ya procesado" (re-query del que ganó la carrera).
+    try {
+      const saved = await this.repo.save(orm);
+      return PaymentMapper.toDomain(saved);
+    } catch (err: unknown) {
+      const isDuplicate =
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        (err as { code?: string }).code === '23505';
+      if (isDuplicate && orm.externalId) {
+        const winner = await this.repo.findOne({
+          where: { externalId: orm.externalId },
+        });
+        if (winner) {
+          return PaymentMapper.toDomain(winner);
+        }
+      }
+      throw err;
+    }
   }
 
   async delete(id: string): Promise<void> {
