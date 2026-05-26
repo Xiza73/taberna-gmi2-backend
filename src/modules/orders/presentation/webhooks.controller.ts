@@ -5,8 +5,6 @@ import {
   Logger,
   Post,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
@@ -14,7 +12,6 @@ import { BaseResponse } from '@shared/application/dtos/base-response.dto';
 import { Public } from '@shared/presentation/decorators/public.decorator';
 
 import { ProcessPaymentNotificationUseCase } from '../application/use-cases/process-payment-notification.use-case';
-import { MercadoPagoNotificationDto } from '../application/dtos/mercado-pago-notification.dto';
 
 /**
  * MercadoPago envía notificaciones con DOS formatos:
@@ -44,24 +41,30 @@ export class WebhooksController {
   @Post('mercadopago')
   @Public()
   @Throttle({ default: { ttl: 60000, limit: 100 } })
-  @UsePipes(
-    new ValidationPipe({
-      whitelist: false,
-      transform: true,
-      forbidNonWhitelisted: false,
-    }),
-  )
   async handleMercadoPago(
     @Query() query: Record<string, string | undefined>,
     @Headers('x-signature') signature: string | undefined,
     @Headers('x-request-id') requestId: string | undefined,
-    @Body() dto: MercadoPagoNotificationDto,
+    // NOTA: usamos `Record<string, any>` en vez de un DTO con class-validator
+    // para BYPASEAR el ValidationPipe global (que tiene
+    // forbidNonWhitelisted: true). MP envía muchos campos no declarables
+    // (live_mode, version, user_id, api_version, etc.) que harían fallar
+    // cualquier DTO estricto con 400. Con `Object` como metatype, el pipe
+    // skipea validación y nos pasa el body crudo.
+    @Body() body: Record<string, any> = {},
   ) {
     // Normalizar: body wins, query como fallback. MP usa `type` (nuevo) o
     // `topic` (legacy) para el tipo, y `data.id` (nuevo) o `id` (legacy).
-    const rawType = dto?.type ?? query['type'] ?? query['topic'];
+    const bodyType = typeof body?.type === 'string' ? body.type : undefined;
+    const bodyDataId =
+      body?.data && typeof body.data === 'object'
+        ? (body.data as Record<string, unknown>).id
+        : undefined;
+    const rawType = bodyType ?? query['type'] ?? query['topic'];
     const rawDataId =
-      dto?.data?.id ??
+      (typeof bodyDataId === 'string' || typeof bodyDataId === 'number'
+        ? String(bodyDataId)
+        : undefined) ??
       query['data.id'] ??
       (rawType === 'payment' ? query['id'] : undefined);
 
