@@ -5,10 +5,8 @@ import {
   Logger,
   Post,
   Query,
-  Req,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { type Request } from 'express';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';
 import { Public } from '@shared/presentation/decorators/public.decorator';
@@ -44,29 +42,17 @@ export class WebhooksController {
   @Public()
   @Throttle({ default: { ttl: 60000, limit: 100 } })
   async handleMercadoPago(
-    @Req() req: Request,
     @Query() query: Record<string, string | undefined>,
     @Headers('x-signature') signature: string | undefined,
     @Headers('x-request-id') requestId: string | undefined,
+    @Headers('user-agent') userAgent: string | undefined,
     // NOTA: usamos `Record<string, any>` en vez de un DTO con class-validator
     // para BYPASEAR el ValidationPipe global (que tiene
     // forbidNonWhitelisted: true). MP envía muchos campos no declarables
     // (live_mode, version, user_id, api_version, etc.) que harían fallar
-    // cualquier DTO estricto con 400. Con `Object` como metatype, el pipe
-    // skipea validación y nos pasa el body crudo.
+    // cualquier DTO estricto con 400.
     @Body() body: Record<string, any> = {},
   ) {
-    // [DEBUG TEMPORAL] Dump TODOS los headers que MP envía para diagnosticar
-    // si Railway está manipulando x-request-id u otro header crítico para
-    // la verificación de firma. Sacar este log cuando se resuelva la firma.
-    const allHeaders = Object.fromEntries(
-      Object.entries(req.headers).filter(([k]) =>
-        k.toLowerCase().startsWith('x-') || k.toLowerCase() === 'user-agent',
-      ),
-    );
-    this.logger.log(
-      `[DEBUG] Headers entrantes: ${JSON.stringify(allHeaders)}`,
-    );
     // Normalizar: body wins, query como fallback. MP usa `type` (nuevo) o
     // `topic` (legacy) para el tipo, y `data.id` (nuevo) o `id` (legacy).
     const bodyType = typeof body?.type === 'string' ? body.type : undefined;
@@ -97,11 +83,16 @@ export class WebhooksController {
 
       const dataId = String(rawDataId);
 
-      // Verificación de firma HMAC — obligatoria si hay secret configurado
+      // MP envía 2 tipos de notificaciones por cada pago:
+      //   - WebHook v1.0 (user-agent "MercadoPago WebHook v1.0"): firma validable
+      //   - IPN legacy (user-agent "MercadoPago Feed v2.0"): NO valida firma por diseño
+      // Solo verificamos firma para WebHook v1.0. Los IPN se procesan sin firma
+      // (son idempotentes con el WebHook — duplicate key se maneja en repo).
+      const isLegacyIpn = (userAgent ?? '').includes('Feed v2.0');
       const hasSecret =
         this.processPaymentNotificationUseCase.hasWebhookSecret();
 
-      if (hasSecret) {
+      if (hasSecret && !isLegacyIpn) {
         const valid = this.processPaymentNotificationUseCase.verifySignature(
           dataId,
           requestId,
@@ -115,6 +106,10 @@ export class WebhooksController {
           return BaseResponse.ok(null);
         }
         this.logger.log(`Firma webhook válida para payment ${dataId}`);
+      } else if (hasSecret && isLegacyIpn) {
+        this.logger.log(
+          `Webhook legacy IPN (Feed v2.0) — skipping signature verification (no soportada por MP para IPN)`,
+        );
       } else {
         this.logger.warn(
           'MERCADOPAGO_WEBHOOK_SECRET no configurado — procesando sin verificar firma',
