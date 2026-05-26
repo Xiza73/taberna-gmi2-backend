@@ -31,21 +31,29 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
     payerEmail: string;
   }): Promise<{ preferenceId: string; paymentUrl: string }> {
     try {
-      // MercadoPago acepta `shipments.cost` (en la misma moneda que items)
-      // y lo suma al total mostrado al comprador. Usamos mode 'not_specified'
-      // porque no integramos con MercadoEnvíos — el envío lo manejamos nosotros.
-      const shippingCostUnits =
-        order.shippingCost && order.shippingCost > 0
-          ? order.shippingCost / 100
-          : 0;
+      // Tip MercadoPago: `shipments.cost` con mode='not_specified' NO se
+      // suma al total real (queda como metadata). Para que el comprador
+      // pague exactamente order.total (productos + envío), agregamos un
+      // ítem "Envío" extra con quantity=1 y unit_price=shippingCost.
+      // Así MP lo ve como un item más y lo cobra sí o sí.
+      const items = order.items.map((item) => ({
+        title: item.title,
+        quantity: item.quantity,
+        unit_price: item.unitPrice / 100,
+        currency_id: 'PEN',
+      }));
+
+      if (order.shippingCost && order.shippingCost > 0) {
+        items.push({
+          title: 'Envío',
+          quantity: 1,
+          unit_price: order.shippingCost / 100,
+          currency_id: 'PEN',
+        });
+      }
 
       const body: Record<string, unknown> = {
-        items: order.items.map((item) => ({
-          title: item.title,
-          quantity: item.quantity,
-          unit_price: item.unitPrice / 100,
-          currency_id: 'PEN',
-        })),
+        items,
         payer: { email: order.payerEmail },
         external_reference: order.id,
         back_urls: {
@@ -68,13 +76,6 @@ export class MercadoPagoPaymentService implements IPaymentProvider {
           '',
         ),
       };
-
-      if (shippingCostUnits > 0) {
-        body.shipments = {
-          cost: shippingCostUnits,
-          mode: 'not_specified',
-        };
-      }
 
       const response = await fetch(`${this.baseUrl}/checkout/preferences`, {
         method: 'POST',
