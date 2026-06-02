@@ -50,4 +50,3 @@ su dashboard. No es un modulo separado — se configura vía `nestjs-pino` en
 | GET | `/health` | @Public | Health check (DB) |
 
 **Health check**: `@nestjs/terminus` — verifica que PostgreSQL esté operativo.
-</content>

@@ -12,9 +12,11 @@ Tolerante a errores de tipeo, con sugerencias y relevancia. **Sin Elasticsearch*
 
 **Query params**: `q` (texto), `categoryId`, `minPrice`, `maxPrice`, `sortBy`, `page`, `limit`
 
-**Indexado (columna generada, sin sync manual):**
-La tabla `products` tiene una columna `search_vector tsvector GENERATED ALWAYS
-AS (...) STORED` que Postgres recalcula sola en cada INSERT/UPDATE a partir de:
+**Indexado (columna `search_vector` mantenida por trigger, sin sync manual):**
+La tabla `products` tiene una columna `search_vector tsvector` que un trigger
+`BEFORE INSERT OR UPDATE` recalcula automáticamente a partir de:
+(no se usa columna `GENERATED` porque `array_to_string` es STABLE y Postgres
+la rechaza en expresiones generadas — "generation expression is not immutable")
 
 ```
 setweight(to_tsvector('spanish', name),               'A') ||  -- nombre (peso alto)
@@ -23,8 +25,8 @@ setweight(to_tsvector('spanish', description),        'C')     -- descripción
 ```
 
 Índices: GIN sobre `search_vector` (full-text) + GIN `gin_trgm_ops` sobre `name`
-(typos/autocomplete). No hay reindex ni job de sincronización: al guardar el
-producto, el vector queda consistente.
+(typos/autocomplete). No hay reindex ni job de sincronización: el trigger
+mantiene el vector consistente al guardar el producto.
 
 **Capacidades de busqueda:**
 | Feature | Como funciona |
@@ -44,9 +46,8 @@ producto, el vector queda consistente.
 - `SearchModule` importa `ProductsModule` (sin `forwardRef` — ya no hay
   dependencia circular) para acceder a `PRODUCT_REPOSITORY` en el fallback.
 - **Ya no existe** `IProductSearchSync` / `PRODUCT_SEARCH_SYNC` ni el endpoint
-  `POST /admin/search/reindex`: la columna generada vuelve innecesaria toda
-  sincronización.
+  `POST /admin/search/reindex`: el trigger vuelve innecesaria toda
+  sincronización a nivel de aplicación.
 
 **Fallback**: Si la query full-text falla por cualquier motivo, la búsqueda cae
 a una consulta básica de repositorio (`PRODUCT_REPOSITORY.findAll`).
-</content>

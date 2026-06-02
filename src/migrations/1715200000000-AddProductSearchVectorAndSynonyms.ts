@@ -13,18 +13,47 @@ export class AddProductSearchVectorAndSynonyms1715200000000 implements Migration
       ADD COLUMN IF NOT EXISTS synonyms text[] NOT NULL DEFAULT '{}'
     `);
 
-    // Columna generada STORED: Postgres la recalcula sola en cada
-    // INSERT/UPDATE a partir de name + synonyms + description. Cero sync
-    // manual, búsqueda siempre consistente. La expresión es 100% IMMUTABLE
-    // (to_tsvector con config constante 'spanish', setweight, array_to_string).
+    // Columna tsvector mantenida por TRIGGER (no GENERATED): la expresión
+    // usa array_to_string(), que Postgres marca STABLE (no IMMUTABLE) y por
+    // eso rechaza en una columna GENERATED ("generation expression is not
+    // immutable"). Un trigger BEFORE no tiene esa restricción.
     await queryRunner.query(`
       ALTER TABLE products
       ADD COLUMN IF NOT EXISTS search_vector tsvector
-      GENERATED ALWAYS AS (
+    `);
+
+    // Arma el vector: nombre (peso A) + sinónimos (B) + descripción (C).
+    await queryRunner.query(`
+      CREATE OR REPLACE FUNCTION products_search_vector_update()
+      RETURNS trigger
+      LANGUAGE plpgsql
+      AS $$
+      BEGIN
+        NEW.search_vector :=
+          setweight(to_tsvector('spanish', coalesce(NEW.name, '')), 'A') ||
+          setweight(to_tsvector('spanish', coalesce(array_to_string(NEW.synonyms, ' '), '')), 'B') ||
+          setweight(to_tsvector('spanish', coalesce(NEW.description, '')), 'C');
+        RETURN NEW;
+      END;
+      $$
+    `);
+
+    // Recalcula cuando cambia nombre, descripción o sinónimos.
+    await queryRunner.query(
+      `DROP TRIGGER IF EXISTS products_search_vector_trigger ON products`,
+    );
+    await queryRunner.query(`
+      CREATE TRIGGER products_search_vector_trigger
+      BEFORE INSERT OR UPDATE OF name, description, synonyms ON products
+      FOR EACH ROW EXECUTE FUNCTION products_search_vector_update()
+    `);
+
+    // Backfill de filas existentes (el trigger solo corre en cambios futuros).
+    await queryRunner.query(`
+      UPDATE products SET search_vector =
         setweight(to_tsvector('spanish', coalesce(name, '')), 'A') ||
-        setweight(to_tsvector('spanish', array_to_string(synonyms, ' ')), 'B') ||
+        setweight(to_tsvector('spanish', coalesce(array_to_string(synonyms, ' '), '')), 'B') ||
         setweight(to_tsvector('spanish', coalesce(description, '')), 'C')
-      ) STORED
     `);
 
     // GIN sobre el tsvector → full-text rápido.
@@ -43,6 +72,12 @@ export class AddProductSearchVectorAndSynonyms1715200000000 implements Migration
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP INDEX IF EXISTS idx_products_name_trgm`);
     await queryRunner.query(`DROP INDEX IF EXISTS idx_products_search_vector`);
+    await queryRunner.query(
+      `DROP TRIGGER IF EXISTS products_search_vector_trigger ON products`,
+    );
+    await queryRunner.query(
+      `DROP FUNCTION IF EXISTS products_search_vector_update()`,
+    );
     await queryRunner.query(
       `ALTER TABLE products DROP COLUMN IF EXISTS search_vector`,
     );
