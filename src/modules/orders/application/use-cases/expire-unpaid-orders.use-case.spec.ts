@@ -19,7 +19,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { ExpireUnpaidOrdersUseCase } from './expire-unpaid-orders.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -78,7 +80,11 @@ function buildOrder(
   });
 }
 
-function buildItem(orderId: string, productId: string, quantity: number): OrderItem {
+function buildItem(
+  orderId: string,
+  productId: string,
+  quantity: number,
+): OrderItem {
   return OrderItem.reconstitute({
     id: `item-${productId}`,
     orderId,
@@ -130,11 +136,13 @@ describe('ExpireUnpaidOrdersUseCase', () => {
       'ORDER_EXPIRATION_HOURS',
       2,
     );
-    const thresholdArg = mockOrderRepo.findPendingExpired.mock.calls[0][0];
+    const thresholdArg = (
+      mockOrderRepo.findPendingExpired.mock.calls[0] as [Date]
+    )[0];
     // threshold should be ~ now - 2h
     const now = Date.now();
     const expected = now - 2 * 60 * 60 * 1000;
-    expect(Math.abs((thresholdArg as Date).getTime() - expected)).toBeLessThan(1500);
+    expect(Math.abs(thresholdArg.getTime() - expected)).toBeLessThan(1500);
   });
 
   it('cancels each order, restores stock (sorted ASC), and saves event', async () => {
@@ -157,8 +165,12 @@ describe('ExpireUnpaidOrdersUseCase', () => {
       OrderStatus.CANCELLED,
     );
     expect(mockOrderRepo.atomicStockRestore).toHaveBeenCalledTimes(2);
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[0][0]).toBe('aaaa');
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[1][0]).toBe('bbbb');
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[0] as [string, number])[0],
+    ).toBe('aaaa');
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[1] as [string, number])[0],
+    ).toBe('bbbb');
     expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
   });
 

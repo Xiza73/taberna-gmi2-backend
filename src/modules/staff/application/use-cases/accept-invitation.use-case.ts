@@ -4,13 +4,26 @@ import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-import { DomainConflictException, DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index';
+import {
+  DomainConflictException,
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { STAFF_INVITATION_REPOSITORY, type IStaffInvitationRepository } from '../../domain/interfaces/staff-invitation-repository.interface';
-import { STAFF_MEMBER_REPOSITORY, type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface';
+import {
+  STAFF_INVITATION_REPOSITORY,
+  type IStaffInvitationRepository,
+} from '../../domain/interfaces/staff-invitation-repository.interface';
+import {
+  STAFF_MEMBER_REPOSITORY,
+  type IStaffMemberRepository,
+} from '../../domain/interfaces/staff-member-repository.interface';
 import { StaffMember } from '../../domain/entities/staff-member.entity';
-import { REFRESH_TOKEN_REPOSITORY, type IRefreshTokenRepository } from '@modules/auth/domain/interfaces/refresh-token-repository.interface';
+import {
+  REFRESH_TOKEN_REPOSITORY,
+  type IRefreshTokenRepository,
+} from '@modules/auth/domain/interfaces/refresh-token-repository.interface';
 import { RefreshToken } from '@modules/auth/domain/entities/refresh-token.entity';
 import { type AcceptInvitationDto } from '../dtos/accept-invitation.dto';
 import { AuthTokensResponseDto } from '@modules/auth/application/dtos/auth-tokens-response.dto';
@@ -66,9 +79,13 @@ export class AcceptInvitationUseCase {
     }
 
     // Check email not already used
-    const existingStaff = await this.staffMemberRepository.findByEmail(invitation.email);
+    const existingStaff = await this.staffMemberRepository.findByEmail(
+      invitation.email,
+    );
     if (existingStaff) {
-      throw new DomainConflictException(ErrorMessages.STAFF_EMAIL_ALREADY_EXISTS);
+      throw new DomainConflictException(
+        ErrorMessages.STAFF_EMAIL_ALREADY_EXISTS,
+      );
     }
 
     // Hash password
@@ -111,12 +128,14 @@ export class AcceptInvitationUseCase {
       familyId: randomUUID(),
       expiresAt: new Date(
         Date.now() +
-          this.configService.get<number>('JWT_REFRESH_EXPIRATION', 604800) * 1000,
+          this.configService.get<number>('JWT_REFRESH_EXPIRATION', 604800) *
+            1000,
       ),
       subjectType: 'staff',
     });
 
-    const savedRefreshToken = await this.refreshTokenRepository.save(refreshToken);
+    const savedRefreshToken =
+      await this.refreshTokenRepository.save(refreshToken);
     const compositeRefresh = `${savedRefreshToken.id}.${rawRefresh}`;
 
     return new AuthTokensResponseDto(accessToken, compositeRefresh);

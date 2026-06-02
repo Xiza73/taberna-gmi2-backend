@@ -44,7 +44,10 @@ export class CashRegister extends BaseEntity {
     this._notes = notes;
   }
 
-  static create(props: { staffId: string; initialAmount: number }): CashRegister {
+  static create(props: {
+    staffId: string;
+    initialAmount: number;
+  }): CashRegister {
     if (!Number.isInteger(props.initialAmount) || props.initialAmount < 0) {
       throw new DomainException(ErrorMessages.POS_CASH_REGISTER_INVALID_AMOUNT);
     }

@@ -92,12 +92,16 @@ describe('ListPosOrdersUseCase', () => {
 
     await useCase.execute({ page: 1, limit: 20 });
 
-    const callArg = mockOrderRepo.findAll.mock.calls[0][0] as {
-      channel?: string;
-      channelIn?: string[];
-    };
+    const callArg = (
+      mockOrderRepo.findAll.mock.calls[0] as [
+        { channel?: string; channelIn?: string[] },
+      ]
+    )[0];
     expect(callArg.channel).toBeUndefined();
-    expect(callArg.channelIn).toEqual([OrderChannel.POS, OrderChannel.WHATSAPP]);
+    expect(callArg.channelIn).toEqual([
+      OrderChannel.POS,
+      OrderChannel.WHATSAPP,
+    ]);
   });
 
   it('should pass channel filter when specified', async () => {
@@ -105,10 +109,11 @@ describe('ListPosOrdersUseCase', () => {
 
     await useCase.execute({ page: 1, limit: 20, channel: OrderChannel.POS });
 
-    const callArg = mockOrderRepo.findAll.mock.calls[0][0] as {
-      channel?: string;
-      channelIn?: string[];
-    };
+    const callArg = (
+      mockOrderRepo.findAll.mock.calls[0] as [
+        { channel?: string; channelIn?: string[] },
+      ]
+    )[0];
     expect(callArg.channel).toBe(OrderChannel.POS);
     expect(callArg.channelIn).toBeUndefined();
   });
@@ -118,9 +123,9 @@ describe('ListPosOrdersUseCase', () => {
 
     await useCase.execute({ page: 1, limit: 20, sortBy: 'createdAt' });
 
-    const callArg = mockOrderRepo.findAll.mock.calls[0][0] as {
-      sortBy?: string;
-    };
+    const callArg = (
+      mockOrderRepo.findAll.mock.calls[0] as [{ sortBy?: string }]
+    )[0];
     expect(callArg.sortBy).toBeUndefined();
   });
 
@@ -129,9 +134,9 @@ describe('ListPosOrdersUseCase', () => {
 
     await useCase.execute({ page: 1, limit: 20, sortBy: 'total' });
 
-    const callArg = mockOrderRepo.findAll.mock.calls[0][0] as {
-      sortBy?: string;
-    };
+    const callArg = (
+      mockOrderRepo.findAll.mock.calls[0] as [{ sortBy?: string }]
+    )[0];
     expect(callArg.sortBy).toBe('total');
   });
 
@@ -164,10 +169,9 @@ describe('ListPosOrdersUseCase', () => {
 
     const result = await useCase.execute({});
 
-    const callArg = mockOrderRepo.findAll.mock.calls[0][0] as {
-      page: number;
-      limit: number;
-    };
+    const callArg = (
+      mockOrderRepo.findAll.mock.calls[0] as [{ page: number; limit: number }]
+    )[0];
     expect(callArg.page).toBe(1);
     expect(callArg.limit).toBe(20);
     expect(result.page).toBe(1);

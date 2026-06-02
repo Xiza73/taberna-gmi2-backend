@@ -98,7 +98,9 @@ describe('GetCurrentCashRegisterUseCase', () => {
 
     const result = await useCase.execute('staff-1');
 
-    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith('staff-1');
+    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith(
+      'staff-1',
+    );
     expect(mockCashMovementRepo.findByCashRegister).toHaveBeenCalledWith(
       REGISTER_ID,
     );

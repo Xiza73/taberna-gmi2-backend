@@ -15,7 +15,9 @@ export class UpdateStoreSettingsUseCase {
     private readonly repository: IStoreSettingsRepository,
   ) {}
 
-  async execute(dto: UpdateStoreSettingsDto): Promise<StoreSettingsResponseDto> {
+  async execute(
+    dto: UpdateStoreSettingsDto,
+  ): Promise<StoreSettingsResponseDto> {
     let settings = await this.repository.findSingleton();
     if (!settings) {
       settings = StoreSettings.createDefault();

@@ -1,8 +1,6 @@
 import { type MigrationInterface, type QueryRunner } from 'typeorm';
 
-export class AddPaymentChannelConstraints1715000000000
-  implements MigrationInterface
-{
+export class AddPaymentChannelConstraints1715000000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE orders DROP CONSTRAINT IF EXISTS chk_orders_payment_method`,

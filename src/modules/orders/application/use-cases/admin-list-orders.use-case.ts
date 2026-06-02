@@ -45,9 +45,7 @@ export class AdminListOrdersUseCase {
     // staffIds únicos de la página actual.
     const staffIds = Array.from(
       new Set(
-        items
-          .map((o) => o.staffId)
-          .filter((id): id is string => id !== null),
+        items.map((o) => o.staffId).filter((id): id is string => id !== null),
       ),
     );
     const staffMembers = await this.staffRepository.findByIds(staffIds);
@@ -59,7 +57,9 @@ export class AdminListOrdersUseCase {
       items.map(
         (o) =>
           new OrderResponseDto(o, {
-            staffName: o.staffId ? staffNameById.get(o.staffId) ?? null : null,
+            staffName: o.staffId
+              ? (staffNameById.get(o.staffId) ?? null)
+              : null,
           }),
       ),
       total,

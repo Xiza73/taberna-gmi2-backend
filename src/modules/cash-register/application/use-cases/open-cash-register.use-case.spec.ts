@@ -53,14 +53,18 @@ describe('OpenCashRegisterUseCase', () => {
   it('should open a cash register when none is open for the staff', async () => {
     mockCashRegisterRepo.findOpenByStaff.mockResolvedValue(null);
     mockCashRegisterRepo.save.mockImplementation(
-      async (entity: CashRegister) => entity,
+      (entity: CashRegister): Promise<CashRegister> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', { initialAmount: 50000 });
 
-    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith('staff-1');
+    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith(
+      'staff-1',
+    );
     expect(mockCashRegisterRepo.save).toHaveBeenCalledTimes(1);
-    const savedArg = mockCashRegisterRepo.save.mock.calls[0][0] as CashRegister;
+    const savedArg = (
+      mockCashRegisterRepo.save.mock.calls[0] as [CashRegister]
+    )[0];
     expect(savedArg.staffId).toBe('staff-1');
     expect(savedArg.initialAmount).toBe(50000);
     expect(savedArg.status).toBe(CashRegisterStatus.OPEN);

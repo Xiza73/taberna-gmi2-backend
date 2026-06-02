@@ -24,7 +24,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { CancelOrderUseCase } from './cancel-order.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -193,12 +195,12 @@ describe('CancelOrderUseCase', () => {
     await useCase.execute(OWNER_ID, ORDER_ID);
 
     expect(mockOrderRepo.atomicStockRestore).toHaveBeenCalledTimes(2);
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[0][0]).toBe(
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    );
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[1][0]).toBe(
-      'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    );
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[0] as [string, number])[0],
+    ).toBe('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[1] as [string, number])[0],
+    ).toBe('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
   });
 
   it('decrements coupon uses when order had a coupon', async () => {
@@ -231,7 +233,11 @@ describe('CancelOrderUseCase', () => {
     await useCase.execute(OWNER_ID, ORDER_ID);
 
     expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0];
+    const eventArg = (
+      mockOrderRepo.saveEvent.mock.calls[0] as [
+        { orderId: string; status: OrderStatus },
+      ]
+    )[0];
     expect(eventArg.orderId).toBe(ORDER_ID);
     expect(eventArg.status).toBe(OrderStatus.CANCELLED);
   });

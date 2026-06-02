@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index';
+import {
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
@@ -54,14 +57,18 @@ describe('RevokeInvitationUseCase', () => {
   it('should revoke invitation successfully', async () => {
     const invitation = createTestInvitation();
     mockInvitationRepo.findById.mockResolvedValue(invitation);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
 
     await useCase.execute(invitation.id);
 
     expect(mockInvitationRepo.findById).toHaveBeenCalledWith(invitation.id);
     expect(mockInvitationRepo.save).toHaveBeenCalledTimes(1);
 
-    const savedInvitation = mockInvitationRepo.save.mock.calls[0][0] as StaffInvitation;
+    const savedInvitation = (
+      mockInvitationRepo.save.mock.calls[0] as [StaffInvitation]
+    )[0];
     expect(savedInvitation.isRevoked).toBe(true);
   });
 

@@ -1,8 +1,6 @@
 import { type MigrationInterface, type QueryRunner } from 'typeorm';
 
-export class AddOrderChannelAndNullableAddress1714600000000
-  implements MigrationInterface
-{
+export class AddOrderChannelAndNullableAddress1714600000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       DO $$ BEGIN

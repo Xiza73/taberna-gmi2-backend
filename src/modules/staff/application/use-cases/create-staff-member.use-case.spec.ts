@@ -76,14 +76,16 @@ describe('CreateStaffMemberUseCase', () => {
     };
 
     mockRepository.findByEmail.mockResolvedValue(null);
-    mockRepository.save.mockImplementation(async (staff: StaffMember) => staff);
+    mockRepository.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
 
     const result = await useCase.execute(dto);
 
     expect(mockRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    const savedStaff = mockRepository.save.mock.calls[0][0] as StaffMember;
+    const savedStaff = (mockRepository.save.mock.calls[0] as [StaffMember])[0];
     expect(savedStaff.role).toBe(StaffRole.USER);
 
     expect(result).toBeInstanceOf(StaffMemberResponseDto);
@@ -102,11 +104,13 @@ describe('CreateStaffMemberUseCase', () => {
     };
 
     mockRepository.findByEmail.mockResolvedValue(null);
-    mockRepository.save.mockImplementation(async (staff: StaffMember) => staff);
+    mockRepository.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
 
     const result = await useCase.execute(dto);
 
-    const savedStaff = mockRepository.save.mock.calls[0][0] as StaffMember;
+    const savedStaff = (mockRepository.save.mock.calls[0] as [StaffMember])[0];
     expect(savedStaff.role).toBe(StaffRole.ADMIN);
     expect(result.role).toBe(StaffRole.ADMIN);
   });
@@ -121,9 +125,7 @@ describe('CreateStaffMemberUseCase', () => {
     const existingStaff = createTestStaff({ email: 'existing@example.com' });
     mockRepository.findByEmail.mockResolvedValue(existingStaff);
 
-    await expect(useCase.execute(dto)).rejects.toThrow(
-      DomainConflictException,
-    );
+    await expect(useCase.execute(dto)).rejects.toThrow(DomainConflictException);
     await expect(useCase.execute(dto)).rejects.toThrow(
       ErrorMessages.EMAIL_ALREADY_EXISTS,
     );
@@ -138,13 +140,15 @@ describe('CreateStaffMemberUseCase', () => {
     };
 
     mockRepository.findByEmail.mockResolvedValue(null);
-    mockRepository.save.mockImplementation(async (staff: StaffMember) => staff);
+    mockRepository.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
 
     await useCase.execute(dto);
 
     expect(hash).toHaveBeenCalledWith('plainPassword123', 12);
 
-    const savedStaff = mockRepository.save.mock.calls[0][0] as StaffMember;
+    const savedStaff = (mockRepository.save.mock.calls[0] as [StaffMember])[0];
     expect(savedStaff.password).toBe('hashedPassword');
     expect(savedStaff.password).not.toBe('plainPassword123');
   });
@@ -158,7 +162,9 @@ describe('CreateStaffMemberUseCase', () => {
     };
 
     mockRepository.findByEmail.mockResolvedValue(null);
-    mockRepository.save.mockImplementation(async (staff: StaffMember) => staff);
+    mockRepository.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
 
     const result = await useCase.execute(dto);
 

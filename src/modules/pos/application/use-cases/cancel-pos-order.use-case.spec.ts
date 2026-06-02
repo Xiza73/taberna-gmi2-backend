@@ -24,7 +24,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { CancelPosOrderUseCase } from './cancel-pos-order.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -152,7 +154,10 @@ describe('CancelPosOrderUseCase', () => {
 
   it('should throw POS_ORDER_NOT_POS when channel is online', async () => {
     const orderId = '11111111-1111-1111-1111-111111111111';
-    const order = createTestOrder({ id: orderId, channel: OrderChannel.ONLINE });
+    const order = createTestOrder({
+      id: orderId,
+      channel: OrderChannel.ONLINE,
+    });
     mockOrderRepo.findById.mockResolvedValue(order);
 
     await expect(
@@ -198,14 +203,18 @@ describe('CancelPosOrderUseCase', () => {
     await useCase.execute(createTestStaff(), orderId, { reason: 'cancel' });
 
     expect(mockOrderRepo.atomicStockRestore).toHaveBeenCalledTimes(2);
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[0][0]).toBe(
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    );
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[0][1]).toBe(2);
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[1][0]).toBe(
-      'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    );
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[1][1]).toBe(3);
+    const restoreCall0 = mockOrderRepo.atomicStockRestore.mock.calls[0] as [
+      string,
+      number,
+    ];
+    const restoreCall1 = mockOrderRepo.atomicStockRestore.mock.calls[1] as [
+      string,
+      number,
+    ];
+    expect(restoreCall0[0]).toBe('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+    expect(restoreCall0[1]).toBe(2);
+    expect(restoreCall1[0]).toBe('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+    expect(restoreCall1[1]).toBe(3);
   });
 
   it('should decrement coupon uses when order had a coupon', async () => {
@@ -245,7 +254,7 @@ describe('CancelPosOrderUseCase', () => {
     await useCase.execute(staff, orderId, { reason: 'cliente arrepentido' });
 
     expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.orderId).toBe(orderId);
     expect(eventArg.status).toBe(OrderStatus.CANCELLED);
     expect(eventArg.description).toBe(

@@ -104,7 +104,7 @@ describe('CloseCashRegisterUseCase', () => {
       buildMovement(CashMovementType.CASH_OUT, 1500),
     ]);
     mockCashRegisterRepo.save.mockImplementation(
-      async (entity: CashRegister) => entity,
+      (entity: CashRegister): Promise<CashRegister> => Promise.resolve(entity),
     );
 
     // expected = 10000 + 50000 + (5000+2500) - 1500 = 66000
@@ -134,7 +134,7 @@ describe('CloseCashRegisterUseCase', () => {
     mockOrderRepo.sumCashSalesByStaffBetween.mockResolvedValue(0);
     mockCashMovementRepo.findByCashRegister.mockResolvedValue([]);
     mockCashRegisterRepo.save.mockImplementation(
-      async (entity: CashRegister) => entity,
+      (entity: CashRegister): Promise<CashRegister> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', { closingAmount: 20000 });
@@ -152,7 +152,7 @@ describe('CloseCashRegisterUseCase', () => {
     mockOrderRepo.sumCashSalesByStaffBetween.mockResolvedValue(0);
     mockCashMovementRepo.findByCashRegister.mockResolvedValue([]);
     mockCashRegisterRepo.save.mockImplementation(
-      async (entity: CashRegister) => entity,
+      (entity: CashRegister): Promise<CashRegister> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', {
@@ -169,7 +169,7 @@ describe('CloseCashRegisterUseCase', () => {
     mockOrderRepo.sumCashSalesByStaffBetween.mockResolvedValue(0);
     mockCashMovementRepo.findByCashRegister.mockResolvedValue([]);
     mockCashRegisterRepo.save.mockImplementation(
-      async (entity: CashRegister) => entity,
+      (entity: CashRegister): Promise<CashRegister> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', { closingAmount: 12000 });

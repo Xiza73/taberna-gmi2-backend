@@ -1,11 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'bcryptjs';
 
-import { DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index';
+import {
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { STAFF_INVITATION_REPOSITORY, type IStaffInvitationRepository } from '../../domain/interfaces/staff-invitation-repository.interface';
-import { STAFF_MEMBER_REPOSITORY, type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface';
+import {
+  STAFF_INVITATION_REPOSITORY,
+  type IStaffInvitationRepository,
+} from '../../domain/interfaces/staff-invitation-repository.interface';
+import {
+  STAFF_MEMBER_REPOSITORY,
+  type IStaffMemberRepository,
+} from '../../domain/interfaces/staff-member-repository.interface';
 import { ValidateInvitationResponseDto } from '../dtos/validate-invitation-response.dto';
 
 @Injectable()
@@ -17,7 +26,9 @@ export class ValidateInvitationUseCase {
     private readonly staffMemberRepository: IStaffMemberRepository,
   ) {}
 
-  async execute(compositeToken: string): Promise<ValidateInvitationResponseDto> {
+  async execute(
+    compositeToken: string,
+  ): Promise<ValidateInvitationResponseDto> {
     const parts = compositeToken.split('.');
     if (parts.length !== 2) {
       throw new DomainNotFoundException(ErrorMessages.INVITATION_NOT_FOUND);
@@ -51,7 +62,9 @@ export class ValidateInvitationUseCase {
     }
 
     // Get inviter info
-    const inviter = await this.staffMemberRepository.findById(invitation.invitedBy);
+    const inviter = await this.staffMemberRepository.findById(
+      invitation.invitedBy,
+    );
 
     return new ValidateInvitationResponseDto(
       invitation.email,

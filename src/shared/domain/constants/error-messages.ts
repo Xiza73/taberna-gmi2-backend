@@ -26,8 +26,7 @@ export const ErrorMessages = {
   INVITATION_CANNOT_INVITE_ROLE: 'You cannot invite staff with this role',
   STAFF_REGISTRATION_REQUIRES_INVITATION:
     'Staff registration requires a valid invitation token',
-  STAFF_REGISTRATION_EMAIL_MISMATCH:
-    'Email does not match the invited email',
+  STAFF_REGISTRATION_EMAIL_MISMATCH: 'Email does not match the invited email',
   // Categories
   CATEGORY_NOT_FOUND: 'Category not found',
   CATEGORY_HAS_PRODUCTS: 'Cannot delete category with products',
@@ -55,8 +54,7 @@ export const ErrorMessages = {
   ORDER_CANNOT_CANCEL: 'Order can only be cancelled while pending',
   ORDER_EXPIRED: 'Order expired due to unpaid status',
   ORDER_INVALID_TRANSITION: 'Invalid order status transition',
-  ORDER_STATUS_CONFLICT:
-    'Order status was modified concurrently, please retry',
+  ORDER_STATUS_CONFLICT: 'Order status was modified concurrently, please retry',
   ORDER_USER_OR_STAFF_REQUIRED:
     'Order must have exactly one of userId or staffId',
   // Payments
@@ -98,14 +96,14 @@ export const ErrorMessages = {
   POS_CASH_REGISTER_NOT_OPEN: 'No open cash register found',
   POS_CASH_REGISTER_NOT_FOUND: 'Cash register not found',
   POS_CASH_REGISTER_ALREADY_CLOSED: 'Cash register is already closed',
-  POS_CASH_REGISTER_INVALID_AMOUNT: 'Cash register amount must be a non-negative integer',
-  POS_CASH_MOVEMENT_INVALID_AMOUNT: 'Cash movement amount must be a positive integer',
+  POS_CASH_REGISTER_INVALID_AMOUNT:
+    'Cash register amount must be a non-negative integer',
+  POS_CASH_MOVEMENT_INVALID_AMOUNT:
+    'Cash movement amount must be a positive integer',
   POS_CASH_MOVEMENT_INVALID_REASON: 'Cash movement reason is required',
   POS_ORDER_NOT_POS: 'This order is not a POS/WhatsApp order',
   POS_ORDER_CANNOT_CANCEL: 'Only paid POS orders can be cancelled',
-  POS_ORDER_CANNOT_REFUND:
-    'Only paid or processing POS orders can be refunded',
+  POS_ORDER_CANNOT_REFUND: 'Only paid or processing POS orders can be refunded',
   POS_REFUND_QUANTITY_EXCEEDED: 'Refund quantity exceeds purchased quantity',
-  POS_REPORTS_INVALID_DATE_RANGE:
-    'dateFrom must be before or equal to dateTo',
+  POS_REPORTS_INVALID_DATE_RANGE: 'dateFrom must be before or equal to dateTo',
 } as const;

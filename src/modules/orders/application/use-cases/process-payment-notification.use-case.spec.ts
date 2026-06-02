@@ -23,7 +23,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { ProcessPaymentNotificationUseCase } from './process-payment-notification.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 const mockOrderRepo = {
   findById: jest.fn(),
@@ -52,7 +54,9 @@ const mockConfigService = {
 
 const ORDER_ID = '11111111-1111-1111-1111-111111111111';
 
-function buildOrder(overrides: Partial<{ total: number; status: OrderStatus }> = {}): Order {
+function buildOrder(
+  overrides: Partial<{ total: number; status: OrderStatus }> = {},
+): Order {
   return Order.reconstitute({
     id: ORDER_ID,
     orderNumber: 'ORD-0001',
@@ -87,7 +91,14 @@ function buildOrder(overrides: Partial<{ total: number; status: OrderStatus }> =
   });
 }
 
-function paymentInfo(overrides: Partial<{ status: string; amount: number; externalRef: string | undefined; externalId: string }> = {}) {
+function paymentInfo(
+  overrides: Partial<{
+    status: string;
+    amount: number;
+    externalRef: string | undefined;
+    externalId: string;
+  }> = {},
+) {
   return {
     externalId: overrides.externalId ?? 'mp-payment-1',
     status: overrides.status ?? 'approved',
@@ -204,7 +215,9 @@ describe('ProcessPaymentNotificationUseCase', () => {
         OrderStatus.PAID,
       );
       expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-      const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0];
+      const eventArg = (
+        mockOrderRepo.saveEvent.mock.calls[0] as [{ status: OrderStatus }]
+      )[0];
       expect(eventArg.status).toBe(OrderStatus.PAID);
       expect(mockEmailSender.sendPaymentConfirmed).toHaveBeenCalledTimes(1);
     });
@@ -223,7 +236,11 @@ describe('ProcessPaymentNotificationUseCase', () => {
 
       expect(mockPaymentRepo.upsertByExternalId).toHaveBeenCalledTimes(1);
       expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-      const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0];
+      const eventArg = (
+        mockOrderRepo.saveEvent.mock.calls[0] as [
+          { metadata: Record<string, unknown> },
+        ]
+      )[0];
       // Late payment event preserves the order's existing status, not PAID
       expect(eventArg.metadata).toEqual(
         expect.objectContaining({ latePayment: true }),
@@ -277,11 +294,15 @@ describe('ProcessPaymentNotificationUseCase', () => {
     });
 
     it('returns false for a malformed signature header', () => {
-      expect(useCase.verifySignature('payment-1', 'req-1', 'not-a-valid-sig')).toBe(false);
+      expect(
+        useCase.verifySignature('payment-1', 'req-1', 'not-a-valid-sig'),
+      ).toBe(false);
     });
 
     it('returns false when signature header is missing', () => {
-      expect(useCase.verifySignature('payment-1', 'req-1', undefined)).toBe(false);
+      expect(useCase.verifySignature('payment-1', 'req-1', undefined)).toBe(
+        false,
+      );
     });
 
     it('omits empty segments from the manifest (per official MP SDK)', () => {

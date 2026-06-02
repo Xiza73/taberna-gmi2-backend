@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiBody } from './utils/api-response';
 
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { GlobalExceptionFilter } from '@shared/presentation/filters/global-exception.filter';
@@ -27,6 +28,8 @@ const SUPER_ADMIN = {
   subjectType: 'staff' as const,
 };
 
+// Value retained so `currentUser` can model both roles; only its type is read.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ADMIN = {
   id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
   email: 'admin@test.com',
@@ -135,7 +138,10 @@ describe('AdminPosOrdersController (e2e)', () => {
         forbidNonWhitelisted: true,
         exceptionFactory: (errors) => {
           const flatten = (
-            errs: { constraints?: Record<string, string>; children?: unknown[] }[],
+            errs: {
+              constraints?: Record<string, string>;
+              children?: unknown[];
+            }[],
           ): string[] =>
             errs.flatMap((e) => [
               ...Object.values(e.constraints ?? {}),
@@ -182,12 +188,12 @@ describe('AdminPosOrdersController (e2e)', () => {
         .send(validBody)
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toMatchObject({
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toMatchObject({
         id: fake.id,
         orderNumber: 'ORD-20260101-001',
       });
-      expect(res.body.message).toBe('Venta POS registrada');
+      expect(apiBody(res).message).toBe('Venta POS registrada');
       expect(mockCreatePosOrder.execute).toHaveBeenCalledWith(
         { id: SUPER_ADMIN.id, name: SUPER_ADMIN.name },
         expect.objectContaining({
@@ -207,6 +213,7 @@ describe('AdminPosOrdersController (e2e)', () => {
     });
 
     it('should reject when paymentMethod is missing', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- rest-omit drops paymentMethod
       const { paymentMethod: _omit, ...body } = validBody;
 
       await request(app.getHttpServer())
@@ -218,6 +225,7 @@ describe('AdminPosOrdersController (e2e)', () => {
     });
 
     it('should reject when customerName is missing', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- rest-omit drops customerName
       const { customerName: _omit, ...body } = validBody;
 
       await request(app.getHttpServer())
@@ -283,15 +291,17 @@ describe('AdminPosOrdersController (e2e)', () => {
         .get('/api/v1/admin/pos/orders')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toMatchObject({
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toMatchObject({
+        // jest's expect.any is typed as `any`
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         items: expect.any(Array),
         total: 1,
         page: 1,
         limit: 20,
         totalPages: 1,
       });
-      expect(res.body.data.items).toHaveLength(1);
+      expect(apiBody(res).data.items).toHaveLength(1);
     });
 
     it('should pass query filters to use case', async () => {
@@ -339,8 +349,8 @@ describe('AdminPosOrdersController (e2e)', () => {
         .get(`/api/v1/admin/pos/orders/${ORDER_ID}`)
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(ORDER_ID);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.id).toBe(ORDER_ID);
       expect(mockGetPosOrder.execute).toHaveBeenCalledWith(ORDER_ID);
     });
 
@@ -364,8 +374,8 @@ describe('AdminPosOrdersController (e2e)', () => {
         .send({ reason: 'Cliente arrepentido' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.message).toBe('Venta anulada');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).message).toBe('Venta anulada');
       expect(mockCancelPosOrder.execute).toHaveBeenCalledWith(
         { id: SUPER_ADMIN.id, name: SUPER_ADMIN.name },
         ORDER_ID,
@@ -403,8 +413,8 @@ describe('AdminPosOrdersController (e2e)', () => {
         .send({ reason: 'Producto fallado' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.message).toBe('Devolución registrada');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).message).toBe('Devolución registrada');
       expect(mockRefundPosOrder.execute).toHaveBeenCalledWith(
         { id: SUPER_ADMIN.id, name: SUPER_ADMIN.name },
         ORDER_ID,
@@ -423,7 +433,7 @@ describe('AdminPosOrdersController (e2e)', () => {
         })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
       expect(mockRefundPosOrder.execute).toHaveBeenCalledWith(
         { id: SUPER_ADMIN.id, name: SUPER_ADMIN.name },
         ORDER_ID,

@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { compare } from 'bcryptjs';
 
-import { DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index';
+import {
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 
@@ -104,7 +107,10 @@ describe('ValidateInvitationUseCase', () => {
     expect(result.role).toBe(StaffRole.USER);
     expect(result.invitedByName).toBe('Super Admin');
     expect(mockInvitationRepo.findById).toHaveBeenCalledWith(invitation.id);
-    expect(compare).toHaveBeenCalledWith('raw-token-value', invitation.tokenHash);
+    expect(compare).toHaveBeenCalledWith(
+      'raw-token-value',
+      invitation.tokenHash,
+    );
     expect(mockStaffRepo.findById).toHaveBeenCalledWith(invitation.invitedBy);
   });
 

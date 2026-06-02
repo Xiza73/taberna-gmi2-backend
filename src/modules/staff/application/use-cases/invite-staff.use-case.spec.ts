@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 
-import { DomainConflictException, DomainForbiddenException } from '@shared/domain/exceptions/index';
+import {
+  DomainConflictException,
+  DomainForbiddenException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { EMAIL_SENDER } from '@modules/notifications/domain/interfaces/email-sender.interface';
@@ -113,7 +116,9 @@ describe('InviteStaffUseCase', () => {
 
     mockStaffRepo.findByEmail.mockResolvedValue(null);
     mockInvitationRepo.findPendingByEmail.mockResolvedValue(null);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
     mockStaffRepo.findById.mockResolvedValue(createTestStaff());
 
     const result = await useCase.execute(dto, currentUserId, currentUserRole);
@@ -121,8 +126,12 @@ describe('InviteStaffUseCase', () => {
     expect(result).toBeInstanceOf(StaffInvitationResponseDto);
     expect(result.email).toBe('newuser@example.com');
     expect(result.role).toBe(StaffRole.USER);
-    expect(mockStaffRepo.findByEmail).toHaveBeenCalledWith('newuser@example.com');
-    expect(mockInvitationRepo.findPendingByEmail).toHaveBeenCalledWith('newuser@example.com');
+    expect(mockStaffRepo.findByEmail).toHaveBeenCalledWith(
+      'newuser@example.com',
+    );
+    expect(mockInvitationRepo.findPendingByEmail).toHaveBeenCalledWith(
+      'newuser@example.com',
+    );
     expect(mockInvitationRepo.save).toHaveBeenCalledTimes(1);
   });
 
@@ -133,7 +142,9 @@ describe('InviteStaffUseCase', () => {
 
     mockStaffRepo.findByEmail.mockResolvedValue(null);
     mockInvitationRepo.findPendingByEmail.mockResolvedValue(null);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
     mockStaffRepo.findById.mockResolvedValue(createTestStaff());
 
     const result = await useCase.execute(dto, currentUserId, currentUserRole);
@@ -151,9 +162,15 @@ describe('InviteStaffUseCase', () => {
 
     mockStaffRepo.findByEmail.mockResolvedValue(null);
     mockInvitationRepo.findPendingByEmail.mockResolvedValue(null);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
     mockStaffRepo.findById.mockResolvedValue(
-      createTestStaff({ id: currentUserId, role: StaffRole.ADMIN, name: 'Admin User' }),
+      createTestStaff({
+        id: currentUserId,
+        role: StaffRole.ADMIN,
+        name: 'Admin User',
+      }),
     );
 
     const result = await useCase.execute(dto, currentUserId, currentUserRole);
@@ -226,8 +243,12 @@ describe('InviteStaffUseCase', () => {
     });
 
     mockStaffRepo.findByEmail.mockResolvedValue(null);
-    mockInvitationRepo.findPendingByEmail.mockResolvedValue(existingPendingInvitation);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.findPendingByEmail.mockResolvedValue(
+      existingPendingInvitation,
+    );
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
     mockStaffRepo.findById.mockResolvedValue(createTestStaff());
 
     await useCase.execute(dto, currentUserId, currentUserRole);
@@ -236,11 +257,15 @@ describe('InviteStaffUseCase', () => {
     expect(mockInvitationRepo.save).toHaveBeenCalledTimes(2);
 
     // First call should be saving the revoked invitation
-    const revokedInvitation = mockInvitationRepo.save.mock.calls[0][0] as StaffInvitation;
+    const revokedInvitation = (
+      mockInvitationRepo.save.mock.calls[0] as [StaffInvitation]
+    )[0];
     expect(revokedInvitation.isRevoked).toBe(true);
 
     // Second call should be the new invitation
-    const newInvitation = mockInvitationRepo.save.mock.calls[1][0] as StaffInvitation;
+    const newInvitation = (
+      mockInvitationRepo.save.mock.calls[1] as [StaffInvitation]
+    )[0];
     expect(newInvitation.email).toBe('invited@example.com');
     expect(newInvitation.isRevoked).toBe(false);
   });
@@ -254,7 +279,9 @@ describe('InviteStaffUseCase', () => {
 
     mockStaffRepo.findByEmail.mockResolvedValue(null);
     mockInvitationRepo.findPendingByEmail.mockResolvedValue(null);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
     mockStaffRepo.findById.mockResolvedValue(inviter);
 
     await useCase.execute(dto, currentUserId, currentUserRole);
@@ -265,7 +292,11 @@ describe('InviteStaffUseCase', () => {
         email: 'newuser@example.com',
         role: StaffRole.USER,
         invitedByName: 'Super Admin',
-        invitationUrl: expect.stringContaining('http://localhost:5174/staff/register?token='),
+        // jest's expect.stringContaining is typed as `any`
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        invitationUrl: expect.stringContaining(
+          'http://localhost:5174/staff/register?token=',
+        ),
       }),
     );
   });

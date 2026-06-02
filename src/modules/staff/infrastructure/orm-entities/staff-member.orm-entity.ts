@@ -29,7 +29,13 @@ export class StaffMemberOrmEntity {
   @Column({ type: 'uuid', name: 'invited_by', nullable: true })
   invitedBy: string | null;
 
-  @Column({ type: 'varchar', length: 255, name: 'google_id', nullable: true, unique: true })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'google_id',
+    nullable: true,
+    unique: true,
+  })
   googleId: string | null;
 
   @Column({

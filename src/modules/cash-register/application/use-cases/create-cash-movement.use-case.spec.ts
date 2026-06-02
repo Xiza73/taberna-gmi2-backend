@@ -64,7 +64,7 @@ describe('CreateCashMovementUseCase', () => {
   it('should create a cash_in movement on the open register', async () => {
     mockCashRegisterRepo.findOpenByStaff.mockResolvedValue(buildOpenRegister());
     mockCashMovementRepo.save.mockImplementation(
-      async (entity: CashMovement) => entity,
+      (entity: CashMovement): Promise<CashMovement> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', {
@@ -73,9 +73,13 @@ describe('CreateCashMovementUseCase', () => {
       reason: 'aporte extra',
     });
 
-    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith('staff-1');
+    expect(mockCashRegisterRepo.findOpenByStaff).toHaveBeenCalledWith(
+      'staff-1',
+    );
     expect(mockCashMovementRepo.save).toHaveBeenCalledTimes(1);
-    const saved = mockCashMovementRepo.save.mock.calls[0][0] as CashMovement;
+    const saved = (
+      mockCashMovementRepo.save.mock.calls[0] as [CashMovement]
+    )[0];
     expect(saved.cashRegisterId).toBe(REGISTER_ID);
     expect(saved.staffId).toBe('staff-1');
     expect(saved.type).toBe(CashMovementType.CASH_IN);
@@ -88,7 +92,7 @@ describe('CreateCashMovementUseCase', () => {
   it('should create a cash_out movement on the open register', async () => {
     mockCashRegisterRepo.findOpenByStaff.mockResolvedValue(buildOpenRegister());
     mockCashMovementRepo.save.mockImplementation(
-      async (entity: CashMovement) => entity,
+      (entity: CashMovement): Promise<CashMovement> => Promise.resolve(entity),
     );
 
     const result = await useCase.execute('staff-1', {

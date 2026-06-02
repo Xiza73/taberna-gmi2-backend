@@ -11,6 +11,7 @@ import {
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { REFRESH_TOKEN_REPOSITORY } from '@modules/auth/domain/interfaces/refresh-token-repository.interface';
+import { type RefreshToken } from '@modules/auth/domain/entities/refresh-token.entity';
 
 import { STAFF_MEMBER_REPOSITORY } from '../../domain/interfaces/staff-member-repository.interface';
 import { STAFF_INVITATION_REPOSITORY } from '../../domain/interfaces/staff-invitation-repository.interface';
@@ -124,13 +125,22 @@ describe('AcceptInvitationUseCase', () => {
     mockInvitationRepo.findById.mockResolvedValue(invitation);
     (compare as jest.Mock).mockResolvedValue(true);
     mockStaffRepo.findByEmail.mockResolvedValue(null);
-    mockStaffRepo.save.mockImplementation(async (staff: StaffMember) => staff);
-    mockInvitationRepo.save.mockImplementation(async (inv: StaffInvitation) => inv);
-    mockRefreshTokenRepo.save.mockImplementation(async (token: any) => {
-      const result = { ...token };
-      Object.defineProperty(result, 'id', { value: 'refresh-token-id', enumerable: true });
-      return result;
-    });
+    mockStaffRepo.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
+    mockInvitationRepo.save.mockImplementation(
+      (inv: StaffInvitation): Promise<StaffInvitation> => Promise.resolve(inv),
+    );
+    mockRefreshTokenRepo.save.mockImplementation(
+      (token: RefreshToken): Promise<RefreshToken> => {
+        const result = { ...token };
+        Object.defineProperty(result, 'id', {
+          value: 'refresh-token-id',
+          enumerable: true,
+        });
+        return Promise.resolve(result as unknown as RefreshToken);
+      },
+    );
 
     const result = await useCase.execute(compositeToken, dto);
 
@@ -140,14 +150,17 @@ describe('AcceptInvitationUseCase', () => {
 
     // Should have found the invitation
     expect(mockInvitationRepo.findById).toHaveBeenCalledWith(invitation.id);
-    expect(compare).toHaveBeenCalledWith('raw-token-value', invitation.tokenHash);
+    expect(compare).toHaveBeenCalledWith(
+      'raw-token-value',
+      invitation.tokenHash,
+    );
 
     // Should have checked email uniqueness
     expect(mockStaffRepo.findByEmail).toHaveBeenCalledWith(invitation.email);
 
     // Should have created a staff member
     expect(mockStaffRepo.save).toHaveBeenCalledTimes(1);
-    const savedStaff = mockStaffRepo.save.mock.calls[0][0] as StaffMember;
+    const savedStaff = (mockStaffRepo.save.mock.calls[0] as [StaffMember])[0];
     expect(savedStaff.name).toBe('New Staff Member');
     expect(savedStaff.email).toBe('invited@example.com');
     expect(savedStaff.role).toBe(StaffRole.USER);
@@ -155,7 +168,9 @@ describe('AcceptInvitationUseCase', () => {
 
     // Should have marked invitation as accepted
     expect(mockInvitationRepo.save).toHaveBeenCalledTimes(1);
-    const acceptedInvitation = mockInvitationRepo.save.mock.calls[0][0] as StaffInvitation;
+    const acceptedInvitation = (
+      mockInvitationRepo.save.mock.calls[0] as [StaffInvitation]
+    )[0];
     expect(acceptedInvitation.acceptedAt).not.toBeNull();
 
     // Should have generated JWT

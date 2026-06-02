@@ -71,14 +71,16 @@ describe('ActivateStaffMemberUseCase', () => {
     });
 
     mockRepository.findById.mockResolvedValue(suspendedStaff);
-    mockRepository.save.mockImplementation(async (staff: StaffMember) => staff);
+    mockRepository.save.mockImplementation(
+      (staff: StaffMember): Promise<StaffMember> => Promise.resolve(staff),
+    );
 
     await useCase.execute(staffId);
 
     expect(mockRepository.findById).toHaveBeenCalledWith(staffId);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
 
-    const savedStaff = mockRepository.save.mock.calls[0][0] as StaffMember;
+    const savedStaff = (mockRepository.save.mock.calls[0] as [StaffMember])[0];
     expect(savedStaff.isActive).toBe(true);
   });
 

@@ -9,6 +9,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiBody } from './utils/api-response';
 
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { GlobalExceptionFilter } from '@shared/presentation/filters/global-exception.filter';
@@ -122,10 +123,7 @@ describe('AdminPosReportsController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
     const reflector = app.get(Reflector);
-    app.useGlobalGuards(
-      new MockJwtAuthGuard(),
-      new StaffRoleGuard(reflector),
-    );
+    app.useGlobalGuards(new MockJwtAuthGuard(), new StaffRoleGuard(reflector));
     app.useGlobalFilters(new GlobalExceptionFilter());
     app.useGlobalPipes(
       new ValidationPipe({
@@ -134,7 +132,10 @@ describe('AdminPosReportsController (e2e)', () => {
         forbidNonWhitelisted: true,
         exceptionFactory: (errors) => {
           const flatten = (
-            errs: { constraints?: Record<string, string>; children?: unknown[] }[],
+            errs: {
+              constraints?: Record<string, string>;
+              children?: unknown[];
+            }[],
           ): string[] =>
             errs.flatMap((e) => [
               ...Object.values(e.constraints ?? {}),
@@ -172,11 +173,11 @@ describe('AdminPosReportsController (e2e)', () => {
         .query({ date: '2026-05-08' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.date).toBe('2026-05-08');
-      expect(res.body.data.totalOrders).toBe(12);
-      expect(res.body.data.totalSales).toBe(350000);
-      expect(res.body.data.byStatus).toEqual(
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.date).toBe('2026-05-08');
+      expect(apiBody(res).data.totalOrders).toBe(12);
+      expect(apiBody(res).data.totalSales).toBe(350000);
+      expect(apiBody(res).data.byStatus).toEqual(
         expect.arrayContaining([
           { status: 'cancelled', count: 1 },
           { status: 'refunded', count: 1 },
@@ -237,10 +238,10 @@ describe('AdminPosReportsController (e2e)', () => {
         .query({ dateFrom: '2026-05-01', dateTo: '2026-05-08' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.dateFrom).toBe('2026-05-01');
-      expect(res.body.data.dateTo).toBe('2026-05-08');
-      expect(res.body.data.items).toHaveLength(2);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.dateFrom).toBe('2026-05-01');
+      expect(apiBody(res).data.dateTo).toBe('2026-05-08');
+      expect(apiBody(res).data.items).toHaveLength(2);
       expect(mockByPaymentMethod.execute).toHaveBeenCalledWith(
         expect.objectContaining({
           dateFrom: '2026-05-01',
@@ -301,9 +302,9 @@ describe('AdminPosReportsController (e2e)', () => {
         .query({ dateFrom: '2026-05-01', dateTo: '2026-05-08' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.items).toHaveLength(2);
-      expect(res.body.data.items[0].staffName).toBe('Ana');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.items).toHaveLength(2);
+      expect(apiBody(res).data.items[0].staffName).toBe('Ana');
       expect(mockByStaff.execute).toHaveBeenCalledWith(
         expect.objectContaining({
           dateFrom: '2026-05-01',

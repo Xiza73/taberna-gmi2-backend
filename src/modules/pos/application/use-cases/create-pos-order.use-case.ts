@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import {
   DomainException,
-  DomainForbiddenException,
   DomainNotFoundException,
 } from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
@@ -195,7 +194,8 @@ export class CreatePosOrderUseCase {
           total,
           couponId,
           couponCode,
-          couponDiscount: couponDiscountAmount > 0 ? couponDiscountAmount : null,
+          couponDiscount:
+            couponDiscountAmount > 0 ? couponDiscountAmount : null,
           shippingAddressSnapshot,
           customerName: dto.customerName,
           customerEmail: dto.customerEmail ?? '',

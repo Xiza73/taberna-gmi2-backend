@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Headers,
-  Logger,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Headers, Logger, Post, Query } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
 import { BaseResponse } from '@shared/application/dtos/base-response.dto';

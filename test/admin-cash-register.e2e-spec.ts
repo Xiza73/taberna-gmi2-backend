@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiBody } from './utils/api-response';
 
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { GlobalExceptionFilter } from '@shared/presentation/filters/global-exception.filter';
@@ -71,7 +72,9 @@ function fakeRegister(overrides: { closed?: boolean; id?: string } = {}) {
   };
 }
 
-function fakeMovement(overrides: { id?: string; type?: 'cash_in' | 'cash_out' } = {}) {
+function fakeMovement(
+  overrides: { id?: string; type?: 'cash_in' | 'cash_out' } = {},
+) {
   return {
     id: overrides.id ?? 'mv-1',
     cashRegisterId: REGISTER_ID,
@@ -132,7 +135,10 @@ describe('AdminCashRegisterController (e2e)', () => {
         forbidNonWhitelisted: true,
         exceptionFactory: (errors) => {
           const flatten = (
-            errs: { constraints?: Record<string, string>; children?: unknown[] }[],
+            errs: {
+              constraints?: Record<string, string>;
+              children?: unknown[];
+            }[],
           ): string[] =>
             errs.flatMap((e) => [
               ...Object.values(e.constraints ?? {}),
@@ -170,10 +176,10 @@ describe('AdminCashRegisterController (e2e)', () => {
         .send({ initialAmount: 10000 })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(REGISTER_ID);
-      expect(res.body.data.status).toBe('open');
-      expect(res.body.message).toBe('Caja abierta');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.id).toBe(REGISTER_ID);
+      expect(apiBody(res).data.status).toBe('open');
+      expect(apiBody(res).message).toBe('Caja abierta');
       expect(mockOpen.execute).toHaveBeenCalledWith(
         SUPER_ADMIN.id,
         expect.objectContaining({ initialAmount: 10000 }),
@@ -216,9 +222,9 @@ describe('AdminCashRegisterController (e2e)', () => {
         .send({ closingAmount: 70000, notes: 'cierre limpio' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.status).toBe('closed');
-      expect(res.body.message).toBe('Caja cerrada');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.status).toBe('closed');
+      expect(apiBody(res).message).toBe('Caja cerrada');
       expect(mockClose.execute).toHaveBeenCalledWith(
         SUPER_ADMIN.id,
         expect.objectContaining({
@@ -266,8 +272,8 @@ describe('AdminCashRegisterController (e2e)', () => {
         .get('/api/v1/admin/pos/cash-register/current')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.status).toBe('open');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.status).toBe('open');
       expect(mockCurrent.execute).toHaveBeenCalledWith(SUPER_ADMIN.id);
     });
   });
@@ -283,9 +289,9 @@ describe('AdminCashRegisterController (e2e)', () => {
         .send({ type: 'cash_in', amount: 1500, reason: 'aporte' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.type).toBe('cash_in');
-      expect(res.body.message).toBe('Movimiento registrado');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.type).toBe('cash_in');
+      expect(apiBody(res).message).toBe('Movimiento registrado');
       expect(mockCreateMovement.execute).toHaveBeenCalledWith(
         SUPER_ADMIN.id,
         expect.objectContaining({
@@ -306,7 +312,7 @@ describe('AdminCashRegisterController (e2e)', () => {
         .send({ type: 'cash_out', amount: 800, reason: 'pago proveedor' })
         .expect(201);
 
-      expect(res.body.data.type).toBe('cash_out');
+      expect(apiBody(res).data.type).toBe('cash_out');
     });
 
     it('should reject invalid type enum', async () => {
@@ -355,8 +361,8 @@ describe('AdminCashRegisterController (e2e)', () => {
         .get('/api/v1/admin/pos/cash-register/movements')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveLength(2);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toHaveLength(2);
       expect(mockListMovements.execute).toHaveBeenCalledWith(SUPER_ADMIN.id);
       // Confirm /:id was NOT used (no UUID param resolved)
       expect(mockGet.execute).not.toHaveBeenCalled();
@@ -369,7 +375,7 @@ describe('AdminCashRegisterController (e2e)', () => {
         .get('/api/v1/admin/pos/cash-register/movements')
         .expect(200);
 
-      expect(res.body.data).toEqual([]);
+      expect(apiBody(res).data).toEqual([]);
     });
   });
 
@@ -398,12 +404,12 @@ describe('AdminCashRegisterController (e2e)', () => {
         .get('/api/v1/admin/pos/cash-register')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.items).toHaveLength(2);
-      expect(res.body.data.items[0].staffName).toBe('Super Admin');
-      expect(res.body.data.total).toBe(2);
-      expect(res.body.data.page).toBe(1);
-      expect(res.body.data.limit).toBe(20);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.items).toHaveLength(2);
+      expect(apiBody(res).data.items[0].staffName).toBe('Super Admin');
+      expect(apiBody(res).data.total).toBe(2);
+      expect(apiBody(res).data.page).toBe(1);
+      expect(apiBody(res).data.limit).toBe(20);
       expect(mockList.execute).toHaveBeenCalledTimes(1);
     });
 
@@ -482,9 +488,9 @@ describe('AdminCashRegisterController (e2e)', () => {
         .get(`/api/v1/admin/pos/cash-register/${REGISTER_ID}`)
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(REGISTER_ID);
-      expect(res.body.data.movements).toHaveLength(1);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.id).toBe(REGISTER_ID);
+      expect(apiBody(res).data.movements).toHaveLength(1);
       expect(mockGet.execute).toHaveBeenCalledWith(REGISTER_ID);
     });
 

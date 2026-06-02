@@ -24,7 +24,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { VerifyPaymentUseCase } from './verify-payment.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -204,7 +206,11 @@ describe('VerifyPaymentUseCase', () => {
     await useCase.execute(OWNER_ID, ORDER_ID);
 
     expect(mockPaymentRepo.upsertByExternalId).toHaveBeenCalledTimes(1);
-    const paymentArg = mockPaymentRepo.upsertByExternalId.mock.calls[0][0];
+    const paymentArg = (
+      mockPaymentRepo.upsertByExternalId.mock.calls[0] as [
+        { status: PaymentStatus; amount: number },
+      ]
+    )[0];
     expect(paymentArg.status).toBe(PaymentStatus.APPROVED);
     expect(paymentArg.amount).toBe(10000);
 

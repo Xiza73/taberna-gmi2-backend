@@ -1,9 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { DomainException, DomainNotFoundException } from '@shared/domain/exceptions/index';
+import {
+  DomainException,
+  DomainNotFoundException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 
-import { STAFF_INVITATION_REPOSITORY, type IStaffInvitationRepository } from '../../domain/interfaces/staff-invitation-repository.interface';
+import {
+  STAFF_INVITATION_REPOSITORY,
+  type IStaffInvitationRepository,
+} from '../../domain/interfaces/staff-invitation-repository.interface';
 
 @Injectable()
 export class RevokeInvitationUseCase {

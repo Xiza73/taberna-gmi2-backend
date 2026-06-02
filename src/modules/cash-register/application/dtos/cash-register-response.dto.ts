@@ -53,7 +53,9 @@ export class CashRegisterResponseDto {
     this.createdAt = entity.createdAt.toISOString();
     this.updatedAt = entity.updatedAt.toISOString();
     if (extras?.movements) {
-      this.movements = extras.movements.map((m) => new CashMovementResponseDto(m));
+      this.movements = extras.movements.map(
+        (m) => new CashMovementResponseDto(m),
+      );
     }
   }
 }

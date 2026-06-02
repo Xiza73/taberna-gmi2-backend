@@ -51,11 +51,11 @@ export class GetDashboardUseCase {
       const parsed = parseInt(value, 10);
       return Number.isNaN(parsed) ? 0 : parsed;
     }
-    if (value === null || value === undefined) {
-      return 0;
+    if (typeof value === 'bigint') {
+      const parsed = parseInt(value.toString(), 10);
+      return Number.isNaN(parsed) ? 0 : parsed;
     }
-    const parsed = parseInt(String(value), 10);
-    return Number.isNaN(parsed) ? 0 : parsed;
+    return 0;
   }
 
   private async countOrders(): Promise<number> {

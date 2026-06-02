@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiBody } from './utils/api-response';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -201,10 +202,10 @@ describe('Staff Invitations (e2e)', () => {
         .send({ email: 'invited@example.com', role: 'user' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveProperty('id');
-      expect(res.body.data).toHaveProperty('email', 'invited@example.com');
-      expect(res.body.data).toHaveProperty('role', 'user');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toHaveProperty('id');
+      expect(apiBody(res).data).toHaveProperty('email', 'invited@example.com');
+      expect(apiBody(res).data).toHaveProperty('role', 'user');
       expect(mockEmailSender.sendStaffInvitation).toHaveBeenCalled();
     });
 
@@ -216,7 +217,7 @@ describe('Staff Invitations (e2e)', () => {
         .send({ email: 'admin@test.com', role: 'user' })
         .expect(409);
 
-      expect(res.body.success).toBe(false);
+      expect(apiBody(res).success).toBe(false);
     });
 
     it('should return 400 for missing fields', async () => {
@@ -241,10 +242,10 @@ describe('Staff Invitations (e2e)', () => {
         .get('/api/v1/admin/staff/invitations')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.items).toHaveLength(1);
-      expect(res.body.data.total).toBe(1);
-      expect(res.body.data.items[0]).toHaveProperty(
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.items).toHaveLength(1);
+      expect(apiBody(res).data.total).toBe(1);
+      expect(apiBody(res).data.items[0]).toHaveProperty(
         'email',
         'invited@example.com',
       );
@@ -260,10 +261,12 @@ describe('Staff Invitations (e2e)', () => {
       mockInvitationRepo.save.mockResolvedValue(invitation);
 
       const res = await request(app.getHttpServer())
-        .delete('/api/v1/admin/staff/invitations/11111111-1111-1111-1111-111111111111')
+        .delete(
+          '/api/v1/admin/staff/invitations/11111111-1111-1111-1111-111111111111',
+        )
         .expect(200);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
       expect(mockInvitationRepo.save).toHaveBeenCalled();
     });
 
@@ -288,13 +291,15 @@ describe('Staff Invitations (e2e)', () => {
       mockStaffRepo.findById.mockResolvedValue(inviter);
 
       const res = await request(app.getHttpServer())
-        .get('/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/validate')
+        .get(
+          '/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/validate',
+        )
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveProperty('email', 'invited@example.com');
-      expect(res.body.data).toHaveProperty('role', 'user');
-      expect(res.body.data).toHaveProperty('invitedByName', 'Super Admin');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toHaveProperty('email', 'invited@example.com');
+      expect(apiBody(res).data).toHaveProperty('role', 'user');
+      expect(apiBody(res).data).toHaveProperty('invitedByName', 'Super Admin');
     });
 
     it('should return 404 for invalid token', async () => {
@@ -325,14 +330,19 @@ describe('Staff Invitations (e2e)', () => {
       mockRefreshTokenRepo.save.mockResolvedValue({ id: 'refresh-id-123' });
 
       const res = await request(app.getHttpServer())
-        .post('/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/accept')
+        .post(
+          '/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/accept',
+        )
         .send({ name: 'New Staff', password: 'securePassword123' })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveProperty('accessToken', 'jwt-access-token');
-      expect(res.body.data).toHaveProperty('refreshToken');
-      expect(res.body.data.refreshToken).toContain('refresh-id-123');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toHaveProperty(
+        'accessToken',
+        'jwt-access-token',
+      );
+      expect(apiBody(res).data).toHaveProperty('refreshToken');
+      expect(apiBody(res).data.refreshToken).toContain('refresh-id-123');
       expect(mockStaffRepo.save).toHaveBeenCalled();
       expect(mockInvitationRepo.save).toHaveBeenCalled();
       expect(mockRefreshTokenRepo.save).toHaveBeenCalled();
@@ -340,7 +350,9 @@ describe('Staff Invitations (e2e)', () => {
 
     it('should return 400 for invalid body', async () => {
       await request(app.getHttpServer())
-        .post('/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/accept')
+        .post(
+          '/api/v1/staff/invitations/11111111-1111-1111-1111-111111111111.raw-token/accept',
+        )
         .send({})
         .expect(400);
     });

@@ -123,10 +123,11 @@ describe('ListCashRegistersUseCase', () => {
 
     const result = await useCase.execute({});
 
-    const callArg = mockCashRegisterRepo.findAll.mock.calls[0][0] as {
-      page: number;
-      limit: number;
-    };
+    const callArg = (
+      mockCashRegisterRepo.findAll.mock.calls[0] as [
+        { page: number; limit: number },
+      ]
+    )[0];
     expect(callArg.page).toBe(1);
     expect(callArg.limit).toBe(20);
     expect(result.page).toBe(1);
@@ -192,7 +193,7 @@ describe('ListCashRegistersUseCase', () => {
 
     await useCase.execute({ page: 1, limit: 20 });
 
-    const ids = mockStaffRepo.findByIds.mock.calls[0][0] as string[];
+    const ids = (mockStaffRepo.findByIds.mock.calls[0] as [string[]])[0];
     expect(ids).toHaveLength(2);
     expect(ids).toEqual(expect.arrayContaining([STAFF_A, STAFF_B]));
   });

@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiBody } from './utils/api-response';
 
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
 import { STAFF_MEMBER_REPOSITORY } from '@modules/staff/domain/interfaces/staff-member-repository.interface';
@@ -143,19 +144,26 @@ describe('AdminStaffController (e2e)', () => {
 
   describe('POST /api/v1/admin/staff', () => {
     it('should create a staff member with default role', async () => {
-      const staff = createStaff({ email: 'new@example.com', name: 'New Staff' });
+      const staff = createStaff({
+        email: 'new@example.com',
+        name: 'New Staff',
+      });
       mockRepository.findByEmail.mockResolvedValue(null);
       mockRepository.save.mockResolvedValue(staff);
 
       const res = await request(app.getHttpServer())
         .post('/api/v1/admin/staff')
-        .send({ name: 'New Staff', email: 'new@example.com', password: 'password123' })
+        .send({
+          name: 'New Staff',
+          email: 'new@example.com',
+          password: 'password123',
+        })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data).toHaveProperty('id');
-      expect(res.body.data).toHaveProperty('name', 'New Staff');
-      expect(res.body.data).not.toHaveProperty('password');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data).toHaveProperty('id');
+      expect(apiBody(res).data).toHaveProperty('name', 'New Staff');
+      expect(apiBody(res).data).not.toHaveProperty('password');
     });
 
     it('should create a staff member with specific role', async () => {
@@ -173,7 +181,7 @@ describe('AdminStaffController (e2e)', () => {
         })
         .expect(201);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
     });
 
     it('should return 409 when email already exists', async () => {
@@ -181,10 +189,14 @@ describe('AdminStaffController (e2e)', () => {
 
       const res = await request(app.getHttpServer())
         .post('/api/v1/admin/staff')
-        .send({ name: 'Dup', email: 'test@example.com', password: 'password123' })
+        .send({
+          name: 'Dup',
+          email: 'test@example.com',
+          password: 'password123',
+        })
         .expect(409);
 
-      expect(res.body.success).toBe(false);
+      expect(apiBody(res).success).toBe(false);
     });
 
     it('should return 400 for invalid payload', async () => {
@@ -218,9 +230,9 @@ describe('AdminStaffController (e2e)', () => {
         .get('/api/v1/admin/staff')
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.items).toHaveLength(1);
-      expect(res.body.data.total).toBe(1);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.items).toHaveLength(1);
+      expect(apiBody(res).data.total).toBe(1);
     });
 
     it('should pass role filter', async () => {
@@ -271,8 +283,8 @@ describe('AdminStaffController (e2e)', () => {
         .get(`/api/v1/admin/staff/${ADMIN_ID}`)
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.id).toBe(ADMIN_ID);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.id).toBe(ADMIN_ID);
     });
 
     it('should return 404 when not found', async () => {
@@ -304,8 +316,8 @@ describe('AdminStaffController (e2e)', () => {
         .send({ name: 'New Name' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.name).toBe('New Name');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.name).toBe('New Name');
     });
 
     it('should update staff role', async () => {
@@ -319,7 +331,7 @@ describe('AdminStaffController (e2e)', () => {
         .send({ role: 'admin' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
     });
 
     it('should suspend via isActive=false', async () => {
@@ -340,8 +352,8 @@ describe('AdminStaffController (e2e)', () => {
         .send({ isActive: false })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.isActive).toBe(false);
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.isActive).toBe(false);
     });
 
     it('should return 400 when trying to change own role', async () => {
@@ -388,8 +400,8 @@ describe('AdminStaffController (e2e)', () => {
         .send({ role: 'admin' })
         .expect(200);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.role).toBe('admin');
+      expect(apiBody(res).success).toBe(true);
+      expect(apiBody(res).data.role).toBe('admin');
     });
 
     it('should return 400 when trying to change own role', async () => {
@@ -449,7 +461,7 @@ describe('AdminStaffController (e2e)', () => {
         .patch(`/api/v1/admin/staff/${USER_STAFF_ID}/suspend`)
         .expect(200);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
     });
 
     it('should return 400 when trying to suspend self', async () => {
@@ -495,7 +507,7 @@ describe('AdminStaffController (e2e)', () => {
         .patch(`/api/v1/admin/staff/${USER_STAFF_ID}/activate`)
         .expect(200);
 
-      expect(res.body.success).toBe(true);
+      expect(apiBody(res).success).toBe(true);
     });
 
     it('should return 404 when staff not found', async () => {

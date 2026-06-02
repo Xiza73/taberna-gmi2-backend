@@ -22,7 +22,9 @@ import { ORDER_REPOSITORY } from '@modules/orders/domain/interfaces/order-reposi
 import { RefundPosOrderUseCase } from './refund-pos-order.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -198,7 +200,7 @@ describe('RefundPosOrderUseCase', () => {
       OrderStatus.PAID,
       OrderStatus.REFUNDED,
     );
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.status).toBe(OrderStatus.REFUNDED);
     expect(eventArg.metadata).toEqual({
       refundType: 'total',
@@ -240,7 +242,7 @@ describe('RefundPosOrderUseCase', () => {
       2,
     );
     expect(mockOrderRepo.atomicStatusTransition).not.toHaveBeenCalled();
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.status).toBe(OrderStatus.PAID);
     expect(eventArg.metadata).toEqual({
       refundType: 'partial',
@@ -303,24 +305,9 @@ describe('RefundPosOrderUseCase', () => {
     const orderId = '11111111-1111-1111-1111-111111111111';
     const order = createTestOrder({ id: orderId, status: OrderStatus.PAID });
     const items = [
-      createTestItem(
-        'item-1',
-        'cccccccc-cccc-cccc-cccc-cccccccccccc',
-        1,
-        'C',
-      ),
-      createTestItem(
-        'item-2',
-        'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        1,
-        'A',
-      ),
-      createTestItem(
-        'item-3',
-        'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-        1,
-        'B',
-      ),
+      createTestItem('item-1', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 1, 'C'),
+      createTestItem('item-2', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1, 'A'),
+      createTestItem('item-3', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 1, 'B'),
     ];
     mockOrderRepo.findById.mockResolvedValue(order);
     mockOrderRepo.findItemsByOrderId.mockResolvedValue(items);
@@ -329,14 +316,14 @@ describe('RefundPosOrderUseCase', () => {
     await useCase.execute(createTestStaff(), orderId, { reason: 'all' });
 
     expect(mockOrderRepo.atomicStockRestore).toHaveBeenCalledTimes(3);
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[0][0]).toBe(
-      'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    );
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[1][0]).toBe(
-      'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    );
-    expect(mockOrderRepo.atomicStockRestore.mock.calls[2][0]).toBe(
-      'cccccccc-cccc-cccc-cccc-cccccccccccc',
-    );
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[0] as [string, number])[0],
+    ).toBe('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[1] as [string, number])[0],
+    ).toBe('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+    expect(
+      (mockOrderRepo.atomicStockRestore.mock.calls[2] as [string, number])[0],
+    ).toBe('cccccccc-cccc-cccc-cccc-cccccccccccc');
   });
 });

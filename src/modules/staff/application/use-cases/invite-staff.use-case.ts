@@ -3,13 +3,25 @@ import { ConfigService } from '@nestjs/config';
 import { hash } from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
-import { DomainConflictException, DomainForbiddenException } from '@shared/domain/exceptions/index';
+import {
+  DomainConflictException,
+  DomainForbiddenException,
+} from '@shared/domain/exceptions/index';
 import { ErrorMessages } from '@shared/domain/constants/error-messages';
 import { StaffRole } from '@shared/domain/enums/staff-role.enum';
-import { EMAIL_SENDER, type IEmailSender } from '@modules/notifications/domain/interfaces/email-sender.interface';
+import {
+  EMAIL_SENDER,
+  type IEmailSender,
+} from '@modules/notifications/domain/interfaces/email-sender.interface';
 
-import { STAFF_MEMBER_REPOSITORY, type IStaffMemberRepository } from '../../domain/interfaces/staff-member-repository.interface';
-import { STAFF_INVITATION_REPOSITORY, type IStaffInvitationRepository } from '../../domain/interfaces/staff-invitation-repository.interface';
+import {
+  STAFF_MEMBER_REPOSITORY,
+  type IStaffMemberRepository,
+} from '../../domain/interfaces/staff-member-repository.interface';
+import {
+  STAFF_INVITATION_REPOSITORY,
+  type IStaffInvitationRepository,
+} from '../../domain/interfaces/staff-invitation-repository.interface';
 import { StaffInvitation } from '../../domain/entities/staff-invitation.entity';
 import { type InviteStaffDto } from '../dtos/invite-staff.dto';
 import { StaffInvitationResponseDto } from '../dtos/staff-invitation-response.dto';
@@ -33,11 +45,15 @@ export class InviteStaffUseCase {
   ): Promise<StaffInvitationResponseDto> {
     // Hierarchy validation
     if (currentUserRole === StaffRole.USER) {
-      throw new DomainForbiddenException(ErrorMessages.INVITATION_CANNOT_INVITE_ROLE);
+      throw new DomainForbiddenException(
+        ErrorMessages.INVITATION_CANNOT_INVITE_ROLE,
+      );
     }
 
     if (currentUserRole === StaffRole.ADMIN && dto.role !== StaffRole.USER) {
-      throw new DomainForbiddenException(ErrorMessages.INVITATION_CANNOT_INVITE_ROLE);
+      throw new DomainForbiddenException(
+        ErrorMessages.INVITATION_CANNOT_INVITE_ROLE,
+      );
     }
 
     if (
@@ -45,17 +61,22 @@ export class InviteStaffUseCase {
       dto.role !== StaffRole.ADMIN &&
       dto.role !== StaffRole.USER
     ) {
-      throw new DomainForbiddenException(ErrorMessages.INVITATION_CANNOT_INVITE_ROLE);
+      throw new DomainForbiddenException(
+        ErrorMessages.INVITATION_CANNOT_INVITE_ROLE,
+      );
     }
 
     // Check if email already belongs to existing staff
-    const existingStaff = await this.staffMemberRepository.findByEmail(dto.email);
+    const existingStaff = await this.staffMemberRepository.findByEmail(
+      dto.email,
+    );
     if (existingStaff) {
       throw new DomainConflictException(ErrorMessages.INVITATION_EMAIL_EXISTS);
     }
 
     // Check if pending invitation exists for email and revoke it
-    const pendingInvitation = await this.staffInvitationRepository.findPendingByEmail(dto.email);
+    const pendingInvitation =
+      await this.staffInvitationRepository.findPendingByEmail(dto.email);
     if (pendingInvitation) {
       pendingInvitation.revoke();
       await this.staffInvitationRepository.save(pendingInvitation);
@@ -75,11 +96,15 @@ export class InviteStaffUseCase {
     });
 
     // Save invitation
-    const savedInvitation = await this.staffInvitationRepository.save(invitation);
+    const savedInvitation =
+      await this.staffInvitationRepository.save(invitation);
 
     // Build composite token and invitation URL
     const compositeToken = `${savedInvitation.id}.${rawToken}`;
-    const backofficeUrl = this.configService.get('BACKOFFICE_URL', 'http://localhost:5174');
+    const backofficeUrl = this.configService.get<string>(
+      'BACKOFFICE_URL',
+      'http://localhost:5174',
+    );
     const invitationUrl = `${backofficeUrl}/staff/register?token=${compositeToken}`;
 
     // Get inviter name

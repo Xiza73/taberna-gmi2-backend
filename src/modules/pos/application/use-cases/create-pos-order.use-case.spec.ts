@@ -225,14 +225,20 @@ describe('CreatePosOrderUseCase', () => {
 
     // Default behaviors used by most happy-path tests.
     mockOrderNumberGenerator.generate.mockResolvedValue('POS-0001');
-    mockOrderRepo.save.mockImplementation(async (order: Order) => order);
-    mockOrderRepo.saveItem.mockImplementation(async (item: OrderItem) => item);
+    mockOrderRepo.save.mockImplementation(
+      (order: Order): Promise<Order> => Promise.resolve(order),
+    );
+    mockOrderRepo.saveItem.mockImplementation(
+      (item: OrderItem): Promise<OrderItem> => Promise.resolve(item),
+    );
     mockOrderRepo.saveEvent.mockImplementation(
-      async (event: OrderEvent) => event,
+      (event: OrderEvent): Promise<OrderEvent> => Promise.resolve(event),
     );
     mockOrderRepo.atomicStockDecrement.mockResolvedValue(true);
     mockOrderRepo.atomicStatusTransition.mockResolvedValue(true);
-    mockOrderRepo.findById.mockImplementation(async () => null);
+    mockOrderRepo.findById.mockImplementation(
+      (): Promise<null> => Promise.resolve(null),
+    );
   });
 
   afterEach(() => {
@@ -279,7 +285,7 @@ describe('CreatePosOrderUseCase', () => {
       'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     );
     expect(mockOrderRepo.save).toHaveBeenCalledTimes(1);
-    const savedOrder = mockOrderRepo.save.mock.calls[0][0] as Order;
+    const savedOrder = (mockOrderRepo.save.mock.calls[0] as [Order])[0];
     expect(savedOrder.paymentMethod).toBe(PaymentMethod.CASH);
     expect(savedOrder.channel).toBe(OrderChannel.POS);
     expect(savedOrder.shippingMethod).toBe(ShippingMethod.PICKUP);
@@ -302,7 +308,7 @@ describe('CreatePosOrderUseCase', () => {
       OrderStatus.PAID,
     );
     expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.status).toBe(OrderStatus.PAID);
     expect(eventArg.description).toBe('Venta POS registrada por Test Staff');
 
@@ -329,7 +335,7 @@ describe('CreatePosOrderUseCase', () => {
 
     expect(mockOrderRepo.atomicStatusTransition).not.toHaveBeenCalled();
     expect(mockOrderRepo.saveEvent).toHaveBeenCalledTimes(1);
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.status).toBe(OrderStatus.PENDING);
   });
 
@@ -436,7 +442,7 @@ describe('CreatePosOrderUseCase', () => {
     );
     expect(mockCouponRepo.incrementUses).toHaveBeenCalledWith(coupon.id);
 
-    const savedOrder = mockOrderRepo.save.mock.calls[0][0] as Order;
+    const savedOrder = (mockOrderRepo.save.mock.calls[0] as [Order])[0];
     expect(savedOrder.discount).toBe(1000);
     expect(savedOrder.total).toBe(9000);
     expect(savedOrder.couponId).toBe(coupon.id);
@@ -511,7 +517,7 @@ describe('CreatePosOrderUseCase', () => {
     });
 
     expect(mockAddressRepo.findById).toHaveBeenCalledWith('addr-1');
-    const savedOrder = mockOrderRepo.save.mock.calls[0][0] as Order;
+    const savedOrder = (mockOrderRepo.save.mock.calls[0] as [Order])[0];
     expect(savedOrder.shippingAddressSnapshot).toEqual({
       label: 'Casa',
       recipientName: 'Juan Perez',
@@ -525,7 +531,7 @@ describe('CreatePosOrderUseCase', () => {
     });
 
     // El event description usa el formato whatsapp.
-    const eventArg = mockOrderRepo.saveEvent.mock.calls[0][0] as OrderEvent;
+    const eventArg = (mockOrderRepo.saveEvent.mock.calls[0] as [OrderEvent])[0];
     expect(eventArg.description).toBe(
       'Venta WhatsApp registrada por Test Staff',
     );

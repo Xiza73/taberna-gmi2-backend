@@ -51,6 +51,8 @@ export class SeparateStaffOrders1714800000000 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE orders DROP CONSTRAINT IF EXISTS fk_orders_staff`,
     );
-    await queryRunner.query(`ALTER TABLE orders DROP COLUMN IF EXISTS staff_id`);
+    await queryRunner.query(
+      `ALTER TABLE orders DROP COLUMN IF EXISTS staff_id`,
+    );
   }
 }
