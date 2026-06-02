@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import {
   DomainConflictException,
@@ -14,10 +14,6 @@ import {
   PRODUCT_REPOSITORY,
   type IProductRepository,
 } from '../../domain/interfaces/product-repository.interface';
-import {
-  PRODUCT_SEARCH_SYNC,
-  type IProductSearchSync,
-} from '../../domain/interfaces/product-search-sync.interface';
 import { type UpdateProductDto } from '../dtos/update-product.dto';
 import { ProductResponseDto } from '../dtos/product-response.dto';
 
@@ -28,9 +24,6 @@ export class UpdateProductUseCase {
     private readonly productRepository: IProductRepository,
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: ICategoryRepository,
-    @Optional()
-    @Inject(PRODUCT_SEARCH_SYNC)
-    private readonly searchSync?: IProductSearchSync,
   ) {}
 
   async execute(
@@ -65,7 +58,6 @@ export class UpdateProductUseCase {
 
     product.update(dto);
     const saved = await this.productRepository.save(product);
-    await this.searchSync?.indexProduct(saved);
     return new ProductResponseDto(saved);
   }
 }

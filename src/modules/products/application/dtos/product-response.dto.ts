@@ -10,6 +10,7 @@ export class ProductResponseDto {
   sku: string | null;
   stock: number;
   images: string[];
+  synonyms: string[];
   categoryId: string;
   isActive: boolean;
   averageRating: number | null;
@@ -27,6 +28,7 @@ export class ProductResponseDto {
     this.sku = product.sku;
     this.stock = product.stock;
     this.images = product.images;
+    this.synonyms = product.synonyms;
     this.categoryId = product.categoryId;
     this.isActive = product.isActive;
     this.averageRating = product.averageRating;

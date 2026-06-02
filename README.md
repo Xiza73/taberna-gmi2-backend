@@ -11,7 +11,8 @@ API REST para un ecommerce completo orientado a un vendedor minorista en Peru. I
 | Database | PostgreSQL 16 + TypeORM |
 | Auth | JWT + bcrypt |
 | Payments | MercadoPago (Checkout Pro) |
-| Search | Elasticsearch + Kibana |
+| Search | PostgreSQL full-text (tsvector + pg_trgm) |
+| Logging | Pino (structured stdout) |
 | Images | Cloudinary |
 | Email | Nodemailer (SMTP) |
 | Validation | class-validator + class-transformer |
@@ -50,14 +51,14 @@ domain        → shared/domain ONLY
 | Wishlist | User wishlists |
 | Uploads | Image uploads via Cloudinary |
 | Notifications | Transactional emails |
-| Logging | Request logging to Elasticsearch |
-| Search | Full-text search with fuzzy matching |
+| Logging | Request logging via Pino (JSON to stdout) |
+| Search | PostgreSQL full-text search with fuzzy matching + per-product synonyms |
 
 ## Prerequisites
 
 - Node.js 20+
 - pnpm
-- Docker & Docker Compose (for PostgreSQL, Elasticsearch, Kibana)
+- Docker & Docker Compose (for PostgreSQL)
 
 ## Setup
 
@@ -65,7 +66,7 @@ domain        → shared/domain ONLY
 # Install dependencies
 pnpm install
 
-# Start infrastructure (PostgreSQL, Elasticsearch, Kibana)
+# Start infrastructure (PostgreSQL)
 docker compose up -d
 
 # Copy environment variables
@@ -109,9 +110,7 @@ pnpm run migration:gen   # Generate migration
 | Service | URL | Description |
 |---|---|---|
 | API (NestJS) | `http://localhost:3000` | Backend REST API |
-| PostgreSQL | `localhost:5432` | Base de datos |
-| Elasticsearch | `http://localhost:9200` | Motor de búsqueda |
-| Kibana | `http://localhost:5601` | UI para visualizar logs y datos de Elasticsearch |
+| PostgreSQL | `localhost:5432` | Base de datos (también motor de búsqueda full-text) |
 
 ## API
 

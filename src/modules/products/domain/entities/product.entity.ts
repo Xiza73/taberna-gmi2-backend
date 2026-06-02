@@ -10,6 +10,7 @@ export class Product extends BaseEntity {
   private _sku: string | null;
   private _stock: number;
   private _images: string[];
+  private _synonyms: string[];
   private _categoryId: string;
   private _isActive: boolean;
   private _averageRating: number | null;
@@ -25,6 +26,7 @@ export class Product extends BaseEntity {
     sku: string | null,
     stock: number,
     images: string[],
+    synonyms: string[],
     categoryId: string,
     isActive: boolean,
     averageRating: number | null,
@@ -41,6 +43,7 @@ export class Product extends BaseEntity {
     this._sku = sku;
     this._stock = stock;
     this._images = images;
+    this._synonyms = synonyms;
     this._categoryId = categoryId;
     this._isActive = isActive;
     this._averageRating = averageRating;
@@ -56,6 +59,7 @@ export class Product extends BaseEntity {
     sku?: string | null;
     stock?: number;
     images?: string[];
+    synonyms?: string[];
     categoryId: string;
     isActive?: boolean;
   }): Product {
@@ -82,6 +86,7 @@ export class Product extends BaseEntity {
       props.sku ?? null,
       props.stock ?? 0,
       props.images ?? [],
+      Product.normalizeSynonyms(props.synonyms),
       props.categoryId,
       props.isActive ?? true,
       null,
@@ -101,6 +106,7 @@ export class Product extends BaseEntity {
     sku: string | null;
     stock: number;
     images: string[];
+    synonyms: string[];
     categoryId: string;
     isActive: boolean;
     averageRating: number | null;
@@ -118,6 +124,7 @@ export class Product extends BaseEntity {
       props.sku,
       props.stock,
       props.images,
+      props.synonyms,
       props.categoryId,
       props.isActive,
       props.averageRating,
@@ -125,6 +132,25 @@ export class Product extends BaseEntity {
       props.createdAt,
       props.updatedAt,
     );
+  }
+
+  // Limpia los sinónimos: recorta espacios, descarta vacíos y deduplica
+  // (case-insensitive). Evita basura en el search_vector.
+  private static normalizeSynonyms(synonyms?: string[]): string[] {
+    if (!synonyms || synonyms.length === 0) {
+      return [];
+    }
+    const seen = new Set<string>();
+    const result: string[] = [];
+    for (const raw of synonyms) {
+      const trimmed = raw.trim();
+      if (trimmed === '') continue;
+      const key = trimmed.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      result.push(trimmed);
+    }
+    return result;
   }
 
   get name(): string {
@@ -151,6 +177,9 @@ export class Product extends BaseEntity {
   get images(): string[] {
     return [...this._images];
   }
+  get synonyms(): string[] {
+    return [...this._synonyms];
+  }
   get categoryId(): string {
     return this._categoryId;
   }
@@ -173,6 +202,7 @@ export class Product extends BaseEntity {
     sku?: string | null;
     stock?: number;
     images?: string[];
+    synonyms?: string[];
     categoryId?: string;
     isActive?: boolean;
   }): void {
@@ -185,6 +215,8 @@ export class Product extends BaseEntity {
     if (props.sku !== undefined) this._sku = props.sku;
     if (props.stock !== undefined) this._stock = props.stock;
     if (props.images !== undefined) this._images = props.images;
+    if (props.synonyms !== undefined)
+      this._synonyms = Product.normalizeSynonyms(props.synonyms);
     if (props.categoryId !== undefined) this._categoryId = props.categoryId;
     if (props.isActive !== undefined) this._isActive = props.isActive;
     this.markUpdated();

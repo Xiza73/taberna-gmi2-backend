@@ -45,6 +45,11 @@ export class UpdateProductDto {
   @IsOptional()
   images?: string[];
 
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  synonyms?: string[];
+
   @IsUUID()
   @IsOptional()
   categoryId?: string;

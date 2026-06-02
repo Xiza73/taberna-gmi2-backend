@@ -1,6 +1,8 @@
 # 19. Search (Full DDD, importado por ProductsModule en Phase 16)
 
-Busqueda inteligente de productos con Elasticsearch. Tolerante a errores de tipeo, con sugerencias y relevancia.
+Busqueda inteligente de productos con **PostgreSQL** (`tsvector` + `pg_trgm`).
+Tolerante a errores de tipeo, con sugerencias y relevancia. **Sin Elasticsearch**
+— cero infra extra, corre sobre el mismo Postgres que ya paga el proyecto.
 
 **Endpoints — Public:**
 | Method | Route | Auth | Description |
@@ -8,45 +10,43 @@ Busqueda inteligente de productos con Elasticsearch. Tolerante a errores de tipe
 | GET | `/search` | @Public | Buscar productos |
 | GET | `/search/suggest` | @Public | Autocompletar mientras escribe |
 
-**Endpoints — Admin:**
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| POST | `/admin/search/reindex` | admin | Rebuild completo del indice ES |
-
 **Query params**: `q` (texto), `categoryId`, `minPrice`, `maxPrice`, `sortBy`, `page`, `limit`
 
-**Elasticsearch Index** `products`:
-```json
-{
-  "mappings": {
-    "properties": {
-      "name": { "type": "text", "analyzer": "spanish", "fields": { "suggest": { "type": "search_as_you_type" } } },
-      "description": { "type": "text", "analyzer": "spanish" },
-      "categoryName": { "type": "keyword" },
-      "price": { "type": "integer" },
-      "isActive": { "type": "boolean" },
-      "averageRating": { "type": "float" },
-      "stock": { "type": "integer" }
-    }
-  }
-}
+**Indexado (columna generada, sin sync manual):**
+La tabla `products` tiene una columna `search_vector tsvector GENERATED ALWAYS
+AS (...) STORED` que Postgres recalcula sola en cada INSERT/UPDATE a partir de:
+
 ```
+setweight(to_tsvector('spanish', name),               'A') ||  -- nombre (peso alto)
+setweight(to_tsvector('spanish', synonyms juntos),    'B') ||  -- sinónimos por producto
+setweight(to_tsvector('spanish', description),        'C')     -- descripción
+```
+
+Índices: GIN sobre `search_vector` (full-text) + GIN `gin_trgm_ops` sobre `name`
+(typos/autocomplete). No hay reindex ni job de sincronización: al guardar el
+producto, el vector queda consistente.
 
 **Capacidades de busqueda:**
 | Feature | Como funciona |
 |---------|---------------|
-| **Fuzzy search** | `fuzziness: "AUTO"` — "zapatso" encuentra "zapatos", "camsia" encuentra "camisa" |
-| **Analizador español** | Stemming: "corriendo"/"correr"/"corrió" son equivalentes |
-| **Autocompletar** | `search_as_you_type` — sugerencias desde 2 caracteres |
-| **Multi-campo** | Busca en name (peso x3) + description (peso x1) |
+| **Fuzzy / typos** | `pg_trgm` `similarity(name, q) > 0.2` — "sapato"/"zapto" encuentran "zapato" |
+| **Analizador español** | `to_tsvector('spanish', ...)` — stemming y stopwords ("corriendo"≈"correr"), acentos normalizados |
+| **Sinónimos por producto** | Campo `synonyms text[]` editable en el backoffice; buscar un sinónimo (ej. "calzado") encuentra el producto |
+| **Autocompletar** | Prefijo `ILIKE q%` + similitud trigram, ordenado por similitud |
+| **Multi-campo** | name (peso A) + synonyms (peso B) + description (peso C) |
 | **Filtros combinados** | Categoria + rango precio + stock > 0 + isActive = true |
-| **Relevancia** | Score por match quality, boosteado por rating y ventas |
+| **Relevancia** | `ts_rank` del match full-text, desempate por similitud del nombre |
 
-**Sincronizacion (sin dependencia circular):**
-- `IProductSearchSync` interfaz + `PRODUCT_SEARCH_SYNC` token definidos en **ProductsModule domain**
-- `SearchModule` (usa `forwardRef(() => ProductsModule)` para importar `PRODUCT_REPOSITORY`) implementa `IProductSearchSync` con `ElasticsearchProductSync` y exporta `PRODUCT_SEARCH_SYNC`.
-- ProductsModule NO registra `PRODUCT_SEARCH_SYNC` localmente. Products use cases inyectan `@Optional() @Inject(PRODUCT_SEARCH_SYNC)` con null-check (`if (this.searchSync) await this.searchSync.indexProduct(...)`) — esto permite que Products funcione desde Phase 4 sin SearchModule (Phase 16). Cuando Search se agrega en Phase 16, ProductsModule lo importa directamente y el sync se activa.
-- **Nota NestJS**: En NestJS, providers locales de un modulo siempre tienen precedencia sobre providers de modulos @Global. Por eso NO se usa `@Global` ni NullProductSearchSync fallback — se usa `@Optional()` + import directo.
-- Rebuild completo via admin: `POST /admin/search/reindex`
+**Implementación:**
+- `IProductSearchService` (token `PRODUCT_SEARCH`) implementado por
+  `PostgresProductSearch`, que ejecuta SQL crudo vía el `DataSource` de TypeORM
+  (join a `categories` para el `categoryName`).
+- `SearchModule` importa `ProductsModule` (sin `forwardRef` — ya no hay
+  dependencia circular) para acceder a `PRODUCT_REPOSITORY` en el fallback.
+- **Ya no existe** `IProductSearchSync` / `PRODUCT_SEARCH_SYNC` ni el endpoint
+  `POST /admin/search/reindex`: la columna generada vuelve innecesaria toda
+  sincronización.
 
-**Fallback**: Si Elasticsearch esta caido, la busqueda cae a `pg_trgm` como fallback (query directa a PostgreSQL via `PRODUCT_REPOSITORY`).
+**Fallback**: Si la query full-text falla por cualquier motivo, la búsqueda cae
+a una consulta básica de repositorio (`PRODUCT_REPOSITORY.findAll`).
+</content>

@@ -37,7 +37,9 @@ import { OrderResponseDto } from '@modules/orders/application/dtos/order-respons
 import { CreatePosOrderUseCase } from './create-pos-order.use-case';
 
 const mockUnitOfWork = {
-  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) => work({})),
+  execute: jest.fn(async (work: (ctx: unknown) => Promise<unknown>) =>
+    work({}),
+  ),
 };
 
 const mockOrderRepo = {
@@ -138,6 +140,7 @@ function createTestProduct(
     sku: null,
     stock: overrides.stock ?? 100,
     images: overrides.images ?? ['image1.jpg'],
+    synonyms: [],
     categoryId: 'cat-1',
     isActive: overrides.isActive ?? true,
     averageRating: null,

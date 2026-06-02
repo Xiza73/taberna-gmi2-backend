@@ -72,8 +72,10 @@ ThrottlerGuard → JwtAuthGuard → SubjectTypeGuard → StaffRoleGuard
   - unknown → 500
   - Todas usan `BaseResponse.fail()`. Validation errors se formatean como array de mensajes.
 
-**Middleware**:
-- `LoggingMiddleware` — Request logging → Elasticsearch con method, path, status, duration, userId, ip. Index: `ecommerce-logs-YYYY.MM.DD`.
+**Logging**:
+- Request logging vía `nestjs-pino` (JSON estructurado a stdout) configurado en
+  `AppModule`. Ver [logging.md](./logging.md). Ya no hay `LoggingMiddleware` ni
+  Elasticsearch.
 
 ---
 

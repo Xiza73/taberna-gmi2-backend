@@ -4,7 +4,7 @@
 
 API REST para un ecommerce generico y completo orientado a un vendedor minorista en Peru. Incluye storefront (cliente) y backoffice (admin). Pagos con MercadoPago Checkout Pro. Envios con tracking de carriers externos (Shalom, SerPost, Olva, etc).
 
-**Stack**: NestJS 11 + TypeScript + PostgreSQL + TypeORM + JWT + MercadoPago + Elasticsearch + Kibana + Cloudinary
+**Stack**: NestJS 11 + TypeScript + PostgreSQL + TypeORM + JWT + MercadoPago + Cloudinary (búsqueda full-text en Postgres, logging con Pino)
 
 **Prefix**: `api/v1`
 
@@ -85,7 +85,8 @@ coupons ──── orders (optional FK)
 banners (standalone)
 order_number_counters (standalone, daily reset)
 
-Elasticsearch indices: products (search), ecommerce-logs-* (logging)
+Búsqueda: columna generada products.search_vector (tsvector) + pg_trgm. Sin Elasticsearch.
+Logging: Pino → stdout (capturado por Railway). Sin Kibana.
 ```
 
 ---
@@ -339,9 +340,6 @@ CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
-# Elasticsearch
-ELASTICSEARCH_NODE=http://localhost:9200
-
 # Email (SMTP)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -393,27 +391,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9200:9200"
-    volumes:
-      - esdata:/var/lib/elasticsearch/data
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-
 volumes:
   pgdata:
-  esdata:
 ```

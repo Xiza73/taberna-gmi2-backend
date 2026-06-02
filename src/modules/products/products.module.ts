@@ -1,8 +1,7 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CategoriesModule } from '@modules/categories/categories.module';
-import { SearchModule } from '@modules/search/search.module';
 
 import { ProductOrmEntity } from './infrastructure/orm-entities/product.orm-entity';
 import { ProductRepository } from './infrastructure/repositories/product.repository';
@@ -19,11 +18,7 @@ import { ProductsController } from './presentation/products.controller';
 import { AdminProductsController } from './presentation/admin-products.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ProductOrmEntity]),
-    CategoriesModule,
-    forwardRef(() => SearchModule),
-  ],
+  imports: [TypeOrmModule.forFeature([ProductOrmEntity]), CategoriesModule],
   controllers: [ProductsController, AdminProductsController],
   providers: [
     { provide: PRODUCT_REPOSITORY, useClass: ProductRepository },

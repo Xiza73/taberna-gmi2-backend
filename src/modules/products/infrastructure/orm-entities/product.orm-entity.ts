@@ -42,6 +42,11 @@ export class ProductOrmEntity {
   @Column({ type: 'jsonb', default: '[]' })
   images: string[];
 
+  // Sinónimos / palabras relacionadas. Postgres array nativo (text[]) para
+  // poder alimentarlos al search_vector generado vía array_to_string.
+  @Column({ type: 'text', array: true, default: () => "'{}'" })
+  synonyms: string[];
+
   @Column({ type: 'uuid', name: 'category_id' })
   categoryId: string;
 

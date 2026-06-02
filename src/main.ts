@@ -9,13 +9,20 @@ setDefaultResultOrder('ipv4first');
 import { NestFactory } from '@nestjs/core';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Logger as PinoLogger } from 'nestjs-pino';
 import helmet from 'helmet';
 import { json } from 'express';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+    bufferLogs: true,
+  });
+  // Enrutamos TODOS los logs de Nest a través de Pino (JSON estructurado a
+  // stdout, capturado por Railway).
+  app.useLogger(app.get(PinoLogger));
   const configService = app.get(ConfigService);
   const bootstrapLogger = new Logger('Bootstrap');
 
@@ -78,10 +85,11 @@ async function bootstrap() {
   }
 
   const googleClientId = configService.get<string>('GOOGLE_CLIENT_ID');
-  if (googleClientId && !googleClientId.endsWith('.apps.googleusercontent.com')) {
-    fail(
-      'GOOGLE_CLIENT_ID must end with .apps.googleusercontent.com',
-    );
+  if (
+    googleClientId &&
+    !googleClientId.endsWith('.apps.googleusercontent.com')
+  ) {
+    fail('GOOGLE_CLIENT_ID must end with .apps.googleusercontent.com');
   }
 
   const orderExpRaw = configService.get<string>('ORDER_EXPIRATION_HOURS');

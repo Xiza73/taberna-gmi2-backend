@@ -45,6 +45,11 @@ export class CreateProductDto {
   @IsOptional()
   images?: string[];
 
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  synonyms?: string[];
+
   @IsUUID()
   categoryId: string;
 

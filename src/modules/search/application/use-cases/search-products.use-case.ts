@@ -38,7 +38,7 @@ export class SearchProductsUseCase {
       });
     } catch (error) {
       this.logger.warn(
-        `Elasticsearch unavailable, falling back to PostgreSQL: ${(error as Error).message}`,
+        `Full-text search failed, falling back to basic repository search: ${(error as Error).message}`,
       );
       return this.fallbackSearch(dto);
     }

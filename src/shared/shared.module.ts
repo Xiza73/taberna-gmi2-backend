@@ -1,36 +1,11 @@
-import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Global, Module } from '@nestjs/common';
 
 import { UNIT_OF_WORK } from './domain/interfaces/unit-of-work.interface';
 import { TypeOrmUnitOfWork } from './infrastructure/typeorm-unit-of-work';
-import { LoggingMiddleware } from './presentation/middleware/logging.middleware';
 
 @Global()
 @Module({
-  imports: [
-    ElasticsearchModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        node: config.get<string>('ELASTICSEARCH_NODE', 'http://localhost:9200'),
-        // Timeouts cortos para evitar que el startup quede colgado si ES no
-        // está disponible. El back tolera ES caído — solo pierde indexado de
-        // logs y búsqueda full-text, pero el resto funciona.
-        requestTimeout: 3000,
-        pingTimeout: 3000,
-        maxRetries: 1,
-      }),
-    }),
-  ],
-  providers: [
-    // Infrastructure
-    { provide: UNIT_OF_WORK, useClass: TypeOrmUnitOfWork },
-  ],
-  exports: [UNIT_OF_WORK, ElasticsearchModule],
+  providers: [{ provide: UNIT_OF_WORK, useClass: TypeOrmUnitOfWork }],
+  exports: [UNIT_OF_WORK],
 })
-export class SharedModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggingMiddleware).forRoutes('*path');
-  }
-}
+export class SharedModule {}

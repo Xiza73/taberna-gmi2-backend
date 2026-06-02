@@ -13,6 +13,7 @@ export class ProductMapper {
       sku: orm.sku,
       stock: orm.stock,
       images: orm.images,
+      synonyms: orm.synonyms ?? [],
       categoryId: orm.categoryId,
       isActive: orm.isActive,
       averageRating:
@@ -34,6 +35,7 @@ export class ProductMapper {
     orm.sku = domain.sku;
     orm.stock = domain.stock;
     orm.images = domain.images;
+    orm.synonyms = domain.synonyms;
     orm.categoryId = domain.categoryId;
     orm.isActive = domain.isActive;
     orm.averageRating = domain.averageRating;

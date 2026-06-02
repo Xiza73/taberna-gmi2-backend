@@ -5,6 +5,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { LoggerModule } from 'nestjs-pino';
+import { buildLoggerParams } from './config/logger.config';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CustomersModule } from './modules/customers/customers.module';
@@ -36,6 +38,13 @@ import { StaffRoleGuard } from './shared/presentation/guards/staff-role.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) =>
+        buildLoggerParams(
+          config.get<string>('NODE_ENV', 'development') === 'production',
+        ),
+    }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 1500 }]),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
