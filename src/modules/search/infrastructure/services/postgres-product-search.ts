@@ -7,9 +7,13 @@ import {
   type ProductSearchResult,
 } from '../../domain/interfaces/product-search.interface';
 
-// Umbral de similitud trigram (pg_trgm) para tolerar typos. 0.2 perdona un
-// poco más que el default 0.3 sin colar demasiados falsos positivos.
-const SIMILARITY_THRESHOLD = 0.2;
+// Umbral de word_similarity (pg_trgm) para tolerar typos. Usamos
+// word_similarity (no similarity) porque compara el query contra la MEJOR
+// palabra del nombre, no contra el nombre completo: así "bestido" matchea
+// "Vestido Floral Zara" (similarity sobre el nombre completo lo diluiría
+// muy por debajo del umbral). 0.4: "bestido"->("Vestido…")≈0.62 entra,
+// coincidencias débiles (p.ej. "zapto" vs "…Zara"≈0.33) quedan fuera.
+const WORD_SIMILARITY_THRESHOLD = 0.4;
 
 interface SearchRow {
   id: string;
@@ -70,10 +74,10 @@ export class PostgresProductSearch implements IProductSearchService {
 
     if (query !== '') {
       // Match por full-text (incluye name + synonyms + description vía
-      // search_vector) O por similitud trigram del nombre (typos).
+      // search_vector) O por word_similarity del nombre (typos).
       conditions.push(
         `(p.search_vector @@ websearch_to_tsquery('spanish', ${qParam}) ` +
-          `OR similarity(p.name, ${qParam}) > ${SIMILARITY_THRESHOLD})`,
+          `OR word_similarity(${qParam}, p.name) > ${WORD_SIMILARITY_THRESHOLD})`,
       );
     }
 
@@ -136,9 +140,9 @@ export class PostgresProductSearch implements IProductSearchService {
       FROM products p
       WHERE p.is_active = true
         AND p.stock > 0
-        AND (p.name ILIKE $1 || '%' OR similarity(p.name, $1) > ${SIMILARITY_THRESHOLD})
+        AND (p.name ILIKE $1 || '%' OR word_similarity($1, p.name) > ${WORD_SIMILARITY_THRESHOLD})
       GROUP BY p.name
-      ORDER BY max(similarity(p.name, $1)) DESC
+      ORDER BY max(word_similarity($1, p.name)) DESC
       LIMIT $2
     `;
 
@@ -170,11 +174,11 @@ export class PostgresProductSearch implements IProductSearchService {
         return 'p.created_at DESC';
       default:
         if (query !== '') {
-          // Relevancia: ranking full-text primero, luego similitud del
+          // Relevancia: ranking full-text primero, luego word_similarity del
           // nombre (para que los typos también ordenen de forma sensata).
           return (
             `ts_rank(p.search_vector, websearch_to_tsquery('spanish', ${qParam})) DESC, ` +
-            `similarity(p.name, ${qParam}) DESC, p.created_at DESC`
+            `word_similarity(${qParam}, p.name) DESC, p.created_at DESC`
           );
         }
         return 'p.created_at DESC';
